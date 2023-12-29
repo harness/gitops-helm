@@ -3,7 +3,7 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   labels:
-    {{- include "argo-cd.labels" (dict "context" . "component" ".Values.argo-cd.repoServer.name" "name" ".Values.argo-cd.repoServer.name") | nindent 4 }}
+    {{- include "argo-cd.labels" (dict "context" . "component" (index .Values "argo-cd").repoServer.name "name" (index .Values "argo-cd").repoServer.name) | nindent 4 }}
   name: {{ template "argo-cd.repoServer.fullname" . }}
   namespace: {{ .Release.Namespace | quote }}
 spec:
@@ -14,21 +14,21 @@ spec:
           {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.agent.name) | nindent 10 }}
         - podSelector:
             matchLabels:
-          {{- include "argo-cd.selectorLabels" (dict "context" . "name" ".Values.argo-cd.controller.name") | nindent 10 }}
-    {{- if .Values.notifications.enabled }}
+          {{- include "argo-cd.selectorLabels" (dict "context" . "name" (index .Values "argo-cd").controller.name) | nindent 10 }}
+    {{- if (index .Values "argo-cd").notifications.enabled }}
         - podSelector:
             matchLabels:
-          {{- include "argo-cd.selectorLabels" (dict "context" . "name" ".Values.argo-cd.notifications.name") | nindent 10 }}
+          {{- include "argo-cd.selectorLabels" (dict "context" . "name" (index .Values "argo-cd").notifications.name) | nindent 10 }}
     {{- end }}
-    {{- if .Values.applicationSet.enabled }}
+    {{- if (index .Values "argo-cd").applicationSet.enabled }}
         - podSelector:
             matchLabels:
-          {{- include "argo-cd.selectorLabels" (dict "context" . "name" ".Values.argo-cd.applicationSet.name") | nindent 10 }}
+          {{- include "argo-cd.selectorLabels" (dict "context" . "name" (index .Values "argo-cd").applicationSet.name) | nindent 10 }}
     {{- end }}
       ports:
         - port: repo-server
           protocol: TCP
-  {{- if ".Values.argo-cd.repoServer.metrics.enabled" }}
+  {{- if (index .Values "argo-cd").repoServer.metrics.enabled }}
     - from:
         - namespaceSelector: {}
       ports:
@@ -36,7 +36,7 @@ spec:
   {{- end }}
   podSelector:
     matchLabels:
-      {{- include "argo-cd.selectorLabels" (dict "context" . "name" ".Values.argo-cd.repoServer.name") | nindent 6 }}
+      {{- include "argo-cd.selectorLabels" (dict "context" . "name" (index .Values "argo-cd").repoServer.name) | nindent 6 }}
   policyTypes:
     - Ingress
 {{- end }}

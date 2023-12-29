@@ -189,13 +189,8 @@ global:
 repoServer:
   name: repo-server
 
-notifications:
-  enabled: false
-
 applicationSet:
-  enabled: true
   name: applicationset-controller
-  metrics.enabled: true
 
 controller:
   name: application-controller
