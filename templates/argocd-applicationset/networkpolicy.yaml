@@ -1,18 +1,19 @@
-{{- if and (index .Values "argo-cd").applicationSet.enabled .Values.harness.networkPolicy.create (or (index .Values "argo-cd").applicationSet.metrics.enabled (index .Values "argo-cd").applicationSet.webhook.ingress.enabled) }}
+{{- $argo := (index .Values "argo-cd") -}}
+{{- if and $argo.applicationSet.enabled .Values.harness.networkPolicy.create (or $argo.applicationSet.metrics.enabled $argo.applicationSet.webhook.ingress.enabled) }}
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: {{ template "argo-cd.applicationSet.fullname" . }}
   namespace: {{ .Release.Namespace | quote }}
   labels:
-    {{- include "argo-cd.labels" (dict "context" . "component" (index .Values "argo-cd").applicationSet.name "name" (index .Values "argo-cd").applicationSet.name) | nindent 4 }}
+    {{- include "argo-cd.labels" (dict "context" . "component" .Values.applicationSet.name "name" .Values.applicationSet.name) | nindent 4 }}
 spec:
   ingress:
-  {{- if (index .Values "argo-cd").applicationSet.webhook.ingress.enabled }}
+  {{- if $argo.applicationSet.webhook.ingress.enabled }}
     - ports:
         - port: webhook
   {{- end }}
-  {{- if (index .Values "argo-cd").applicationSet.metrics.enabled }}
+  {{- if $argo.applicationSet.metrics.enabled }}
     - from:
         - namespaceSelector: {}
       ports:
@@ -20,7 +21,7 @@ spec:
   {{- end }}
   podSelector:
     matchLabels:
-      {{- include "argo-cd.selectorLabels" (dict "context" . "name" (index .Values "argo-cd").applicationSet.name) | nindent 6 }}
+      {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.applicationSet.name) | nindent 6 }}
   policyTypes:
     - Ingress
 {{- end }}

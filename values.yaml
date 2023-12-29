@@ -194,3 +194,7 @@ applicationSet:
 
 controller:
   name: application-controller
+
+redis:
+  name: redis
+
