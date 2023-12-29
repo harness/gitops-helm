@@ -1,0 +1,7 @@
+## Harness GitOps Agent configuration
+## Ref: https://github.com/harness/gitops-helm
+## Documentation: https://developer.harness.io/docs/category/gitops
+
+argo-cd:
+  nameOverride: harness
+
