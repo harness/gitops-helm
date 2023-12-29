@@ -136,3 +136,39 @@ argo-cd:
     # -- Enable notifications controller
     enabled: false
 
+# <---Harness specific overrides--->
+
+## Harness GitOps Agent
+agent:
+  # -- GitOps Agent name
+  name: gitops-agent
+
+  ## Proxy config for GitOps Agent
+  proxy:
+    # -- Enable Proxy
+    enabled: false
+
+    # -- Add HTTP proxy
+    httpProxy: {}
+
+    # -- Add HTTPS proxy
+    httpsProxy: {}
+
+## Harness GitOps Agent upgrader
+upgrader:
+  # -- Agent upgrader name
+  name: gitops-agent-upgrader
+
+  # -- Enable Harness GitOps agent upgrader
+  enabled: true
+
+  # -- Frequency of upgrader cron job
+  cron: "0 */4 * * *"
+
+  # -- Starting deadline for cron job
+  startDeadline: 20
+
+  # -- Docker image for upgrader
+  image: harness/upgrader:latest
+
+
