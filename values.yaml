@@ -122,7 +122,7 @@ argo-cd:
         cpu: "1"
         memory: 512Mi
 
-  ## ArgoCD Dex and Notifications Controllers are not required for Harness GitOps Agent
+  ## ArgoCD Dex and Notifications Controller are not required for Harness GitOps Agent
   dex:
     # -- Enable dex
     enabled: false
