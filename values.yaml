@@ -9,6 +9,11 @@ argo-cd:
   # -- String to fully override `"argo-cd.fullname"`
   fullnameOverride: harness-gitops
 
+  ## Custom resource configuration
+  crds:
+    # -- Keep CRDs on chart uninstall
+    keep: false
+
   ## Argo CD Application controller
   controller:
     # -- Resource limits and requests for the Application controller pods
