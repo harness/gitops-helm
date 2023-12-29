@@ -9,6 +9,19 @@ argo-cd:
   # -- String to fully override `"argo-cd.fullname"`
   fullnameOverride: harness-gitops
 
+  ## Globally shared configuration
+  global:
+    # -- Toggle and define pod-level security context.
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+          - ALL
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+      seccompProfile:
+        type: RuntimeDefault
+
   ## Custom resource configuration
   crds:
     # -- Keep CRDs on chart uninstall
@@ -178,7 +191,6 @@ upgrader:
 
   # -- Docker image for upgrader
   image: harness/upgrader:latest
-
 
 # <---Duplicated Argo CD overrides for overridden templates--->
 
