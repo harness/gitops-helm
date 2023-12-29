@@ -2,6 +2,45 @@
 ## Ref: https://github.com/harness/gitops-helm
 ## Documentation: https://developer.harness.io/docs/category/gitops
 
+## Variable Overrides for Argo CD configuration
 argo-cd:
+  # -- Provide a name in place of `harness`
   nameOverride: harness
+  # -- String to fully override `"argo-cd.fullname"`
+  fullnameOverride: harness-gitops
+
+  ## Argo CD Application controller
+  controller:
+    # -- Resource limits and requests for the Application controller pods
+    resources:
+      limits:
+        cpu: "1"
+        memory: 2Gi
+      requests:
+        cpu: "1"
+        memory: 2Gi
+
+  ## Argo CD ApplicationSet controller
+  applicationSet:
+
+    ## Metrics service configuration
+    metrics:
+      # -- Deploy metrics service
+      enabled: true
+
+    # -- Resource limits and requests for the ApplicationSet controller pods.
+    resources:
+      requests:
+        memory: 512Mi
+        cpu: "1"
+      limits:
+        memory: 512Mi
+        cpu: "1"
+
+    ## Webhook for the Git Generator
+    ## Ref: https://argocd-applicationset.readthedocs.io/en/master/Generators-Git/#webhook-configuration)
+    webhook:
+      ingress:
+        # -- Enable an ingress resource for Webhooks
+        enabled: true
 
