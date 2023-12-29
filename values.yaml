@@ -22,6 +22,23 @@ argo-cd:
       seccompProfile:
         type: RuntimeDefault
 
+  ## Argo Configs
+  configs:
+    # General Argo CD configuration
+    ## Ref: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/argocd-cm.yaml
+    cm:
+      # Comma delimited list of additional custom remote values file schemes (http are https are allowed by default).
+      # Change to empty value if you want to disable remote values files altogether.
+      helm.valuesFileSchemes: >-
+        secrets+gpg-import, secrets+gpg-import-kubernetes,
+        secrets+age-import, secrets+age-import-kubernetes,
+        secrets,secrets+literal,
+        https
+
+      # This allows for a cluster entity to be created for the cluster that your agent is installed in
+      # It should be false for Namespaced Agent installations
+      cluster.inClusterEnabled: "true"
+
   ## Custom resource configuration
   crds:
     # -- Keep CRDs on chart uninstall
