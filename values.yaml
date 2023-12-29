@@ -1,0 +1,174 @@
+## Harness GitOps Agent configuration
+## Ref: https://github.com/harness/gitops-helm
+## Documentation: https://developer.harness.io/docs/category/gitops
+
+## Variable Overrides for Argo CD configuration
+argo-cd:
+  # -- Provide a name in place of `harness`
+  nameOverride: harness
+  # -- String to fully override `"argo-cd.fullname"`
+  fullnameOverride: harness-gitops
+
+  ## Custom resource configuration
+  crds:
+    # -- Keep CRDs on chart uninstall
+    keep: false
+
+  ## Argo CD Application controller
+  controller:
+    # -- Resource limits and requests for the Application controller pods
+    resources:
+      limits:
+        cpu: "1"
+        memory: 2Gi
+      requests:
+        cpu: "1"
+        memory: 2Gi
+
+  ## Argo CD ApplicationSet controller
+  applicationSet:
+
+    ## Metrics service configuration
+    metrics:
+      # -- Deploy metrics service
+      enabled: true
+
+    # -- Resource limits and requests for the ApplicationSet controller pods.
+    resources:
+      requests:
+        memory: 512Mi
+        cpu: "1"
+      limits:
+        memory: 512Mi
+        cpu: "1"
+
+    ## Webhook for the Git Generator
+    ## Ref: https://argocd-applicationset.readthedocs.io/en/master/Generators-Git/#webhook-configuration)
+    webhook:
+      ingress:
+        # -- Enable an ingress resource for Webhooks
+        enabled: true
+
+  ## Argo CD Repo Server
+  repoServer:
+    # -- Environment variables to pass to repo server
+    env:
+      - name: HELM_PLUGINS
+        value: /helm-sops-tools/helm-plugins/
+      - name: HELM_SECRETS_CURL_PATH
+        value: /helm-sops-tools/curl
+      - name: HELM_SECRETS_SOPS_PATH
+        value: /helm-sops-tools/sops
+      - name: HELM_SECRETS_KUBECTL_PATH
+        value: /helm-sops-tools/kubectl
+      - name: HELM_SECRETS_BACKEND
+        value: sops
+      - name: HELM_SECRETS_VALUES_ALLOW_SYMLINKS
+        value: "false"
+      - name: HELM_SECRETS_VALUES_ALLOW_ABSOLUTE_PATH
+        value: "true"
+      - name: HELM_SECRETS_VALUES_ALLOW_PATH_TRAVERSAL
+        value: "false"
+      - name: HELM_SECRETS_WRAPPER_ENABLED
+        value: "true"
+      - name: HELM_SECRETS_HELM_PATH
+        value: /usr/local/bin/helm
+
+    # -- Init containers to add to the repo server pods
+    initContainers:
+      - name: sops-helm-secrets-tool
+        image: harness/gitops-agent-installer-helper:v0.0.1
+        imagePullPolicy: IfNotPresent
+        command: [ sh, -ec ]
+        args:
+          - |
+            cp -r /custom-tools/. /helm-sops-tools
+            cp /helm-sops-tools/helm-plugins/helm-secrets/scripts/wrapper/helm.sh /helm-sops-tools/helm
+            chmod +x /helm-sops-tools/*
+        volumeMounts:
+          - mountPath: /helm-sops-tools
+            name: helm-sops-tools
+
+    # -- Additional volumeMounts to the repo server main container
+    volumeMounts:
+      - mountPath: /helm-sops-tools
+        name: helm-sops-tools
+      - mountPath: /usr/local/sbin/helm
+        subPath: helm
+        name: helm-sops-tools
+
+    # -- Additional volumes to the repo server pod
+    volumes:
+      - name: helm-sops-tools
+        emptyDir: { }
+
+    # -- Resource limits and requests for the repo server pods
+    resources:
+      limits:
+        cpu: "1"
+        memory: 1Gi
+      requests:
+        cpu: "1"
+        memory: 1Gi
+
+    ## Repo server metrics service configuration
+    metrics:
+      # -- Deploy metrics service
+      enabled: true
+
+  ## Redis
+  redis:
+    # -- Resource limits and requests for redis
+    resources:
+      limits:
+        cpu: "1"
+        memory: 512Mi
+      requests:
+        cpu: "1"
+        memory: 512Mi
+
+  ## ArgoCD Dex and Notifications Controller are not required for Harness GitOps Agent
+  dex:
+    # -- Enable dex
+    enabled: false
+
+  notifications:
+    # -- Enable notifications controller
+    enabled: false
+
+# <---Harness specific overrides--->
+
+## Harness GitOps Agent
+agent:
+  # -- GitOps Agent name
+  name: gitops-agent
+
+  ## Proxy config for GitOps Agent
+  proxy:
+    # -- Enable Proxy
+    enabled: false
+
+    # -- Add HTTP proxy
+    httpProxy: {}
+
+    # -- Add HTTPS proxy
+    httpsProxy: {}
+
+## Harness GitOps Agent upgrader
+upgrader:
+  # -- Agent upgrader name
+  name: gitops-agent-upgrader
+
+  # -- Enable Harness GitOps agent upgrader
+  enabled: true
+
+  # -- Frequency of upgrader cron job
+  cron: "0 */4 * * *"
+
+  # -- Starting deadline for cron job
+  startDeadline: 20
+
+  # -- Docker image for upgrader
+  image: harness/upgrader:latest
+
+
