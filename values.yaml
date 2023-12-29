@@ -140,7 +140,7 @@ argo-cd:
 
 ## Variable Overrides for Harness configuration
 harness:
-  
+
   # Default Harness network policy rules used by all components
   networkPolicy:
     # -- Create NetworkPolicy objects for all components
@@ -180,3 +180,22 @@ upgrader:
   image: harness/upgrader:latest
 
 
+# <---Duplicated Argo CD overrides for overridden templates--->
+
+global:
+  image:
+    tag: v2.9.3
+
+repoServer:
+  name: repo-server
+
+notifications:
+  enabled: false
+
+applicationSet:
+  enabled: true
+  name: applicationset-controller
+  metrics.enabled: true
+
+controller:
+  name: application-controller
