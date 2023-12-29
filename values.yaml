@@ -9,6 +9,36 @@ argo-cd:
   # -- String to fully override `"argo-cd.fullname"`
   fullnameOverride: harness-gitops
 
+  ## Globally shared configuration
+  global:
+    # -- Toggle and define pod-level security context.
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+          - ALL
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+      seccompProfile:
+        type: RuntimeDefault
+
+  ## Argo Configs
+  configs:
+    # General Argo CD configuration
+    ## Ref: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/argocd-cm.yaml
+    cm:
+      # Comma delimited list of additional custom remote values file schemes (http are https are allowed by default).
+      # Change to empty value if you want to disable remote values files altogether.
+      helm.valuesFileSchemes: >-
+        secrets+gpg-import, secrets+gpg-import-kubernetes,
+        secrets+age-import, secrets+age-import-kubernetes,
+        secrets,secrets+literal,
+        https
+
+      # This allows for a cluster entity to be created for the cluster that your agent is installed in
+      # It should be false for Namespaced Agent installations
+      cluster.inClusterEnabled: "true"
+
   ## Custom resource configuration
   crds:
     # -- Keep CRDs on chart uninstall
@@ -127,7 +157,10 @@ argo-cd:
         cpu: "1"
         memory: 512Mi
 
-  ## ArgoCD Dex and Notifications Controller are not required for Harness GitOps Agent
+  ## ArgoCD Server, Dex and Notifications Controller are not required for Harness GitOps Agent
+  server:
+    replicas: 0
+
   dex:
     # -- Enable dex
     enabled: false
@@ -137,6 +170,17 @@ argo-cd:
     enabled: false
 
 # <---Harness specific overrides--->
+
+## Variable Overrides for Harness configuration
+harness:
+
+  # Default Harness network policy rules used by all components
+  networkPolicy:
+    # -- Create NetworkPolicy objects for all components
+    create: true
+
+  # -- Host for GitOps Service
+  gitopsServerHost: ""
 
 ## Harness GitOps Agent
 agent:
@@ -171,4 +215,21 @@ upgrader:
   # -- Docker image for upgrader
   image: harness/upgrader:latest
 
+# <---Duplicated Argo CD overrides for overridden templates--->
+
+global:
+  image:
+    tag: v2.9.3
+
+repoServer:
+  name: repo-server
+
+applicationSet:
+  name: applicationset-controller
+
+controller:
+  name: application-controller
+
+redis:
+  name: redis
 
