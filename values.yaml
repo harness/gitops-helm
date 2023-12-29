@@ -159,6 +159,9 @@ harness:
     # -- Create NetworkPolicy objects for all components
     create: true
 
+  # -- Host for GitOps Service
+  gitopsServerHost: ""
+
 ## Harness GitOps Agent
 agent:
   # -- GitOps Agent name

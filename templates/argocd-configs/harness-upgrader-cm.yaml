@@ -1,0 +1,18 @@
+{{- if .Values.upgrader.enabled }}
+apiVersion: v1
+data:
+  config.yaml: |
+    mode: GitopsAgent
+    dryRun: false
+    workloadName: {{ .Values.agent.name }}-agent
+    namespace: {{ .Release.Namespace }}
+    containerName: gitops-agent
+    gitopsAgentConfig:
+      gitopsServerHost: {{ .Values.harness.gitopsServerHost }}
+      caData: /tmp/ca.bundle
+kind: ConfigMap
+metadata:
+  name: {{ .Values.agent.name }}-agent-upgrader
+  namespace: {{ .Release.Namespace | quote }}
+---
+{{- end }}
