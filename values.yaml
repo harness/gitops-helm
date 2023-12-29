@@ -138,6 +138,14 @@ argo-cd:
 
 # <---Harness specific overrides--->
 
+## Variable Overrides for Harness configuration
+harness:
+  
+  # Default Harness network policy rules used by all components
+  networkPolicy:
+    # -- Create NetworkPolicy objects for all components
+    create: true
+
 ## Harness GitOps Agent
 agent:
   # -- GitOps Agent name
