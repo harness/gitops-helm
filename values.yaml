@@ -160,6 +160,8 @@ argo-cd:
   ## ArgoCD Server, Dex and Notifications Controller are not required for Harness GitOps Agent
   server:
     replicas: 0
+    clusterAdminAccess:
+      enabled: false
 
   dex:
     # -- Enable dex
@@ -170,6 +172,9 @@ argo-cd:
     enabled: false
 
 # <---Harness specific overrides--->
+
+# -- Provide a name in place of `harness-gitops`
+nameOverride: harness-gitops
 
 ## Variable Overrides for Harness configuration
 harness:
@@ -197,6 +202,12 @@ agent:
 
     # -- Add HTTPS proxy
     httpsProxy: {}
+
+  serviceAccount:
+    # -- Create agent service account
+    create: true
+    # -- Agent service account name
+    name: gitops-agent
 
 ## Harness GitOps Agent upgrader
 upgrader:
