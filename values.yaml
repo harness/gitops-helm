@@ -194,8 +194,31 @@ agent:
   # -- GitOps Agent name
   name: gitops-agent
 
-  # -- GitOps Agent image version
-  imageTag: v0.65.0
+  # -- GitOps Agent image
+  image:
+    # -- Repository to use for GitOps Agent
+    # @default -- `""` (defaults to global.image.repository)
+    repository: harness/gitops-agent # defaults to global.image.repository
+    # -- Tag to use for the GitOps Agent
+    # @default -- `""` (defaults to global.image.tag)
+    tag: v0.65.0 # defaults to global.image.tag
+    # -- Image pull policy for GitOps Agent
+    # @default -- `""` (defaults to global.image.imagePullPolicy)
+    imagePullPolicy: "" # IfNotPresent
+
+  pdb:
+    # -- Deploy a [PodDisruptionBudget] for the GitOps Agent
+    enabled: false
+    # -- Labels to be added to GitOps Agent pdb
+    labels: { }
+    # -- Annotations to be added to GitOps Agent pdb
+    annotations: { }
+    # -- Number of pods that are available after eviction as number or percentage (eg.: 50%)
+    # @default -- `""` (defaults to 0 if not specified)
+    minAvailable: ""
+    # -- Number of pods that are unavailable after eviction as number or percentage (eg.: 50%).
+    ## Has higher precedence over `server.pdb.minAvailable`
+    maxUnavailable: ""
 
   ## Proxy config for GitOps Agent
   proxy:
@@ -219,6 +242,35 @@ agent:
     labels: { }
     # -- Automount API credentials for the Service Account
     automountServiceAccountToken: false
+
+  autoscaling:
+    # -- Enable Horizontal Pod Autoscaler ([HPA]) for the GitOps Agent
+    enabled: false
+    # -- Minimum number of replicas for the GitOps Agent [HPA]
+    minReplicas: 1
+    # -- Maximum number of replicas for the GitOps Agent [HPA]
+    maxReplicas: 5
+    # -- Average CPU utilization percentage for the GitOps Agent [HPA]
+    targetCPUUtilizationPercentage: 50
+    # -- Average memory utilization percentage for the GitOps Agent [HPA]
+    targetMemoryUtilizationPercentage: 50
+    # -- Configures the scaling behavior of the target in both Up and Down directions.
+    behavior: {}
+      # scaleDown:
+      #  stabilizationWindowSeconds: 300
+      #  policies:
+      #   - type: Pods
+      #     value: 1
+      #     periodSeconds: 180
+      # scaleUp:
+      #   stabilizationWindowSeconds: 300
+      #   policies:
+      #   - type: Pods
+      #     value: 2
+    #     periodSeconds: 60
+    # -- Configures custom HPA metrics for the Argo CD server
+    # Ref: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
+    metrics: []
 
 ## Harness GitOps Agent upgrader
 upgrader:
