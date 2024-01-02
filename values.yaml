@@ -130,7 +130,7 @@ argo-cd:
     # -- Additional volumes to the repo server pod
     volumes:
       - name: helm-sops-tools
-        emptyDir: { }
+        emptyDir: {}
 
     # -- Resource limits and requests for the repo server pods
     resources:
@@ -194,6 +194,9 @@ agent:
   # -- GitOps Agent name
   name: gitops-agent
 
+  # -- The number of agent pods to run
+  replicas: 1
+
   # -- GitOps Agent image
   image:
     # -- Repository to use for GitOps Agent
@@ -212,9 +215,9 @@ agent:
     # -- Agent service account name
     name: gitops-agent
     # -- Annotations applied to created service account
-    annotations: { }
+    annotations: {}
     # -- Labels applied to created service account
-    labels: { }
+    labels: {}
     # -- Automount API credentials for the Service Account
     automountServiceAccountToken: false
 
@@ -254,9 +257,9 @@ agent:
     # -- Deploy a [PodDisruptionBudget] for the GitOps Agent
     enabled: false
     # -- Labels to be added to GitOps Agent pdb
-    labels: { }
+    labels: {}
     # -- Annotations to be added to GitOps Agent pdb
-    annotations: { }
+    annotations: {}
     # -- Number of pods that are available after eviction as number or percentage (eg.: 50%)
     # @default -- `""` (defaults to 0 if not specified)
     minAvailable: ""
@@ -274,9 +277,9 @@ agent:
       # -- Metrics service clusterIP. `None` makes a "headless service" (no virtual IP)
       clusterIP: ""
       # -- Metrics service annotations
-      annotations: { }
+      annotations: {}
       # -- Metrics service labels
-      labels: { }
+      labels: {}
       # -- Metrics service port
       servicePort: 8083
       # -- Metrics service port name
@@ -291,19 +294,19 @@ agent:
       # -- Prometheus [MetricRelabelConfigs] to apply to samples before ingestion
       metricRelabelings: [ ]
       # -- Prometheus ServiceMonitor selector
-      selector: { }
+      selector: {}
       # prometheus: kube-prometheus
 
       # -- Prometheus ServiceMonitor scheme
       scheme: ""
       # -- Prometheus ServiceMonitor tlsConfig
-      tlsConfig: { }
+      tlsConfig: {}
       # -- Prometheus ServiceMonitor namespace
       namespace: ""  # monitoring
       # -- Prometheus ServiceMonitor labels
-      additionalLabels: { }
+      additionalLabels: {}
       # -- Prometheus ServiceMonitor annotations
-      annotations: { }
+      annotations: {}
 
   # Agent container ports
   containerPorts:
@@ -345,16 +348,32 @@ agent:
     # -- Used to maintain session affinity. Supports `ClientIP` and `None`
     sessionAffinity: ""
 
+  # -- Annotations to be added to agent Deployment
+  deploymentAnnotations: {}
+
+  # -- Annotations to be added to agent pods
+  podAnnotations: {}
+
+  # -- Labels to be added to agentƒ pods
+  podLabels: {}
+
+  # -- Deployment strategy to be added to the agent Deployment
+  deploymentStrategy: {}
+  # type: RollingUpdate
+  # rollingUpdate:
+  #   maxSurge: 25%
+  #   maxUnavailable: 25%
+
   ## Proxy config for GitOps Agent
   proxy:
     # -- Enable Proxy
     enabled: false
 
     # -- Add HTTP proxy
-    httpProxy: { }
+    httpProxy: {}
 
     # -- Add HTTPS proxy
-    httpsProxy: { }
+    httpsProxy: {}
 
 ## Harness GitOps Agent upgrader
 upgrader:
