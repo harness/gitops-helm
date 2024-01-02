@@ -2,7 +2,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  {{- with (mergeOverwrite (deepCopy .Values.global.deploymentAnnotations) .Values.agent.deploymentAnnotations) }}
+  {{- with (.Values.agent.deploymentAnnotations) }}
   annotations:
     {{- range $key, $value := . }}
     {{ $key }}: {{ $value | quote }}
@@ -13,7 +13,7 @@ metadata:
   labels:
     {{- include "harness.labels" (dict "context" . "component" $argo.server.name "name" .Values.agent.name) | nindent 4 }}
 spec:
-  {{- with include "argo-cd.strategy" (mergeOverwrite (deepCopy .Values.global.deploymentStrategy) .Values.agent.deploymentStrategy) }}
+  {{- with include "argo-cd.strategy" (mergeOverwrite .Values.agent.deploymentStrategy) }}
   strategy:
     {{- trim . | nindent 4 }}
   {{- end }}
