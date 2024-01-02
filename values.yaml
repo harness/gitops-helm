@@ -521,9 +521,15 @@ upgrader:
 global:
   image:
     tag: v2.9.3
+  logging:
+    format: text
 
 repoServer:
   name: repo-server
+  service:
+    port: 8081
+  certificateSecret:
+    enabled: false
 
 applicationSet:
   name: applicationset-controller
@@ -534,3 +540,63 @@ controller:
 redis:
   name: redis
 
+dex:
+  enabled: false
+
+externalRedis:
+  host: ""
+
+configs:
+  params:
+    # -- Create the argocd-cmd-params-cm configmap
+    # If false, it is expected the configmap will be created by something else.
+    create: true
+
+    # -- Annotations to be added to the argocd-cmd-params-cm ConfigMap
+    annotations: { }
+
+    ## Generic parameters
+    # -- Open-Telemetry collector address: (e.g. "otel-collector:4317")
+    otlp.address: ''
+
+    ## Controller Properties
+    # -- Number of application status processors
+    controller.status.processors: 20
+    # -- Number of application operation processors
+    controller.operation.processors: 10
+    # -- Specifies timeout between application self heal attempts
+    controller.self.heal.timeout.seconds: 5
+    # -- Repo server RPC call timeout seconds.
+    controller.repo.server.timeout.seconds: 60
+
+    ## Server properties
+    # -- Run server without TLS
+    server.insecure: false
+    # -- Value for base href in index.html. Used if Argo CD is running behind reverse proxy under subpath different from /
+    server.basehref: /
+    # -- Used if Argo CD is running behind reverse proxy under subpath different from /
+    server.rootpath: ''
+    # -- Directory path that contains additional static assets
+    server.staticassets: /shared/app
+    # -- Disable Argo CD RBAC for user authentication
+    server.disable.auth: false
+    # -- Enable GZIP compression
+    server.enable.gzip: true
+    # -- Set X-Frame-Options header in HTTP responses to value. To disable, set to "".
+    server.x.frame.options: sameorigin
+
+    ## Repo-server properties
+    # -- Limit on number of concurrent manifests generate requests. Any value less the 1 means no limit.
+    reposerver.parallelism.limit: 0
+
+    ## ApplicationSet Properties
+    # -- Modify how application is synced between the generator and the cluster. One of: `sync`, `create-only`, `create-update`, `create-delete`
+    applicationsetcontroller.policy: sync
+    # -- Enables use of the Progressive Syncs capability
+    applicationsetcontroller.enable.progressive.syncs: false
+
+    # -- Enables [Applications in any namespace]
+    ## List of additional namespaces where applications may be created in and reconciled from.
+    ## The namespace where Argo CD is installed to will always be allowed.
+    ## Set comma-separated list. (e.g. app-team-one, app-team-two)
+    application.namespaces: ""

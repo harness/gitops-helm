@@ -28,14 +28,14 @@ spec:
     metadata:
       annotations:
         checksum/cmd-params: {{ include (print $.Template.BasePath "/argocd-configs/argocd-cmd-params-cm.yaml") . | sha256sum }}
-        {{- with (mergeOverwrite (deepCopy .Values.global.podAnnotations) .Values.agent.podAnnotations) }}
+        {{- with (mergeOverwrite (deepCopy $argo.global.podAnnotations) .Values.agent.podAnnotations) }}
         {{- range $key, $value := . }}
         {{ $key }}: {{ $value | quote }}
         {{- end }}
         {{- end }}
       labels:
         {{- include "harness.labels" (dict "context" . "component" .Values.agent.name "name" .Values.agent.name) | nindent 8 }}
-        {{- with (mergeOverwrite (deepCopy .Values.global.podLabels) .Values.agent.podLabels) }}
+        {{- with (mergeOverwrite (deepCopy $argo.global.podLabels) .Values.agent.podLabels) }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
@@ -78,7 +78,7 @@ spec:
           {{- toYaml . | nindent 8 }}
         {{- end }}
         env:
-          {{- with (concat .Values.global.env .Values.agent.env) }}
+          {{- with (concat $argo.global.env .Values.agent.env) }}
             {{- toYaml . | nindent 10 }}
           {{- end }}
           - name: ARGOCD_SERVER_INSECURE
@@ -246,13 +246,13 @@ spec:
           - name: REDIS_USERNAME
             valueFrom:
               secretKeyRef:
-                name: {{ default (include "harness.redis.fullname" .) .Values.externalRedis.existingSecret }}
+                name: {{ default (include "argo-cd.redis.fullname" .) $argo.externalRedis.existingSecret }}
                 key: redis-username
                 optional: true
           - name: REDIS_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: {{ default (include "harness.redis.fullname" .) .Values.externalRedis.existingSecret }}
+                name: {{ default (include "argo-cd.redis.fullname" .) $argo.externalRedis.existingSecret }}
                 key: redis-password
                 optional: true
           - name: ARGOCD_DEFAULT_CACHE_EXPIRATION
