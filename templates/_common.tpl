@@ -14,17 +14,10 @@ Create chart name and version as used by the chart label.
 {{- end -}}
 
 {{/*
-Create Argo CD app version
-*/}}
-{{- define "harness.defaultTag" -}}
-{{- default .Chart.AppVersion .Values.global.image.tag }}
-{{- end -}}
-
-{{/*
 Return valid version label
 */}}
 {{- define "harness.versionLabelValue" -}}
-{{ regexReplaceAll "[^-A-Za-z0-9_.]" (include "harness.defaultTag" .) "-" | trunc 63 | trimAll "-" | trimAll "_" | trimAll "." | quote }}
+{{ regexReplaceAll "[^-A-Za-z0-9_.]" .Values.agent.imageTag "-" | trunc 63 | trimAll "-" | trimAll "_" | trimAll "." | quote }}
 {{- end -}}
 
 {{/*

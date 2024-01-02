@@ -162,6 +162,8 @@ argo-cd:
     replicas: 0
     clusterAdminAccess:
       enabled: false
+    serviceAccount:
+      create: false
 
   dex:
     # -- Enable dex
@@ -191,6 +193,9 @@ harness:
 agent:
   # -- GitOps Agent name
   name: gitops-agent
+
+  # -- GitOps Agent image version
+  imageTag: v0.65.0
 
   ## Proxy config for GitOps Agent
   proxy:
