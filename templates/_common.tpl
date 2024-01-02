@@ -57,7 +57,7 @@ app.kubernetes.io/component: {{ .component }}
 {{/*
 Create the name of the GitOps Agent service account to use
 */}}
-{{- define "harness.serverServiceAccountName" -}}
+{{- define "harness.agentServiceAccountName" -}}
 {{- if .Values.agent.serviceAccount.create -}}
     {{ default .Values.agent.name .Values.agent.serviceAccount.name }}
 {{- else -}}
