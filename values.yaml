@@ -305,6 +305,46 @@ agent:
       # -- Prometheus ServiceMonitor annotations
       annotations: { }
 
+  # Agent container ports
+  containerPorts:
+    # -- Agent container port
+    server: 8080
+    # -- Metrics container port
+    metrics: 8083
+
+  ## Agent service configuration
+  service:
+    # -- Agent service annotations
+    annotations: {}
+    # -- Agent service labels
+    labels: {}
+    # -- Agent service type
+    type: ClusterIP
+    # -- Agent service http port for NodePort service type (only if `server.service.type` is set to "NodePort")
+    nodePortHttp: 30080
+    # -- Agent service https port for NodePort service type (only if `server.service.type` is set to "NodePort")
+    nodePortHttps: 30443
+    # -- Agent service http port
+    servicePortHttp: 80
+    # -- Agent service https port
+    servicePortHttps: 443
+    # -- Agent service http port name, can be used to route traffic via istio
+    servicePortHttpName: http
+    # -- Agent service https port name, can be used to route traffic via istio
+    servicePortHttpsName: https
+    # -- Agent service https port appProtocol. (should be upper case - i.e. HTTPS)
+    # servicePortHttpsAppProtocol: HTTPS
+    # -- LoadBalancer will get created with the IP specified in this field
+    loadBalancerIP: ""
+    # -- Source IP ranges to allow access to service from
+    loadBalancerSourceRanges: []
+    # -- Agent service external IPs
+    externalIPs: []
+    # -- Denotes if this Service desires to route external traffic to node-local or cluster-wide endpoints
+    externalTrafficPolicy: ""
+    # -- Used to maintain session affinity. Supports `ClientIP` and `None`
+    sessionAffinity: ""
+
   ## Proxy config for GitOps Agent
   proxy:
     # -- Enable Proxy
