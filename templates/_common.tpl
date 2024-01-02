@@ -17,7 +17,7 @@ Create chart name and version as used by the chart label.
 Return valid version label
 */}}
 {{- define "harness.versionLabelValue" -}}
-{{ regexReplaceAll "[^-A-Za-z0-9_.]" .Values.agent.imageTag "-" | trunc 63 | trimAll "-" | trimAll "_" | trimAll "." | quote }}
+{{ regexReplaceAll "[^-A-Za-z0-9_.]" .Values.agent.image.tag "-" | trunc 63 | trimAll "-" | trimAll "_" | trimAll "." | quote }}
 {{- end -}}
 
 {{/*

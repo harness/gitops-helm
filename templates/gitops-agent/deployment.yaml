@@ -1,0 +1,461 @@
+{{- $argo := (index .Values "argo-cd") -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  {{- with (mergeOverwrite (deepCopy .Values.global.deploymentAnnotations) .Values.agent.deploymentAnnotations) }}
+  annotations:
+    {{- range $key, $value := . }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+  {{- end }}
+  name: .Values.agent.name
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    {{- include "harness.labels" (dict "context" . "component" $argo.server.name "name" .Values.agent.name) | nindent 4 }}
+spec:
+  {{- with include "argo-cd.strategy" (mergeOverwrite (deepCopy .Values.global.deploymentStrategy) .Values.agent.deploymentStrategy) }}
+  strategy:
+    {{- trim . | nindent 4 }}
+  {{- end }}
+  {{- if not .Values.agent.autoscaling.enabled }}
+  replicas: {{ .Values.agent.replicas }}
+  {{- end }}
+  revisionHistoryLimit: {{ .Values.global.revisionHistoryLimit }}
+  selector:
+    matchLabels:
+      {{- include "harness.selectorLabels" (dict "context" . "name" .Values.agent.name) | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        checksum/cmd-params: {{ include (print $.Template.BasePath "/argocd-configs/argocd-cmd-params-cm.yaml") . | sha256sum }}
+        {{- with (mergeOverwrite (deepCopy .Values.global.podAnnotations) .Values.agent.podAnnotations) }}
+        {{- range $key, $value := . }}
+        {{ $key }}: {{ $value | quote }}
+        {{- end }}
+        {{- end }}
+      labels:
+        {{- include "harness.labels" (dict "context" . "component" .Values.agent.name "name" .Values.agent.name) | nindent 8 }}
+        {{- with (mergeOverwrite (deepCopy .Values.global.podLabels) .Values.agent.podLabels) }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.agent.imagePullSecrets | default .Values.global.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.global.hostAliases }}
+      hostAliases:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.global.securityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.agent.priorityClassName | default .Values.global.priorityClassName }}
+      priorityClassName: {{ . }}
+      {{- end }}
+      {{- if .Values.agent.terminationGracePeriodSeconds }}
+      terminationGracePeriodSeconds: {{ .Values.agent.terminationGracePeriodSeconds }}
+      {{- end }}
+      serviceAccountName: {{ .Values.agent.serviceAccount.name }}
+      containers:
+      - name: {{ .Values.agent.name }}
+        image: {{ .Values.agent.image.repository }}:{{ .Values.agent.image.tag }}
+        imagePullPolicy: {{ .Values.agent.image.imagePullPolicy }}
+        args:
+        - /usr/local/bin/argocd-server
+        - --port={{ .Values.agent.containerPorts.server }}
+        - --metrics-port={{ .Values.agent.containerPorts.metrics }}
+        {{- with .Values.agent.logFormat }}
+        - --logformat
+        - {{ . | quote }}
+        {{- end }}
+        {{- with .Values.agent.logLevel }}
+        - --loglevel
+        - {{ . | quote }}
+        {{- end }}
+        {{- with .Values.agent.extraArgs }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
+        env:
+          {{- with (concat .Values.global.env .Values.agent.env) }}
+            {{- toYaml . | nindent 10 }}
+          {{- end }}
+          - name: ARGOCD_SERVER_INSECURE
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: agent.insecure
+                optional: true
+          - name: ARGOCD_SERVER_BASEHREF
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: agent.basehref
+                optional: true
+          - name: ARGOCD_SERVER_ROOTPATH
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: agent.rootpath
+                optional: true
+          - name: ARGOCD_SERVER_LOGFORMAT
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: agent.log.format
+                optional: true
+          - name: ARGOCD_SERVER_LOG_LEVEL
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: agent.log.level
+                optional: true
+          - name: ARGOCD_SERVER_REPO_SERVER
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: repo.server
+                optional: true
+          - name: ARGOCD_SERVER_DEX_SERVER
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: agent.dex.server
+                optional: true
+          - name: ARGOCD_SERVER_DISABLE_AUTH
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: agent.disable.auth
+                optional: true
+          - name: ARGOCD_SERVER_ENABLE_GZIP
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: agent.enable.gzip
+                optional: true
+          - name: ARGOCD_SERVER_REPO_SERVER_TIMEOUT_SECONDS
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: agent.repo.agent.timeout.seconds
+                optional: true
+          - name: ARGOCD_SERVER_X_FRAME_OPTIONS
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: agent.x.frame.options
+                optional: true
+          - name: ARGOCD_SERVER_CONTENT_SECURITY_POLICY
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: agent.content.security.policy
+                optional: true
+          - name: ARGOCD_SERVER_REPO_SERVER_PLAINTEXT
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: agent.repo.agent.plaintext
+                optional: true
+          - name: ARGOCD_SERVER_REPO_SERVER_STRICT_TLS
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: agent.repo.agent.strict.tls
+                optional: true
+          - name: ARGOCD_SERVER_DEX_SERVER_PLAINTEXT
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: agent.dex.agent.plaintext
+                optional: true
+          - name: ARGOCD_SERVER_DEX_SERVER_STRICT_TLS
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: agent.dex.agent.strict.tls
+                optional: true
+          - name: ARGOCD_TLS_MIN_VERSION
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: agent.tls.minversion
+                optional: true
+          - name: ARGOCD_TLS_MAX_VERSION
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: agent.tls.maxversion
+                optional: true
+          - name: ARGOCD_TLS_CIPHERS
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: agent.tls.ciphers
+                optional: true
+          - name: ARGOCD_SERVER_CONNECTION_STATUS_CACHE_EXPIRATION
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: agent.connection.status.cache.expiration
+                optional: true
+          - name: ARGOCD_SERVER_OIDC_CACHE_EXPIRATION
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: agent.oidc.cache.expiration
+                optional: true
+          - name: ARGOCD_SERVER_LOGIN_ATTEMPTS_EXPIRATION
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: agent.login.attempts.expiration
+                optional: true
+          - name: ARGOCD_SERVER_STATIC_ASSETS
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: agent.staticassets
+                optional: true
+          - name: ARGOCD_APP_STATE_CACHE_EXPIRATION
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: agent.app.state.cache.expiration
+                optional: true
+          - name: REDIS_SERVER
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: redis.server
+                optional: true
+          - name: REDIS_COMPRESSION
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: redis.compression
+                optional: true
+          - name: REDISDB
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: redis.db
+                optional: true
+          - name: REDIS_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: {{ default (include "harness.redis.fullname" .) .Values.externalRedis.existingSecret }}
+                key: redis-username
+                optional: true
+          - name: REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ default (include "harness.redis.fullname" .) .Values.externalRedis.existingSecret }}
+                key: redis-password
+                optional: true
+          - name: ARGOCD_DEFAULT_CACHE_EXPIRATION
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: agent.default.cache.expiration
+                optional: true
+          - name: ARGOCD_MAX_COOKIE_NUMBER
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: agent.http.cookie.maxnumber
+                optional: true
+          - name: ARGOCD_SERVER_LISTEN_ADDRESS
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: agent.listen.address
+                optional: true
+          - name: ARGOCD_SERVER_METRICS_LISTEN_ADDRESS
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: agent.metrics.listen.address
+                optional: true
+          - name: ARGOCD_SERVER_OTLP_ADDRESS
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: otlp.address
+                optional: true
+          - name: ARGOCD_APPLICATION_NAMESPACES
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: application.namespaces
+                optional: true
+          - name: ARGOCD_SERVER_ENABLE_PROXY_EXTENSION
+            valueFrom:
+              configMapKeyRef:
+                name: argocd-cmd-params-cm
+                key: agent.enable.proxy.extension
+                optional: true
+        {{- with .Values.agent.envFrom }}
+        envFrom:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        volumeMounts:
+        {{- with .Values.agent.volumeMounts }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
+        - mountPath: /app/config/ssh
+          name: ssh-known-hosts
+        - mountPath: /app/config/tls
+          name: tls-certs
+        - mountPath: /app/config/server/tls
+          name: argocd-repo-server-tls
+        - mountPath: /app/config/dex/tls
+          name: argocd-dex-server-tls
+        - mountPath: /home/argocd
+          name: plugins-home
+        - mountPath: /shared/app/custom
+          name: styles
+        - mountPath: /tmp
+          name: tmp
+        - mountPath: /tmp/ca.bundle
+          name: certvol
+          subPath: ca.bundle
+        {{- if .Values.agent.openshift.enabled }}
+        - mountPath: /app/logs
+          name: log-volume
+        {{- end }}
+        ports:
+        - name: server
+          containerPort: {{ .Values.agent.containerPorts.server }}
+          protocol: TCP
+        - name: metrics
+          containerPort: {{ .Values.agent.containerPorts.metrics }}
+          protocol: TCP
+        startupProbe:
+          exec:
+            command:
+              - test
+              - -s
+              - logs/agent.log
+          initialDelaySeconds: {{ .Values.agent.startupProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.agent.startupProbe.periodSeconds }}
+          failureThreshold: {{ .Values.agent.startupProbe.failureThreshold }}
+        livenessProbe:
+          httpGet:
+            path: /healthz?full=true
+            port: server
+          initialDelaySeconds: {{ .Values.agent.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.agent.livenessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.agent.livenessProbe.timeoutSeconds }}
+          successThreshold: {{ .Values.agent.livenessProbe.successThreshold }}
+          failureThreshold: {{ .Values.agent.livenessProbe.failureThreshold }}
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: server
+          initialDelaySeconds: {{ .Values.agent.readinessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.agent.readinessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.agent.readinessProbe.timeoutSeconds }}
+          successThreshold: {{ .Values.agent.readinessProbe.successThreshold }}
+          failureThreshold: {{ .Values.agent.readinessProbe.failureThreshold }}
+        resources:
+          {{- toYaml .Values.agent.resources | nindent 10 }}
+        {{- with .Values.agent.containerSecurityContext }}
+        securityContext:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        {{- with .Values.agent.lifecycle }}
+        lifecycle:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+      {{- with .Values.agent.extraContainers }}
+        {{- tpl (toYaml .) $ | nindent 6 }}
+      {{- end }}
+      {{- with .Values.agent.initContainers }}
+      initContainers:
+        {{- tpl (toYaml .) $ | nindent 6 }}
+      {{- end }}
+      {{- with include "argo-cd.affinity" (dict "context" . "component" $argo.server) }}
+      affinity:
+        {{- trim . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.agent.nodeSelector | default .Values.global.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.agent.tolerations | default .Values.global.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.agent.topologySpreadConstraints | default .Values.global.topologySpreadConstraints }}
+      topologySpreadConstraints:
+        {{- range $constraint := . }}
+      - {{ toYaml $constraint | nindent 8 | trim }}
+        {{- if not $constraint.labelSelector }}
+        labelSelector:
+          matchLabels:
+            {{- include "harness.selectorLabels" (dict "context" $ "name" $.Values.agent.name) | nindent 12 }}
+        {{- end }}
+        {{- end }}
+      {{- end }}
+      volumes:
+      {{- with .Values.agent.volumes }}
+        {{- toYaml . | nindent 6}}
+      {{- end }}
+      - name: plugins-home
+        emptyDir: {}
+      - name: tmp
+        emptyDir: {}
+      - name: ssh-known-hosts
+        configMap:
+          name: argocd-ssh-known-hosts-cm
+          defaultMode: 420
+      - name: tls-certs
+        configMap:
+          name: argocd-tls-certs-cm
+          defaultMode: 420
+      - name: styles
+        configMap:
+          name: argocd-styles-cm
+          optional: true
+      - name: argocd-repo-server-tls
+        secret:
+          secretName: argocd-repo-server-tls
+          optional: true
+          items:
+          - key: tls.crt
+            path: tls.crt
+          - key: tls.key
+            path: tls.key
+          - key: ca.crt
+            path: ca.crt
+      - name: argocd-dex-server-tls
+        secret:
+          secretName: argocd-dex-server-tls
+          optional: true
+          items:
+          - key: tls.crt
+            path: tls.crt
+          - key: ca.crt
+            path: ca.crt
+      - name: certvol
+        secret:
+          secretName: {{ .Values.agent.name }}-agent-ca
+          optional: true
+          items:
+            - key: ca.bundle
+              path: ca.bundle
+      {{- if .Values.agent.openshift.enabled }}
+      - name: log-volume
+        emptyDir: { }
+      {{- end }}
+      {{- if .Values.agent.hostNetwork }}
+      hostNetwork: {{ .Values.agent.hostNetwork }}
+      {{- end }}
+      {{- with .Values.agent.dnsConfig }}
+      dnsConfig:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      dnsPolicy: {{ .Values.agent.dnsPolicy }}

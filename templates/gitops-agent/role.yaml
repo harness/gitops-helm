@@ -53,9 +53,6 @@ rules:
   - applicationsets
   {{- end }}
   - appprojects
-  {{- if $argo.server.extensions.enabled }}
-  - argocdextensions
-  {{- end }}
   verbs:
   - create
   - get

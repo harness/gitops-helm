@@ -201,13 +201,13 @@ agent:
   image:
     # -- Repository to use for GitOps Agent
     # @default -- `""` (defaults to global.image.repository)
-    repository: harness/gitops-agent # defaults to global.image.repository
+    repository: harness/gitops-agent
     # -- Tag to use for the GitOps Agent
     # @default -- `""` (defaults to global.image.tag)
-    tag: v0.65.0 # defaults to global.image.tag
+    tag: v0.65.0
     # -- Image pull policy for GitOps Agent
     # @default -- `""` (defaults to global.image.imagePullPolicy)
-    imagePullPolicy: "" # IfNotPresent
+    imagePullPolicy: Always
 
   serviceAccount:
     # -- Create agent service account
@@ -290,9 +290,9 @@ agent:
       # -- Prometheus ServiceMonitor interval
       interval: 30s
       # -- Prometheus [RelabelConfigs] to apply to samples before scraping
-      relabelings: [ ]
+      relabelings: []
       # -- Prometheus [MetricRelabelConfigs] to apply to samples before ingestion
-      metricRelabelings: [ ]
+      metricRelabelings: []
       # -- Prometheus ServiceMonitor selector
       selector: {}
       # prometheus: kube-prometheus
@@ -314,6 +314,14 @@ agent:
     server: 8080
     # -- Metrics container port
     metrics: 8083
+
+  # -- Host Network for Server pods
+  hostNetwork: false
+
+  # -- [DNS configuration]
+  dnsConfig: {}
+  # -- Alternative DNS policy for Server pods
+  dnsPolicy: "ClusterFirst"
 
   ## Agent service configuration
   service:
@@ -364,6 +372,118 @@ agent:
   #   maxSurge: 25%
   #   maxUnavailable: 25%
 
+  # -- Secrets with credentials to pull images from a private registry
+  # @default -- `[]` (defaults to global.imagePullSecrets)
+  imagePullSecrets: []
+
+  # -- Priority class for the repo server pods
+  # @default -- `""` (defaults to global.priorityClassName)
+  priorityClassName: ""
+
+  ## Readiness and liveness probes for default backend
+  ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/
+  readinessProbe:
+    # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
+    failureThreshold: 3
+    # -- Number of seconds after the container has started before [probe] is initiated
+    initialDelaySeconds: 10
+    # -- How often (in seconds) to perform the [probe]
+    periodSeconds: 10
+    # -- Minimum consecutive successes for the [probe] to be considered successful after having failed
+    successThreshold: 1
+    # -- Number of seconds after which the [probe] times out
+    timeoutSeconds: 1
+
+  livenessProbe:
+    # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
+    failureThreshold: 3
+    # -- Number of seconds after the container has started before [probe] is initiated
+    initialDelaySeconds: 10
+    # -- How often (in seconds) to perform the [probe]
+    periodSeconds: 10
+    # -- Minimum consecutive successes for the [probe] to be considered successful after having failed
+    successThreshold: 1
+    # -- Number of seconds after which the [probe] times out
+    timeoutSeconds: 1
+
+  startupProbe:
+    # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
+    failureThreshold: 32
+    # -- Number of seconds after the container has started before [probe] is initiated
+    initialDelaySeconds: 10
+    # -- How often (in seconds) to perform the [probe]
+    periodSeconds: 5
+
+  # -- terminationGracePeriodSeconds for container lifecycle hook
+  terminationGracePeriodSeconds: 30
+
+  # -- [Node selector]
+  # @default -- `{}` (defaults to global.nodeSelector)
+  nodeSelector: {}
+
+  # -- [Tolerations] for use with node taints
+  # @default -- `[]` (defaults to global.tolerations)
+  tolerations: []
+
+  # -- Assign custom [TopologySpreadConstraints] rules to the agent
+  # @default -- `[]` (defaults to global.topologySpreadConstraints)
+  ## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+  ## If labelSelector is left out, it will default to the labelSelector configuration of the deployment
+  topologySpreadConstraints: []
+    # - maxSkew: 1
+  #   topologyKey: topology.kubernetes.io/zone
+  #   whenUnsatisfiable: DoNotSchedule
+
+  # -- Additional command line arguments to pass to GitOps Agent
+  extraArgs: []
+
+  resources:
+    requests:
+      memory: 512Mi
+      cpu: "1"
+    limits:
+      memory: 512Mi
+      cpu: "1"
+
+  # -- Agent container-level security context
+  # @default -- See [values.yaml]
+  containerSecurityContext:
+    runAsNonRoot: true
+    allowPrivilegeEscalation: false
+    seccompProfile:
+      type: RuntimeDefault
+    capabilities:
+      drop:
+        - ALL
+
+  # -- Environment variables to pass to GitOps Agent
+  env: []
+
+  # -- envFrom to pass to GitOps Agent
+  # @default -- `[]` (See [values.yaml])
+  envFrom: []
+  # - configMapRef:
+  #     name: config-map-name
+  # - secretRef:
+  #     name: secret-name
+
+  # -- Additional containers to be added to the agent pod
+  ## Ref: https://argo-cd.readthedocs.io/en/stable/user-guide/config-management-plugins/
+  ## Note: Supports use of custom Helm templates
+  extraContainers: []
+
+  # -- Init containers to add to the agent pods
+  initContainers: []
+
+  # -- Additional volumes to the agent pod
+  volumes: []
+
+  # -- Additional volumeMounts to the agent main container
+  volumeMounts: []
+  #  - mountPath: /usr/local/bin/kubelogin
+  #    name: custom-tools
+  #    subPath: kubelogin
+
   ## Proxy config for GitOps Agent
   proxy:
     # -- Enable Proxy
@@ -374,6 +494,10 @@ agent:
 
     # -- Add HTTPS proxy
     httpsProxy: {}
+
+  ## Create an OpenShift agent
+  openshift:
+    enabled: false
 
 ## Harness GitOps Agent upgrader
 upgrader:
