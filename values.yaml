@@ -206,31 +206,6 @@ agent:
     # @default -- `""` (defaults to global.image.imagePullPolicy)
     imagePullPolicy: "" # IfNotPresent
 
-  pdb:
-    # -- Deploy a [PodDisruptionBudget] for the GitOps Agent
-    enabled: false
-    # -- Labels to be added to GitOps Agent pdb
-    labels: { }
-    # -- Annotations to be added to GitOps Agent pdb
-    annotations: { }
-    # -- Number of pods that are available after eviction as number or percentage (eg.: 50%)
-    # @default -- `""` (defaults to 0 if not specified)
-    minAvailable: ""
-    # -- Number of pods that are unavailable after eviction as number or percentage (eg.: 50%).
-    ## Has higher precedence over `server.pdb.minAvailable`
-    maxUnavailable: ""
-
-  ## Proxy config for GitOps Agent
-  proxy:
-    # -- Enable Proxy
-    enabled: false
-
-    # -- Add HTTP proxy
-    httpProxy: {}
-
-    # -- Add HTTPS proxy
-    httpsProxy: {}
-
   serviceAccount:
     # -- Create agent service account
     create: true
@@ -243,6 +218,7 @@ agent:
     # -- Automount API credentials for the Service Account
     automountServiceAccountToken: false
 
+  ## GitOps Agent Horizontal Pod Autoscaler
   autoscaling:
     # -- Enable Horizontal Pod Autoscaler ([HPA]) for the GitOps Agent
     enabled: false
@@ -271,6 +247,74 @@ agent:
     # -- Configures custom HPA metrics for the Argo CD server
     # Ref: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
     metrics: []
+
+  ## GitOps Agent Pod Disruption Budget
+  ## Ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
+  pdb:
+    # -- Deploy a [PodDisruptionBudget] for the GitOps Agent
+    enabled: false
+    # -- Labels to be added to GitOps Agent pdb
+    labels: { }
+    # -- Annotations to be added to GitOps Agent pdb
+    annotations: { }
+    # -- Number of pods that are available after eviction as number or percentage (eg.: 50%)
+    # @default -- `""` (defaults to 0 if not specified)
+    minAvailable: ""
+    # -- Number of pods that are unavailable after eviction as number or percentage (eg.: 50%).
+    ## Has higher precedence over `server.pdb.minAvailable`
+    maxUnavailable: ""
+
+  ## Agent metrics service configuration
+  metrics:
+    # -- Deploy metrics service
+    enabled: false
+    service:
+      # -- Metrics service type
+      type: ClusterIP
+      # -- Metrics service clusterIP. `None` makes a "headless service" (no virtual IP)
+      clusterIP: ""
+      # -- Metrics service annotations
+      annotations: { }
+      # -- Metrics service labels
+      labels: { }
+      # -- Metrics service port
+      servicePort: 8083
+      # -- Metrics service port name
+      portName: http-metrics
+    serviceMonitor:
+      # -- Enable a prometheus ServiceMonitor
+      enabled: false
+      # -- Prometheus ServiceMonitor interval
+      interval: 30s
+      # -- Prometheus [RelabelConfigs] to apply to samples before scraping
+      relabelings: [ ]
+      # -- Prometheus [MetricRelabelConfigs] to apply to samples before ingestion
+      metricRelabelings: [ ]
+      # -- Prometheus ServiceMonitor selector
+      selector: { }
+      # prometheus: kube-prometheus
+
+      # -- Prometheus ServiceMonitor scheme
+      scheme: ""
+      # -- Prometheus ServiceMonitor tlsConfig
+      tlsConfig: { }
+      # -- Prometheus ServiceMonitor namespace
+      namespace: ""  # monitoring
+      # -- Prometheus ServiceMonitor labels
+      additionalLabels: { }
+      # -- Prometheus ServiceMonitor annotations
+      annotations: { }
+
+  ## Proxy config for GitOps Agent
+  proxy:
+    # -- Enable Proxy
+    enabled: false
+
+    # -- Add HTTP proxy
+    httpProxy: { }
+
+    # -- Add HTTPS proxy
+    httpsProxy: { }
 
 ## Harness GitOps Agent upgrader
 upgrader:
