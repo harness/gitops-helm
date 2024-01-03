@@ -5,7 +5,7 @@
 ## Variable Overrides for Argo CD configuration
 argo-cd:
   # -- Disable this for BYOA flows, when Argo CD is already installed
-  enabled: false
+  enabled: true
 
   # -- Provide a name in place of `harness`
   nameOverride: harness
@@ -211,6 +211,21 @@ agent:
     # -- Image pull policy for GitOps Agent
     # @default -- `""` (defaults to global.image.imagePullPolicy)
     imagePullPolicy: Always
+
+  ## Proxy config for GitOps Agent
+  proxy:
+    # -- Enable Proxy
+    enabled: false
+
+    # -- Add HTTP proxy
+    httpProxy: {}
+
+    # -- Add HTTPS proxy
+    httpsProxy: {}
+
+  ## Create an OpenShift agent
+  openshift:
+    enabled: false
 
   serviceAccount:
     # -- Create agent service account
@@ -440,6 +455,7 @@ agent:
   # -- Additional command line arguments to pass to GitOps Agent
   extraArgs: []
 
+  # -- Resource limits and requests for the GitOps Agent pods
   resources:
     requests:
       memory: 512Mi
@@ -486,21 +502,6 @@ agent:
   #  - mountPath: /usr/local/bin/kubelogin
   #    name: custom-tools
   #    subPath: kubelogin
-
-  ## Proxy config for GitOps Agent
-  proxy:
-    # -- Enable Proxy
-    enabled: false
-
-    # -- Add HTTP proxy
-    httpProxy: {}
-
-    # -- Add HTTPS proxy
-    httpsProxy: {}
-
-  ## Create an OpenShift agent
-  openshift:
-    enabled: false
 
 ## Harness GitOps Agent upgrader
 upgrader:
