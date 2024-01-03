@@ -130,7 +130,7 @@ argo-cd:
     # -- Additional volumes to the repo server pod
     volumes:
       - name: helm-sops-tools
-        emptyDir: { }
+        emptyDir: {}
 
     # -- Resource limits and requests for the repo server pods
     resources:
@@ -160,6 +160,10 @@ argo-cd:
   ## ArgoCD Server, Dex and Notifications Controller are not required for Harness GitOps Agent
   server:
     replicas: 0
+    clusterAdminAccess:
+      enabled: false
+    serviceAccount:
+      create: false
 
   dex:
     # -- Enable dex
@@ -170,6 +174,9 @@ argo-cd:
     enabled: false
 
 # <---Harness specific overrides--->
+
+# -- Provide a name in place of `harness-gitops`
+nameOverride: harness-gitops
 
 ## Variable Overrides for Harness configuration
 harness:
@@ -187,6 +194,296 @@ agent:
   # -- GitOps Agent name
   name: gitops-agent
 
+  # -- The number of agent pods to run
+  replicas: 1
+
+  # -- GitOps Agent image
+  image:
+    # -- Repository to use for GitOps Agent
+    # @default -- `""` (defaults to global.image.repository)
+    repository: harness/gitops-agent
+    # -- Tag to use for the GitOps Agent
+    # @default -- `""` (defaults to global.image.tag)
+    tag: v0.65.0
+    # -- Image pull policy for GitOps Agent
+    # @default -- `""` (defaults to global.image.imagePullPolicy)
+    imagePullPolicy: Always
+
+  serviceAccount:
+    # -- Create agent service account
+    create: true
+    # -- Agent service account name
+    name: gitops-agent
+    # -- Annotations applied to created service account
+    annotations: {}
+    # -- Labels applied to created service account
+    labels: {}
+    # -- Automount API credentials for the Service Account
+    automountServiceAccountToken: false
+
+  ## GitOps Agent Horizontal Pod Autoscaler
+  autoscaling:
+    # -- Enable Horizontal Pod Autoscaler ([HPA]) for the GitOps Agent
+    enabled: false
+    # -- Minimum number of replicas for the GitOps Agent [HPA]
+    minReplicas: 1
+    # -- Maximum number of replicas for the GitOps Agent [HPA]
+    maxReplicas: 5
+    # -- Average CPU utilization percentage for the GitOps Agent [HPA]
+    targetCPUUtilizationPercentage: 50
+    # -- Average memory utilization percentage for the GitOps Agent [HPA]
+    targetMemoryUtilizationPercentage: 50
+    # -- Configures the scaling behavior of the target in both Up and Down directions.
+    behavior: {}
+      # scaleDown:
+      #  stabilizationWindowSeconds: 300
+      #  policies:
+      #   - type: Pods
+      #     value: 1
+      #     periodSeconds: 180
+      # scaleUp:
+      #   stabilizationWindowSeconds: 300
+      #   policies:
+      #   - type: Pods
+      #     value: 2
+    #     periodSeconds: 60
+    # -- Configures custom HPA metrics for the Argo CD server
+    # Ref: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
+    metrics: []
+
+  ## GitOps Agent Pod Disruption Budget
+  ## Ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
+  pdb:
+    # -- Deploy a [PodDisruptionBudget] for the GitOps Agent
+    enabled: false
+    # -- Labels to be added to GitOps Agent pdb
+    labels: {}
+    # -- Annotations to be added to GitOps Agent pdb
+    annotations: {}
+    # -- Number of pods that are available after eviction as number or percentage (eg.: 50%)
+    # @default -- `""` (defaults to 0 if not specified)
+    minAvailable: ""
+    # -- Number of pods that are unavailable after eviction as number or percentage (eg.: 50%).
+    ## Has higher precedence over `server.pdb.minAvailable`
+    maxUnavailable: ""
+
+  ## Agent metrics service configuration
+  metrics:
+    # -- Deploy metrics service
+    enabled: false
+    service:
+      # -- Metrics service type
+      type: ClusterIP
+      # -- Metrics service clusterIP. `None` makes a "headless service" (no virtual IP)
+      clusterIP: ""
+      # -- Metrics service annotations
+      annotations: {}
+      # -- Metrics service labels
+      labels: {}
+      # -- Metrics service port
+      servicePort: 8083
+      # -- Metrics service port name
+      portName: http-metrics
+    serviceMonitor:
+      # -- Enable a prometheus ServiceMonitor
+      enabled: false
+      # -- Prometheus ServiceMonitor interval
+      interval: 30s
+      # -- Prometheus [RelabelConfigs] to apply to samples before scraping
+      relabelings: []
+      # -- Prometheus [MetricRelabelConfigs] to apply to samples before ingestion
+      metricRelabelings: []
+      # -- Prometheus ServiceMonitor selector
+      selector: {}
+      # prometheus: kube-prometheus
+
+      # -- Prometheus ServiceMonitor scheme
+      scheme: ""
+      # -- Prometheus ServiceMonitor tlsConfig
+      tlsConfig: {}
+      # -- Prometheus ServiceMonitor namespace
+      namespace: ""  # monitoring
+      # -- Prometheus ServiceMonitor labels
+      additionalLabels: {}
+      # -- Prometheus ServiceMonitor annotations
+      annotations: {}
+
+  # Agent container ports
+  containerPorts:
+    # -- Agent container port
+    server: 8080
+    # -- Metrics container port
+    metrics: 8083
+
+  # -- Host Network for Server pods
+  hostNetwork: false
+
+  # -- [DNS configuration]
+  dnsConfig: {}
+  # -- Alternative DNS policy for Server pods
+  dnsPolicy: "ClusterFirst"
+
+  ## Agent service configuration
+  service:
+    # -- Agent service annotations
+    annotations: {}
+    # -- Agent service labels
+    labels: {}
+    # -- Agent service type
+    type: ClusterIP
+    # -- Agent service http port for NodePort service type (only if `server.service.type` is set to "NodePort")
+    nodePortHttp: 30080
+    # -- Agent service https port for NodePort service type (only if `server.service.type` is set to "NodePort")
+    nodePortHttps: 30443
+    # -- Agent service http port
+    servicePortHttp: 80
+    # -- Agent service https port
+    servicePortHttps: 443
+    # -- Agent service http port name, can be used to route traffic via istio
+    servicePortHttpName: http
+    # -- Agent service https port name, can be used to route traffic via istio
+    servicePortHttpsName: https
+    # -- Agent service https port appProtocol. (should be upper case - i.e. HTTPS)
+    # servicePortHttpsAppProtocol: HTTPS
+    # -- LoadBalancer will get created with the IP specified in this field
+    loadBalancerIP: ""
+    # -- Source IP ranges to allow access to service from
+    loadBalancerSourceRanges: []
+    # -- Agent service external IPs
+    externalIPs: []
+    # -- Denotes if this Service desires to route external traffic to node-local or cluster-wide endpoints
+    externalTrafficPolicy: ""
+    # -- Used to maintain session affinity. Supports `ClientIP` and `None`
+    sessionAffinity: ""
+
+  # -- Annotations to be added to agent Deployment
+  deploymentAnnotations: {}
+
+  # -- Annotations to be added to agent pods
+  podAnnotations: {}
+
+  # -- Labels to be added to agentƒ pods
+  podLabels: {}
+
+  # -- Deployment strategy to be added to the agent Deployment
+  deploymentStrategy: {}
+  # type: RollingUpdate
+  # rollingUpdate:
+  #   maxSurge: 25%
+  #   maxUnavailable: 25%
+
+  # -- Secrets with credentials to pull images from a private registry
+  # @default -- `[]` (defaults to global.imagePullSecrets)
+  imagePullSecrets: []
+
+  # -- Priority class for the repo server pods
+  # @default -- `""` (defaults to global.priorityClassName)
+  priorityClassName: ""
+
+  ## Readiness and liveness probes for default backend
+  ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/
+  readinessProbe:
+    # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
+    failureThreshold: 3
+    # -- Number of seconds after the container has started before [probe] is initiated
+    initialDelaySeconds: 10
+    # -- How often (in seconds) to perform the [probe]
+    periodSeconds: 10
+    # -- Minimum consecutive successes for the [probe] to be considered successful after having failed
+    successThreshold: 1
+    # -- Number of seconds after which the [probe] times out
+    timeoutSeconds: 1
+
+  livenessProbe:
+    # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
+    failureThreshold: 3
+    # -- Number of seconds after the container has started before [probe] is initiated
+    initialDelaySeconds: 10
+    # -- How often (in seconds) to perform the [probe]
+    periodSeconds: 10
+    # -- Minimum consecutive successes for the [probe] to be considered successful after having failed
+    successThreshold: 1
+    # -- Number of seconds after which the [probe] times out
+    timeoutSeconds: 1
+
+  startupProbe:
+    # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
+    failureThreshold: 32
+    # -- Number of seconds after the container has started before [probe] is initiated
+    initialDelaySeconds: 10
+    # -- How often (in seconds) to perform the [probe]
+    periodSeconds: 5
+
+  # -- terminationGracePeriodSeconds for container lifecycle hook
+  terminationGracePeriodSeconds: 30
+
+  # -- [Node selector]
+  # @default -- `{}` (defaults to global.nodeSelector)
+  nodeSelector: {}
+
+  # -- [Tolerations] for use with node taints
+  # @default -- `[]` (defaults to global.tolerations)
+  tolerations: []
+
+  # -- Assign custom [TopologySpreadConstraints] rules to the agent
+  # @default -- `[]` (defaults to global.topologySpreadConstraints)
+  ## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+  ## If labelSelector is left out, it will default to the labelSelector configuration of the deployment
+  topologySpreadConstraints: []
+    # - maxSkew: 1
+  #   topologyKey: topology.kubernetes.io/zone
+  #   whenUnsatisfiable: DoNotSchedule
+
+  # -- Additional command line arguments to pass to GitOps Agent
+  extraArgs: []
+
+  resources:
+    requests:
+      memory: 512Mi
+      cpu: "1"
+    limits:
+      memory: 512Mi
+      cpu: "1"
+
+  # -- Agent container-level security context
+  # @default -- See [values.yaml]
+  containerSecurityContext:
+    runAsNonRoot: true
+    allowPrivilegeEscalation: false
+    seccompProfile:
+      type: RuntimeDefault
+    capabilities:
+      drop:
+        - ALL
+
+  # -- Environment variables to pass to GitOps Agent
+  env: []
+
+  # -- envFrom to pass to GitOps Agent
+  # @default -- `[]` (See [values.yaml])
+  envFrom: []
+  # - configMapRef:
+  #     name: config-map-name
+  # - secretRef:
+  #     name: secret-name
+
+  # -- Additional containers to be added to the agent pod
+  ## Ref: https://argo-cd.readthedocs.io/en/stable/user-guide/config-management-plugins/
+  ## Note: Supports use of custom Helm templates
+  extraContainers: []
+
+  # -- Init containers to add to the agent pods
+  initContainers: []
+
+  # -- Additional volumes to the agent pod
+  volumes: []
+
+  # -- Additional volumeMounts to the agent main container
+  volumeMounts: []
+  #  - mountPath: /usr/local/bin/kubelogin
+  #    name: custom-tools
+  #    subPath: kubelogin
+
   ## Proxy config for GitOps Agent
   proxy:
     # -- Enable Proxy
@@ -197,6 +494,10 @@ agent:
 
     # -- Add HTTPS proxy
     httpsProxy: {}
+
+  ## Create an OpenShift agent
+  openshift:
+    enabled: false
 
 ## Harness GitOps Agent upgrader
 upgrader:
@@ -220,9 +521,15 @@ upgrader:
 global:
   image:
     tag: v2.9.3
+  logging:
+    format: text
 
 repoServer:
   name: repo-server
+  service:
+    port: 8081
+  certificateSecret:
+    enabled: false
 
 applicationSet:
   name: applicationset-controller
@@ -233,3 +540,63 @@ controller:
 redis:
   name: redis
 
+dex:
+  enabled: false
+
+externalRedis:
+  host: ""
+
+configs:
+  params:
+    # -- Create the argocd-cmd-params-cm configmap
+    # If false, it is expected the configmap will be created by something else.
+    create: true
+
+    # -- Annotations to be added to the argocd-cmd-params-cm ConfigMap
+    annotations: { }
+
+    ## Generic parameters
+    # -- Open-Telemetry collector address: (e.g. "otel-collector:4317")
+    otlp.address: ''
+
+    ## Controller Properties
+    # -- Number of application status processors
+    controller.status.processors: 20
+    # -- Number of application operation processors
+    controller.operation.processors: 10
+    # -- Specifies timeout between application self heal attempts
+    controller.self.heal.timeout.seconds: 5
+    # -- Repo server RPC call timeout seconds.
+    controller.repo.server.timeout.seconds: 60
+
+    ## Server properties
+    # -- Run server without TLS
+    server.insecure: false
+    # -- Value for base href in index.html. Used if Argo CD is running behind reverse proxy under subpath different from /
+    server.basehref: /
+    # -- Used if Argo CD is running behind reverse proxy under subpath different from /
+    server.rootpath: ''
+    # -- Directory path that contains additional static assets
+    server.staticassets: /shared/app
+    # -- Disable Argo CD RBAC for user authentication
+    server.disable.auth: false
+    # -- Enable GZIP compression
+    server.enable.gzip: true
+    # -- Set X-Frame-Options header in HTTP responses to value. To disable, set to "".
+    server.x.frame.options: sameorigin
+
+    ## Repo-server properties
+    # -- Limit on number of concurrent manifests generate requests. Any value less the 1 means no limit.
+    reposerver.parallelism.limit: 0
+
+    ## ApplicationSet Properties
+    # -- Modify how application is synced between the generator and the cluster. One of: `sync`, `create-only`, `create-update`, `create-delete`
+    applicationsetcontroller.policy: sync
+    # -- Enables use of the Progressive Syncs capability
+    applicationsetcontroller.enable.progressive.syncs: false
+
+    # -- Enables [Applications in any namespace]
+    ## List of additional namespaces where applications may be created in and reconciled from.
+    ## The namespace where Argo CD is installed to will always be allowed.
+    ## Set comma-separated list. (e.g. app-team-one, app-team-two)
+    application.namespaces: ""
