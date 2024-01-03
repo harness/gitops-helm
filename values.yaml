@@ -4,9 +4,6 @@
 
 ## Variable Overrides for Argo CD configuration
 argo-cd:
-  # -- Disable this for BYOA flows, when Argo CD is already installed
-  enabled: false
-
   # -- Provide a name in place of `harness`
   nameOverride: harness
   # -- String to fully override `"argo-cd.fullname"`
