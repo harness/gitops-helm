@@ -3,10 +3,10 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: .Values.agent.name
+  name: {{ .Values.agent.name }}
   namespace: {{ default .Release.Namespace .Values.agent.metrics.serviceMonitor.namespace | quote }}
   labels:
-    {{- include "harness.labels" (dict "context" . "component" $argo.server.name "name" .Values.agent.name) | nindent 4 }}
+    {{- include "harness.labels" (dict "context" . "component" .Values.agent.name "name" .Values.agent.name) | nindent 4 }}
     {{- with .Values.agent.metrics.serviceMonitor.selector }}
       {{- toYaml . | nindent 4 }}
     {{- end }}
@@ -44,5 +44,5 @@ spec:
       - {{ .Release.Namespace }}
   selector:
     matchLabels:
-      {{- include "harness.selectorLabels" (dict "context" . "component" $argo.server.name "name" (printf "%s-metrics" .Values.agent.name)) | nindent 6 }}
+      {{- include "harness.selectorLabels" (dict "context" . "component" .Values.agent.name "name" (printf "%s-metrics" .Values.agent.name)) | nindent 6 }}
 {{- end }}

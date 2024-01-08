@@ -8,10 +8,10 @@ metadata:
     {{ $key }}: {{ $value | quote }}
   {{- end }}
 {{- end }}
-  name: .Values.agent.name
+  name: {{ .Values.agent.name }}
   namespace: {{ .Release.Namespace | quote }}
   labels:
-    {{- include "harness.labels" (dict "context" . "component" $argo.server.name "name" .Values.agent.name) | nindent 4 }}
+    {{- include "harness.labels" (dict "context" . "component" .Values.agent.name "name" .Values.agent.name) | nindent 4 }}
 {{- if .Values.agent.service.labels }}
 {{- toYaml .Values.agent.service.labels | nindent 4 }}
 {{- end }}

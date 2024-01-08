@@ -3,15 +3,15 @@
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: .Values.agent.name
+  name: {{ .Values.agent.name }}
   namespace: {{ .Release.Namespace | quote }}
   labels:
-    {{- include "harness.labels" (dict "context" . "component" $argo.server.name "name" .Values.agent.name) | nindent 4 }}
+    {{- include "harness.labels" (dict "context" . "component" .Values.agent.name "name" .Values.agent.name) | nindent 4 }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: .Values.agent.name
+    name: {{ .Values.agent.name }}
   minReplicas: {{ .Values.agent.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.agent.autoscaling.maxReplicas }}
   metrics:
