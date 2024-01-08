@@ -23,12 +23,6 @@ spec:
     ports:
     - port: redis
       protocol: TCP
-  egress:
-  - ports:
-    - port: 53
-      protocol: UDP
-    - port: 53
-      protocol: TCP
   {{- if $argo.redis.metrics.enabled }}
   - from:
       - namespaceSelector: {}
@@ -36,6 +30,12 @@ spec:
       - port: metrics
         protocol: TCP
   {{- end }}
+  egress:
+  - ports:
+    - port: 53
+      protocol: UDP
+    - port: 53
+      protocol: TCP
   podSelector:
     matchLabels:
       {{- include "harness.selectorLabels" (dict "context" . "name" $argo.redis.name) | nindent 6 }}
