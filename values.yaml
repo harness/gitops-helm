@@ -577,6 +577,7 @@ global:
   image:
     repository: docker.io/harness/argocd
     tag: v2.9.3
+    imagePullPolicy: Always
   logging:
     format: text
 
