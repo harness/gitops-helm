@@ -116,12 +116,6 @@ spec:
                 name: argocd-cmd-params-cm
                 key: repo.server
                 optional: true
-          - name: ARGOCD_SERVER_DEX_SERVER
-            valueFrom:
-              configMapKeyRef:
-                name: argocd-cmd-params-cm
-                key: agent.dex.server
-                optional: true
           - name: ARGOCD_SERVER_DISABLE_AUTH
             valueFrom:
               configMapKeyRef:
@@ -163,18 +157,6 @@ spec:
               configMapKeyRef:
                 name: argocd-cmd-params-cm
                 key: agent.repo.agent.strict.tls
-                optional: true
-          - name: ARGOCD_SERVER_DEX_SERVER_PLAINTEXT
-            valueFrom:
-              configMapKeyRef:
-                name: argocd-cmd-params-cm
-                key: agent.dex.agent.plaintext
-                optional: true
-          - name: ARGOCD_SERVER_DEX_SERVER_STRICT_TLS
-            valueFrom:
-              configMapKeyRef:
-                name: argocd-cmd-params-cm
-                key: agent.dex.agent.strict.tls
                 optional: true
           - name: ARGOCD_TLS_MIN_VERSION
             valueFrom:
@@ -310,12 +292,8 @@ spec:
           name: tls-certs
         - mountPath: /app/config/server/tls
           name: argocd-repo-server-tls
-        - mountPath: /app/config/dex/tls
-          name: argocd-dex-server-tls
         - mountPath: /home/argocd
           name: plugins-home
-        - mountPath: /shared/app/custom
-          name: styles
         - mountPath: /tmp
           name: tmp
         - mountPath: /tmp/ca.bundle
@@ -415,10 +393,6 @@ spec:
         configMap:
           name: argocd-tls-certs-cm
           defaultMode: 420
-      - name: styles
-        configMap:
-          name: argocd-styles-cm
-          optional: true
       - name: argocd-repo-server-tls
         secret:
           secretName: argocd-repo-server-tls
@@ -430,22 +404,15 @@ spec:
             path: tls.key
           - key: ca.crt
             path: ca.crt
-      - name: argocd-dex-server-tls
-        secret:
-          secretName: argocd-dex-server-tls
-          optional: true
-          items:
-          - key: tls.crt
-            path: tls.crt
-          - key: ca.crt
-            path: ca.crt
+      {{ if .Values.harness.secrets.caData.enabled }}
       - name: certvol
         secret:
-          secretName: {{ .Values.agent.name }}-agent-ca
+          secretName: {{ .Values.agent.name }}-ca
           optional: true
           items:
             - key: ca.bundle
               path: ca.bundle
+      {{- end }}
       {{- if .Values.agent.openshift.enabled }}
       - name: log-volume
         emptyDir: { }
