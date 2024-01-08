@@ -296,9 +296,11 @@ spec:
           name: plugins-home
         - mountPath: /tmp
           name: tmp
+        {{- if .Values.harness.secrets.caData.enabled }}
         - mountPath: /tmp/ca.bundle
           name: certvol
           subPath: ca.bundle
+        {{- end }}
         {{- if .Values.agent.openshift.enabled }}
         - mountPath: /app/logs
           name: log-volume
@@ -353,10 +355,6 @@ spec:
       {{- with .Values.agent.initContainers }}
       initContainers:
         {{- tpl (toYaml .) $ | nindent 6 }}
-      {{- end }}
-      {{- with include "argo-cd.affinity" (dict "context" . "component" $argo.server) }}
-      affinity:
-        {{- trim . | nindent 8 }}
       {{- end }}
       {{- with .Values.agent.nodeSelector | default .Values.global.nodeSelector }}
       nodeSelector:
