@@ -5,7 +5,7 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   labels:
-    {{- include "argo-cd.labels" (dict "context" . "component" .Values.redis.name "name" .Values.redis.name) | nindent 4 }}
+    {{- include "harness.labels" (dict "context" . "component" .Values.redis.name "name" .Values.redis.name) | nindent 4 }}
   name: {{ template "argo-cd.redis.fullname" . }}
   namespace: {{ .Release.Namespace | quote }}
 spec:
@@ -13,13 +13,13 @@ spec:
     - from:
         - podSelector:
             matchLabels:
-              {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.agent.name) | nindent 10 }}
+              {{- include "harness.selectorLabels" (dict "context" . "name" .Values.agent.name) | nindent 10 }}
         - podSelector:
             matchLabels:
-              {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.repoServer.name) | nindent 10 }}
+              {{- include "harness.selectorLabels" (dict "context" . "name" .Values.repoServer.name) | nindent 10 }}
         - podSelector:
             matchLabels:
-              {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.controller.name) | nindent 10 }}
+              {{- include "harness.selectorLabels" (dict "context" . "name" .Values.controller.name) | nindent 10 }}
       ports:
         - port: redis
           protocol: TCP
@@ -38,7 +38,7 @@ spec:
   {{- end }}
   podSelector:
     matchLabels:
-      {{- include "argo-cd.selectorLabels" (dict "context" . "name" $argo.redis.name) | nindent 6 }}
+      {{- include "harness.selectorLabels" (dict "context" . "name" $argo.redis.name) | nindent 6 }}
   policyTypes:
     - Ingress
     - Egress
