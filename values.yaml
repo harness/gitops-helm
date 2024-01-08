@@ -577,10 +577,6 @@ global:
 
 repoServer:
   name: repo-server
-  service:
-    port: 8081
-  certificateSecret:
-    enabled: false
 
 applicationSet:
   name: applicationset-controller
@@ -590,9 +586,3 @@ controller:
 
 redis:
   name: redis
-
-dex:
-  enabled: false
-
-externalRedis:
-  host: ""
