@@ -2,7 +2,7 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: {{ .Values.agent.name }}-agent-upgrader
+  name: {{ .Values.agent.name }}-upgrader
   namespace: {{ .Release.Namespace | quote }}
 spec:
   schedule: "{{ .Values.upgrader.cron }}"
@@ -14,39 +14,41 @@ spec:
         spec:
           serviceAccountName: {{ .Values.upgrader.name }}
           containers:
-              - name: upgrader
-                image: {{ .Values.upgrader.image }}
-                imagePullPolicy: Always
-                env:
-                  - name: POD_NAMESPACE
-                    valueFrom:
-                      fieldRef:
-                        fieldPath: metadata.namespace
+            - name: upgrader
+              image: {{ .Values.upgrader.image }}
+              imagePullPolicy: Always
+              env:
+                - name: POD_NAMESPACE
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.namespace
             {{- if .Values.agent.proxy.enabled }}
                 - name: HTTPS_PROXY
                   value: {{ .Values.agent.proxy.httpsProxy }}
                 - name: HTTP_PROXY
                   value: {{ .Values.agent.proxy.httpProxy }}
                 - name: NO_PROXY
-                  value: localhost,argocd-repo-server,argocd-redis,127.0.0.1,argocd-redis-ha-haproxy,kubernetes.default.svc,{{ .Values.agent.name }}-agent
+                  value: localhost,argocd-repo-server,argocd-redis,127.0.0.1,argocd-redis-ha-haproxy,kubernetes.default.svc,{{ .Values.agent.name }}
             {{- end }}
-                volumeMounts:
-                  - name: config-volume
-                    mountPath: /etc/config
-                  - name: certvol
-                    mountPath: /tmp/ca.bundle
-                    subPath: ca.bundle
+              volumeMounts:
+                - name: config-volume
+                  mountPath: /etc/config
+                - name: certvol
+                  mountPath: /tmp/ca.bundle
+                  subPath: ca.bundle
           volumes:
             - name: config-volume
               configMap:
-                name: {{ .Values.agent.name }}-agent-upgrader
+                name: {{ .Values.agent.name }}-upgrader
+            {{- if .Values.harness.secrets.caData.enabled }}
             - name: certvol
               secret:
-                secretName: {{ .Values.agent.name }}-agent-ca
+                secretName: {{ .Values.agent.name }}-ca
                 optional: true
                 items:
                   - key: ca.bundle
                     path: ca.bundle
+            {{- end }}
           restartPolicy: Never
 ---
 {{- end }}
