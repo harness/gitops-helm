@@ -6,7 +6,7 @@ metadata:
   name: {{ template "argo-cd.applicationSet.fullname" . }}
   namespace: {{ .Release.Namespace | quote }}
   labels:
-    {{- include "argo-cd.labels" (dict "context" . "component" .Values.applicationSet.name "name" .Values.applicationSet.name) | nindent 4 }}
+    {{- include "harness.labels" (dict "context" . "component" .Values.applicationSet.name "name" .Values.applicationSet.name) | nindent 4 }}
 spec:
   ingress:
   {{- if $argo.applicationSet.webhook.ingress.enabled }}
@@ -21,7 +21,7 @@ spec:
   {{- end }}
   podSelector:
     matchLabels:
-      {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.applicationSet.name) | nindent 6 }}
+      {{- include "harness.selectorLabels" (dict "context" . "name" .Values.applicationSet.name) | nindent 6 }}
   policyTypes:
     - Ingress
 {{- end }}

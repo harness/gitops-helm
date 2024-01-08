@@ -36,7 +36,7 @@ spec:
     appProtocol: {{ . }}
     {{- end }}
   selector:
-    {{- include "argo-cd.selectorLabels" (dict "context" . "name" .Values.agent.name) | nindent 4 }}
+    {{- include "harness.selectorLabels" (dict "context" . "name" .Values.agent.name) | nindent 4 }}
 {{- if eq .Values.agent.service.type "LoadBalancer" }}
 {{- if .Values.agent.service.loadBalancerIP }}
   loadBalancerIP: {{ .Values.agent.service.loadBalancerIP | quote }}
