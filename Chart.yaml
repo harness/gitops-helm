@@ -1,5 +1,5 @@
 apiVersion: v2
-name: harness-gitops
+name: gitops-helm
 description: A Helm chart for Harness GitOps Agent - for more information, please visit https://developer.harness.io/docs/category/gitops.
 version: 1.0.0
 dependencies:
