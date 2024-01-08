@@ -280,7 +280,7 @@ agent:
     # -- Labels applied to created service account
     labels: {}
     # -- Automount API credentials for the Service Account
-    automountServiceAccountToken: false
+    automountServiceAccountToken: true
 
   ## GitOps Agent Horizontal Pod Autoscaler
   autoscaling:
