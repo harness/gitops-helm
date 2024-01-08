@@ -164,6 +164,13 @@ argo-cd:
         cpu: "1"
         memory: 512Mi
 
+    serviceAccount:
+      create: true
+
+    image:
+      repository: redis
+      tag: 7.0.11-alpine
+
   ## ArgoCD Server, Dex and Notifications Controller are not required for Harness GitOps Agent
   server:
     replicas: 0
