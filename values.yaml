@@ -184,6 +184,38 @@ nameOverride: harness-gitops
 ## Variable Overrides for Harness configuration
 harness:
 
+  ## Harness specific identity data
+  identity:
+    # -- Account Identifier
+    accountId: ""
+
+    # -- Organization Identifier
+    orgId: ""
+
+    # -- Project Identifier
+    projectId: ""
+
+    # -- Agent Identifier
+    agentId: ""
+
+  configMap:
+    agentProtocol : ""
+    http:
+      tlsEnabled: false
+      certPath: "/tmp/ca.bundle"
+      agentHttpTarget: ""
+    grpc:
+      agentGrpcTarget: ""
+      agentGrpcAuthority: ""
+      serviceGrpcInsecure: false
+    reconcile:
+      enabled: true
+      interval: 100
+      podsDiscovery: 120
+    logLevel: "debug"
+    agentFetchType: "POLLER"
+    redisCompression: "true"
+
   # Default Harness network policy rules used by all components
   networkPolicy:
     # -- Create NetworkPolicy objects for all components
@@ -191,6 +223,14 @@ harness:
 
   # -- Host for GitOps Service
   gitopsServerHost: ""
+
+  ## Disaster Recovery configuration
+  disasterRecovery:
+    # -- Enable Disaster Recovery Agent
+    enabled: false
+
+    # -- DR Agent Identifier
+    identifier: ""
 
 ## Harness GitOps Agent
 agent:
