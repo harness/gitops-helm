@@ -575,6 +575,7 @@ nameOverride: harness
 
 global:
   image:
+    repository: docker.io/harness/argocd
     tag: v2.9.3
   logging:
     format: text
