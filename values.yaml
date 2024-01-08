@@ -216,6 +216,12 @@ harness:
     agentFetchType: "POLLER"
     redisCompression: "true"
 
+  secrets:
+    agentSecret: ""
+    caData:
+      enabled: false
+      secret: ""
+
   # Default Harness network policy rules used by all components
   networkPolicy:
     # -- Create NetworkPolicy objects for all components
