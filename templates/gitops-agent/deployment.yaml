@@ -63,8 +63,6 @@ spec:
         name: {{ .Values.agent.name }}
         image: {{ .Values.agent.image.repository }}:{{ .Values.agent.image.tag }}
         imagePullPolicy: {{ .Values.agent.image.imagePullPolicy }}
-        args:
-        - /usr/local/bin/argocd-server
         {{- with .Values.agent.logFormat }}
         - --logformat
         - {{ . | quote }}
