@@ -22,7 +22,7 @@ data:
   GITOPS_AGENT_RECONCILE_INTERVAL: "{{ .Values.harness.configMap.reconcile.interval }}"
   GITOPS_AGENT_DISCOVER_APPLICATION_PODS_DURATION_IN_SECS: "{{ .Values.harness.configMap.reconcile.podsDiscovery }}"
   LOG_LEVEL: {{ .Values.harness.configMap.logLevel }}
-  GITOPS_AGENT_FETCH_TYPE: {{ .Values.harness.configMap.agentFetchType }}
+  GITOPS_AGENT_FETCH_TYPE: "{{ .Values.harness.configMap.agentFetchType }}"
   REDIS_COMPRESSION: {{ .Values.harness.configMap.redisCompression }}
   {{-  if .Values.agent.proxy.enabled }}
   HTTPS_PROXY: {{ .Values.agent.proxy.httpsProxy }}
