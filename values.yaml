@@ -178,9 +178,6 @@ argo-cd:
 
 # <---Harness specific overrides--->
 
-# -- Provide a name in place of `harness-gitops`
-nameOverride: harness-gitops
-
 ## Variable Overrides for Harness configuration
 harness:
 
@@ -567,6 +564,10 @@ upgrader:
   image: harness/upgrader:latest
 
 # <---Duplicated Argo CD overrides for overridden templates--->
+
+fullnameOverride: harness-gitops
+
+nameOverride: harness
 
 global:
   image:
