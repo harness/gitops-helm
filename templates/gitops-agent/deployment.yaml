@@ -13,10 +13,6 @@ metadata:
   labels:
     {{- include "harness.labels" (dict "context" . "component" .Values.agent.name "name" .Values.agent.name) | nindent 4 }}
 spec:
-  {{- with include "argo-cd.strategy" (mergeOverwrite .Values.agent.deploymentStrategy) }}
-  strategy:
-    {{- trim . | nindent 4 }}
-  {{- end }}
   {{- if not .Values.agent.autoscaling.enabled }}
   replicas: {{ .Values.agent.replicas }}
   {{- end }}

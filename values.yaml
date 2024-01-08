@@ -397,13 +397,6 @@ agent:
   # -- Labels to be added to agentƒ pods
   podLabels: {}
 
-  # -- Deployment strategy to be added to the agent Deployment
-  deploymentStrategy: {}
-  # type: RollingUpdate
-  # rollingUpdate:
-  #   maxSurge: 25%
-  #   maxUnavailable: 25%
-
   # -- Secrets with credentials to pull images from a private registry
   # @default -- `[]` (defaults to global.imagePullSecrets)
   imagePullSecrets: []
