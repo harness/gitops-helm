@@ -9,7 +9,9 @@ data:
     containerName: gitops-agent
     gitopsAgentConfig:
       gitopsServerHost: {{ .Values.harness.gitopsServerHost }}
+      {{- if .Values.harness.secrets.caData.enabled }}
       caData: /tmp/ca.bundle
+      {{- end }}
 kind: ConfigMap
 metadata:
   name: {{ .Values.agent.name }}-upgrader
