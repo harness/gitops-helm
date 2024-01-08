@@ -3,9 +3,9 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: .Values.agent.name
+  name: {{ .Values.agent.name }}
   labels:
-    {{- include "harness.labels" (dict "context" . "component" $argo.server.name "name" .Values.agent.name) | nindent 4 }}
+    {{- include "harness.labels" (dict "context" . "component" .Values.agent.name "name" .Values.agent.name) | nindent 4 }}
 rules:
   - apiGroups:
       - '*'
@@ -46,6 +46,7 @@ rules:
     resources:
       - applications
       - applicationsets
+      - appprojects
     verbs:
       - get
       - list

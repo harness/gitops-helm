@@ -4,15 +4,17 @@ data:
   config.yaml: |
     mode: GitopsAgent
     dryRun: false
-    workloadName: {{ .Values.agent.name }}-agent
+    workloadName: {{ .Values.agent.name }}
     namespace: {{ .Release.Namespace }}
     containerName: gitops-agent
     gitopsAgentConfig:
       gitopsServerHost: {{ .Values.harness.gitopsServerHost }}
+      {{- if .Values.harness.secrets.caData.enabled }}
       caData: /tmp/ca.bundle
+      {{- end }}
 kind: ConfigMap
 metadata:
-  name: {{ .Values.agent.name }}-agent-upgrader
+  name: {{ .Values.agent.name }}-upgrader
   namespace: {{ .Release.Namespace | quote }}
 ---
 {{- end }}

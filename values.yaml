@@ -4,6 +4,9 @@
 
 ## Variable Overrides for Argo CD configuration
 argo-cd:
+  # -- Disable this for BYOA flows, when Argo CD is already installed
+  enabled: true
+
   # -- Provide a name in place of `harness`
   nameOverride: harness
   # -- String to fully override `"argo-cd.fullname"`
@@ -38,6 +41,10 @@ argo-cd:
       # This allows for a cluster entity to be created for the cluster that your agent is installed in
       # It should be false for Namespaced Agent installations
       cluster.inClusterEnabled: "true"
+
+    params:
+      # Setting default Redis Compression as "gzip" (options: "none", "gzip")
+      redis.compression: gzip
 
   ## Custom resource configuration
   crds:
@@ -157,6 +164,13 @@ argo-cd:
         cpu: "1"
         memory: 512Mi
 
+    serviceAccount:
+      create: true
+
+    image:
+      repository: redis
+      tag: 7.0.11-alpine
+
   ## ArgoCD Server, Dex and Notifications Controller are not required for Harness GitOps Agent
   server:
     replicas: 0
@@ -175,11 +189,46 @@ argo-cd:
 
 # <---Harness specific overrides--->
 
-# -- Provide a name in place of `harness-gitops`
-nameOverride: harness-gitops
-
 ## Variable Overrides for Harness configuration
 harness:
+
+  ## Harness specific identity data
+  identity:
+    # -- Account Identifier
+    accountId: ""
+
+    # -- Organization Identifier
+    orgId: ""
+
+    # -- Project Identifier
+    projectId: ""
+
+    # -- Agent Identifier
+    agentId: ""
+
+  configMap:
+    agentProtocol : "HTTP1"
+    http:
+      tlsEnabled: false
+      certPath: "/tmp/ca.bundle"
+      agentHttpTarget: ""
+    grpc:
+      agentGrpcTarget: ""
+      agentGrpcAuthority: ""
+      serviceGrpcInsecure: false
+    reconcile:
+      enabled: true
+      interval: 100
+      podsDiscovery: 120
+    logLevel: "debug"
+    agentFetchType: "POLLER"
+    redisCompression: "gzip"
+
+  secrets:
+    agentSecret: ""
+    caData:
+      enabled: false
+      secret: ""
 
   # Default Harness network policy rules used by all components
   networkPolicy:
@@ -188,6 +237,14 @@ harness:
 
   # -- Host for GitOps Service
   gitopsServerHost: ""
+
+  ## Disaster Recovery configuration
+  disasterRecovery:
+    # -- Enable Disaster Recovery Agent
+    enabled: false
+
+    # -- DR Agent Identifier
+    identifier: ""
 
 ## Harness GitOps Agent
 agent:
@@ -209,6 +266,21 @@ agent:
     # @default -- `""` (defaults to global.image.imagePullPolicy)
     imagePullPolicy: Always
 
+  ## Proxy config for GitOps Agent
+  proxy:
+    # -- Enable Proxy
+    enabled: false
+
+    # -- Add HTTP proxy
+    httpProxy: {}
+
+    # -- Add HTTPS proxy
+    httpsProxy: {}
+
+  ## Create an OpenShift agent
+  openshift:
+    enabled: false
+
   serviceAccount:
     # -- Create agent service account
     create: true
@@ -219,7 +291,7 @@ agent:
     # -- Labels applied to created service account
     labels: {}
     # -- Automount API credentials for the Service Account
-    automountServiceAccountToken: false
+    automountServiceAccountToken: true
 
   ## GitOps Agent Horizontal Pod Autoscaler
   autoscaling:
@@ -308,13 +380,6 @@ agent:
       # -- Prometheus ServiceMonitor annotations
       annotations: {}
 
-  # Agent container ports
-  containerPorts:
-    # -- Agent container port
-    server: 8080
-    # -- Metrics container port
-    metrics: 8083
-
   # -- Host Network for Server pods
   hostNetwork: false
 
@@ -322,39 +387,6 @@ agent:
   dnsConfig: {}
   # -- Alternative DNS policy for Server pods
   dnsPolicy: "ClusterFirst"
-
-  ## Agent service configuration
-  service:
-    # -- Agent service annotations
-    annotations: {}
-    # -- Agent service labels
-    labels: {}
-    # -- Agent service type
-    type: ClusterIP
-    # -- Agent service http port for NodePort service type (only if `server.service.type` is set to "NodePort")
-    nodePortHttp: 30080
-    # -- Agent service https port for NodePort service type (only if `server.service.type` is set to "NodePort")
-    nodePortHttps: 30443
-    # -- Agent service http port
-    servicePortHttp: 80
-    # -- Agent service https port
-    servicePortHttps: 443
-    # -- Agent service http port name, can be used to route traffic via istio
-    servicePortHttpName: http
-    # -- Agent service https port name, can be used to route traffic via istio
-    servicePortHttpsName: https
-    # -- Agent service https port appProtocol. (should be upper case - i.e. HTTPS)
-    # servicePortHttpsAppProtocol: HTTPS
-    # -- LoadBalancer will get created with the IP specified in this field
-    loadBalancerIP: ""
-    # -- Source IP ranges to allow access to service from
-    loadBalancerSourceRanges: []
-    # -- Agent service external IPs
-    externalIPs: []
-    # -- Denotes if this Service desires to route external traffic to node-local or cluster-wide endpoints
-    externalTrafficPolicy: ""
-    # -- Used to maintain session affinity. Supports `ClientIP` and `None`
-    sessionAffinity: ""
 
   # -- Annotations to be added to agent Deployment
   deploymentAnnotations: {}
@@ -437,6 +469,7 @@ agent:
   # -- Additional command line arguments to pass to GitOps Agent
   extraArgs: []
 
+  # -- Resource limits and requests for the GitOps Agent pods
   resources:
     requests:
       memory: 512Mi
@@ -456,17 +489,6 @@ agent:
       drop:
         - ALL
 
-  # -- Environment variables to pass to GitOps Agent
-  env: []
-
-  # -- envFrom to pass to GitOps Agent
-  # @default -- `[]` (See [values.yaml])
-  envFrom: []
-  # - configMapRef:
-  #     name: config-map-name
-  # - secretRef:
-  #     name: secret-name
-
   # -- Additional containers to be added to the agent pod
   ## Ref: https://argo-cd.readthedocs.io/en/stable/user-guide/config-management-plugins/
   ## Note: Supports use of custom Helm templates
@@ -483,21 +505,6 @@ agent:
   #  - mountPath: /usr/local/bin/kubelogin
   #    name: custom-tools
   #    subPath: kubelogin
-
-  ## Proxy config for GitOps Agent
-  proxy:
-    # -- Enable Proxy
-    enabled: false
-
-    # -- Add HTTP proxy
-    httpProxy: {}
-
-    # -- Add HTTPS proxy
-    httpsProxy: {}
-
-  ## Create an OpenShift agent
-  openshift:
-    enabled: false
 
 ## Harness GitOps Agent upgrader
 upgrader:
@@ -518,18 +525,20 @@ upgrader:
 
 # <---Duplicated Argo CD overrides for overridden templates--->
 
+fullnameOverride: harness-gitops
+
+nameOverride: harness
+
 global:
   image:
+    repository: docker.io/harness/argocd
     tag: v2.9.3
+    imagePullPolicy: Always
   logging:
     format: text
 
 repoServer:
   name: repo-server
-  service:
-    port: 8081
-  certificateSecret:
-    enabled: false
 
 applicationSet:
   name: applicationset-controller
@@ -539,64 +548,3 @@ controller:
 
 redis:
   name: redis
-
-dex:
-  enabled: false
-
-externalRedis:
-  host: ""
-
-configs:
-  params:
-    # -- Create the argocd-cmd-params-cm configmap
-    # If false, it is expected the configmap will be created by something else.
-    create: true
-
-    # -- Annotations to be added to the argocd-cmd-params-cm ConfigMap
-    annotations: { }
-
-    ## Generic parameters
-    # -- Open-Telemetry collector address: (e.g. "otel-collector:4317")
-    otlp.address: ''
-
-    ## Controller Properties
-    # -- Number of application status processors
-    controller.status.processors: 20
-    # -- Number of application operation processors
-    controller.operation.processors: 10
-    # -- Specifies timeout between application self heal attempts
-    controller.self.heal.timeout.seconds: 5
-    # -- Repo server RPC call timeout seconds.
-    controller.repo.server.timeout.seconds: 60
-
-    ## Server properties
-    # -- Run server without TLS
-    server.insecure: false
-    # -- Value for base href in index.html. Used if Argo CD is running behind reverse proxy under subpath different from /
-    server.basehref: /
-    # -- Used if Argo CD is running behind reverse proxy under subpath different from /
-    server.rootpath: ''
-    # -- Directory path that contains additional static assets
-    server.staticassets: /shared/app
-    # -- Disable Argo CD RBAC for user authentication
-    server.disable.auth: false
-    # -- Enable GZIP compression
-    server.enable.gzip: true
-    # -- Set X-Frame-Options header in HTTP responses to value. To disable, set to "".
-    server.x.frame.options: sameorigin
-
-    ## Repo-server properties
-    # -- Limit on number of concurrent manifests generate requests. Any value less the 1 means no limit.
-    reposerver.parallelism.limit: 0
-
-    ## ApplicationSet Properties
-    # -- Modify how application is synced between the generator and the cluster. One of: `sync`, `create-only`, `create-update`, `create-delete`
-    applicationsetcontroller.policy: sync
-    # -- Enables use of the Progressive Syncs capability
-    applicationsetcontroller.enable.progressive.syncs: false
-
-    # -- Enables [Applications in any namespace]
-    ## List of additional namespaces where applications may be created in and reconciled from.
-    ## The namespace where Argo CD is installed to will always be allowed.
-    ## Set comma-separated list. (e.g. app-team-one, app-team-two)
-    application.namespaces: ""
