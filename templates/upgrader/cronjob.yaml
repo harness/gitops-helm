@@ -5,7 +5,7 @@ metadata:
   name: {{ .Values.agent.name }}-agent-upgrader
   namespace: {{ .Release.Namespace | quote }}
 spec:
-  schedule: {{ .Values.upgrader.cron }}
+  schedule: "{{ .Values.upgrader.cron }}"
   concurrencyPolicy: Forbid
   startingDeadlineSeconds: {{ .Values.upgrader.startDeadline }}
   jobTemplate:
