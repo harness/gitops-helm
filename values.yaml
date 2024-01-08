@@ -42,6 +42,10 @@ argo-cd:
       # It should be false for Namespaced Agent installations
       cluster.inClusterEnabled: "true"
 
+    params:
+      # Setting default Redis Compression as "gzip" (options: "none", "gzip")
+      redis.compression: gzip
+
   ## Custom resource configuration
   crds:
     # -- Keep CRDs on chart uninstall
