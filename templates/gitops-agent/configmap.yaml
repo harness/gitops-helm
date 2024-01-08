@@ -27,13 +27,11 @@ data:
   {{-  if .Values.agent.proxy.enabled }}
   HTTPS_PROXY: {{ .Values.agent.proxy.httpsProxy }}
   HTTP_PROXY: {{ .Values.agent.proxy.httpProxy }}
-  NO_PROXY: localhost,argocd-repo-server,argocd-redis,127.0.0.1,argocd-redis-ha-haproxy,$(KUBERNETES_SERVICE_HOST),kubernetes.default.svc,{{ .Values.agent.name }}-agent
+  NO_PROXY: localhost,argocd-repo-server,argocd-redis,127.0.0.1,argocd-redis-ha-haproxy,$(KUBERNETES_SERVICE_HOST),kubernetes.default.svc,{{ .Values.agent.name }}
   {{- end }}
 kind: ConfigMap
 metadata:
   labels:
-    app.kubernetes.io/component: agent
-    app.kubernetes.io/name: gitops-agent-cm
-    app.kubernetes.io/part-of: argocd
-  name: {{ .Values.agent.name }}-agent
+      {{- include "harness.labels" (dict "context" . "component" .Values.agent.name "name" (printf "%s-cm" .Values.agent.name)) | nindent 4 }}
+  name: {{ .Values.agent.name }}
   namespace: {{ .Release.Namespace }}

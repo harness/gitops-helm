@@ -200,7 +200,7 @@ harness:
     agentId: ""
 
   configMap:
-    agentProtocol : ""
+    agentProtocol : "HTTP1"
     http:
       tlsEnabled: false
       certPath: "/tmp/ca.bundle"
@@ -215,7 +215,7 @@ harness:
       podsDiscovery: 120
     logLevel: "debug"
     agentFetchType: "POLLER"
-    redisCompression: "true"
+    redisCompression: "gzip"
 
   secrets:
     agentSecret: ""
