@@ -492,14 +492,6 @@ agent:
   # -- Environment variables to pass to GitOps Agent
   env: []
 
-  # -- envFrom to pass to GitOps Agent
-  # @default -- `[]` (See [values.yaml])
-  envFrom: []
-  # - configMapRef:
-  #     name: config-map-name
-  # - secretRef:
-  #     name: secret-name
-
   # -- Additional containers to be added to the agent pod
   ## Ref: https://argo-cd.readthedocs.io/en/stable/user-guide/config-management-plugins/
   ## Note: Supports use of custom Helm templates
