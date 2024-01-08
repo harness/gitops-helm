@@ -489,9 +489,6 @@ agent:
       drop:
         - ALL
 
-  # -- Environment variables to pass to GitOps Agent
-  env: []
-
   # -- Additional containers to be added to the agent pod
   ## Ref: https://argo-cd.readthedocs.io/en/stable/user-guide/config-management-plugins/
   ## Note: Supports use of custom Helm templates

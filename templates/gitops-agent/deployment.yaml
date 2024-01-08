@@ -76,10 +76,6 @@ spec:
         {{- with .Values.agent.extraArgs }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
-        env:
-          {{- with (concat $argo.global.env .Values.agent.env) }}
-            {{- toYaml . | nindent 10 }}
-          {{- end }}
         envFrom:
           - configMapRef:
               name: {{ .Values.agent.name }}
