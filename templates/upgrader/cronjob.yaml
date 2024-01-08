@@ -4,6 +4,8 @@ kind: CronJob
 metadata:
   name: {{ .Values.agent.name }}-upgrader
   namespace: {{ .Release.Namespace | quote }}
+  labels:
+    {{- include "harness.labels" (dict "context" . "component" .Values.upgrader.name "name" .Values.upgrader.name) | nindent 4 }}
 spec:
   schedule: "{{ .Values.upgrader.cron }}"
   concurrencyPolicy: Forbid
@@ -33,9 +35,11 @@ spec:
               volumeMounts:
                 - name: config-volume
                   mountPath: /etc/config
+                {{- if .Values.harness.secrets.caData.enabled }}
                 - name: certvol
                   mountPath: /tmp/ca.bundle
                   subPath: ca.bundle
+                {{- end }}
           volumes:
             - name: config-volume
               configMap:
