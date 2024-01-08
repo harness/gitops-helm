@@ -58,13 +58,13 @@ spec:
       {{- end }}
       serviceAccountName: {{ .Values.agent.serviceAccount.name }}
       containers:
-      - name: {{ .Values.agent.name }}
+      - command:
+          - /app/agent
+        name: {{ .Values.agent.name }}
         image: {{ .Values.agent.image.repository }}:{{ .Values.agent.image.tag }}
         imagePullPolicy: {{ .Values.agent.image.imagePullPolicy }}
         args:
         - /usr/local/bin/argocd-server
-        - --port={{ .Values.agent.containerPorts.server }}
-        - --metrics-port={{ .Values.agent.containerPorts.metrics }}
         {{- with .Values.agent.logFormat }}
         - --logformat
         - {{ . | quote }}
@@ -305,13 +305,6 @@ spec:
         - mountPath: /app/logs
           name: log-volume
         {{- end }}
-        ports:
-        - name: server
-          containerPort: {{ .Values.agent.containerPorts.server }}
-          protocol: TCP
-        - name: metrics
-          containerPort: {{ .Values.agent.containerPorts.metrics }}
-          protocol: TCP
         startupProbe:
           exec:
             command:
