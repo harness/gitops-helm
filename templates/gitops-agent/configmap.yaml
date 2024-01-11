@@ -1,12 +1,12 @@
 apiVersion: v1
 data:
-  GITOPS_ACCOUNT_IDENTIFIER: {{ .Values.harness.identity.accountId }}
-  GITOPS_AGENT_IDENTIFIER: {{ .Values.harness.identity.agentId }}
-  {{- if ne .Values.harness.identity.orgId "" }}
-  GITOPS_ORG_IDENTIFIER: {{ .Values.harness.identity.orgId }}
+  GITOPS_ACCOUNT_IDENTIFIER: {{ .Values.harness.identity.accountIdentifier }}
+  GITOPS_AGENT_IDENTIFIER: {{ .Values.harness.identity.agentIdentifier }}
+  {{- if ne .Values.harness.identity.orgIdentifier "" }}
+  GITOPS_ORG_IDENTIFIER: {{ .Values.harness.identity.orgIdentifier }}
   {{- end }}
-  {{- if ne .Values.harness.identity.projectId "" }}
-  GITOPS_PROJECT_IDENTIFIER: {{ .Values.harness.identity.projectId }}
+  {{- if ne .Values.harness.identity.projectIdentifier "" }}
+  GITOPS_PROJECT_IDENTIFIER: {{ .Values.harness.identity.projectIdentifier }}
   {{- end }}
   {{- if .Values.harness.disasterRecovery.enabled }}
   GITOPS_DISASTER_RECOVERY_IDENTIFIER: {{ .Values.harness.disasterRecovery.identifier }}
@@ -14,9 +14,6 @@ data:
   GITOPS_SERVICE_HTTP_TLS_ENABLED: "{{ .Values.harness.configMap.http.tlsEnabled }}"
   GITOPS_SERVICE_HTTP_CERT_FILES: {{ .Values.harness.configMap.http.certPath }}
   AGENT_HTTP_TARGET: {{ .Values.harness.configMap.http.agentHttpTarget }}
-  AGENT_GRPC_TARGET: {{ .Values.harness.configMap.grpc.agentGrpcTarget }}
-  AGENT_GRPC_AUTHORITY: {{ .Values.harness.configMap.grpc.agentGrpcAuthority }}
-  GITOPS_SERVICE_GRPC_INSECURE: "{{ .Values.harness.configMap.grpc.serviceGrpcInsecure }}"
   GITOPS_SERVICE_PROTOCOL: {{ .Values.harness.configMap.agentProtocol }}
   GITOPS_AGENT_ENABLE_RECONCILE: "{{ .Values.harness.configMap.reconcile.enabled }}"
   GITOPS_AGENT_RECONCILE_INTERVAL: "{{ .Values.harness.configMap.reconcile.interval }}"
