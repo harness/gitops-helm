@@ -1,3 +1,4 @@
+{{- $argo := (index .Values "argo-cd") -}}
 apiVersion: v1
 data:
   GITOPS_ACCOUNT_IDENTIFIER: {{ .Values.harness.identity.accountId }}
@@ -23,7 +24,7 @@ data:
   GITOPS_AGENT_DISCOVER_APPLICATION_PODS_DURATION_IN_SECS: "{{ .Values.harness.configMap.reconcile.podsDiscovery }}"
   LOG_LEVEL: {{ .Values.harness.configMap.logLevel }}
   GITOPS_AGENT_FETCH_TYPE: "{{ .Values.harness.configMap.agentFetchType }}"
-  REDIS_COMPRESSION: "{{ .Values.harness.configMap.redisCompression }}"
+  REDIS_COMPRESSION: "{{ $argo.configs.params.redis.compression }}"
   {{-  if .Values.agent.proxy.enabled }}
   HTTPS_PROXY: {{ .Values.agent.proxy.httpsProxy }}
   HTTP_PROXY: {{ .Values.agent.proxy.httpProxy }}
