@@ -1,12 +1,12 @@
 apiVersion: v1
 data:
-  GITOPS_ACCOUNT_IDENTIFIER: {{ .Values.harness.identity.accountId }}
-  GITOPS_AGENT_IDENTIFIER: {{ .Values.harness.identity.agentId }}
-  {{- if ne .Values.harness.identity.orgId "" }}
-  GITOPS_ORG_IDENTIFIER: {{ .Values.harness.identity.orgId }}
+  GITOPS_ACCOUNT_IDENTIFIER: {{ .Values.harness.identity.accountIdentifier }}
+  GITOPS_AGENT_IDENTIFIER: {{ .Values.harness.identity.agentIdentifier }}
+  {{- if ne .Values.harness.identity.orgIdentifier "" }}
+  GITOPS_ORG_IDENTIFIER: {{ .Values.harness.identity.orgIdentifier }}
   {{- end }}
-  {{- if ne .Values.harness.identity.projectId "" }}
-  GITOPS_PROJECT_IDENTIFIER: {{ .Values.harness.identity.projectId }}
+  {{- if ne .Values.harness.identity.projectIdentifier "" }}
+  GITOPS_PROJECT_IDENTIFIER: {{ .Values.harness.identity.projectIdentifier }}
   {{- end }}
   {{- if .Values.harness.disasterRecovery.enabled }}
   GITOPS_DISASTER_RECOVERY_IDENTIFIER: {{ .Values.harness.disasterRecovery.identifier }}
