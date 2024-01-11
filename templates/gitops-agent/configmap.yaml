@@ -14,9 +14,6 @@ data:
   GITOPS_SERVICE_HTTP_TLS_ENABLED: "{{ .Values.harness.configMap.http.tlsEnabled }}"
   GITOPS_SERVICE_HTTP_CERT_FILES: {{ .Values.harness.configMap.http.certPath }}
   AGENT_HTTP_TARGET: {{ .Values.harness.configMap.http.agentHttpTarget }}
-  AGENT_GRPC_TARGET: {{ .Values.harness.configMap.grpc.agentGrpcTarget }}
-  AGENT_GRPC_AUTHORITY: {{ .Values.harness.configMap.grpc.agentGrpcAuthority }}
-  GITOPS_SERVICE_GRPC_INSECURE: "{{ .Values.harness.configMap.grpc.serviceGrpcInsecure }}"
   GITOPS_SERVICE_PROTOCOL: {{ .Values.harness.configMap.agentProtocol }}
   GITOPS_AGENT_ENABLE_RECONCILE: "{{ .Values.harness.configMap.reconcile.enabled }}"
   GITOPS_AGENT_RECONCILE_INTERVAL: "{{ .Values.harness.configMap.reconcile.interval }}"

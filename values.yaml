@@ -195,16 +195,16 @@ harness:
   ## Harness specific identity data
   identity:
     # -- Account Identifier
-    accountId: ""
+    accountIdentifier: ""
 
     # -- Organization Identifier
-    orgId: ""
+    orgIdentifier: ""
 
     # -- Project Identifier
-    projectId: ""
+    projectIdentifier: ""
 
     # -- Agent Identifier
-    agentId: ""
+    agentIdentifier: ""
 
   configMap:
     agentProtocol : "HTTP1"
@@ -212,10 +212,6 @@ harness:
       tlsEnabled: false
       certPath: "/tmp/ca.bundle"
       agentHttpTarget: ""
-    grpc:
-      agentGrpcTarget: ""
-      agentGrpcAuthority: ""
-      serviceGrpcInsecure: false
     reconcile:
       enabled: true
       interval: 100
@@ -248,8 +244,11 @@ harness:
 
 ## Harness GitOps Agent
 agent:
-  # -- GitOps Agent name
+  # -- GitOps Agent entity name
   name: gitops-agent
+
+  # -- GitOps Agent identifier name
+  harnessName: gitops-agent
 
   # -- The number of agent pods to run
   replicas: 1
