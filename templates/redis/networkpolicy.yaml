@@ -6,7 +6,7 @@ kind: NetworkPolicy
 metadata:
   labels:
     {{- include "harness.labels" (dict "context" . "component" .Values.redis.name "name" .Values.redis.name) | nindent 4 }}
-  name: {{ template "argo-cd.redis.fullname" . }}
+  name: {{ .Values.redis.name }}
   namespace: {{ .Release.Namespace | quote }}
 spec:
   ingress:

@@ -7,9 +7,6 @@ argo-cd:
   # -- Disable this for BYOA flows, when Argo CD is already installed
   enabled: true
 
-  # -- Provide a name in place of `harness`
-  nameOverride: harness
-
   ## Argo Configs
   configs:
     # General Argo CD configuration
@@ -504,8 +501,6 @@ upgrader:
   image: harness/upgrader:latest
 
 # <---Duplicated Argo CD overrides for overridden templates--->
-
-nameOverride: harness
 
 global:
   image:

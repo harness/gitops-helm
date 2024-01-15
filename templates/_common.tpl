@@ -2,9 +2,6 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "harness.name" -}}
-{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
 
 {{/*
 Create chart name and version as used by the chart label.
@@ -39,7 +36,7 @@ Selector labels
 */}}
 {{- define "harness.selectorLabels" -}}
 {{- if .name -}}
-app.kubernetes.io/name: {{ include "harness.name" .context }}-{{ .name }}
+app.kubernetes.io/name: {{ .name }}
 {{ end -}}
 app.kubernetes.io/instance: {{ .context.Release.Name }}
 {{- if .component }}
