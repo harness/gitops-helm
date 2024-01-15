@@ -10,7 +10,7 @@ argo-cd:
   # -- Provide a name in place of `harness`
   nameOverride: harness
   # -- String to fully override `"argo-cd.fullname"`
-  fullnameOverride: harness-gitops
+  fullnameOverride: argocd
 
   ## Argo Configs
   configs:
@@ -507,7 +507,7 @@ upgrader:
 
 # <---Duplicated Argo CD overrides for overridden templates--->
 
-fullnameOverride: harness-gitops
+fullnameOverride: argocd
 
 nameOverride: harness
 
