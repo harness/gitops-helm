@@ -5,7 +5,7 @@ kind: NetworkPolicy
 metadata:
   labels:
     helm.sh/chart: gitops-helm-1.0.0
-    app.kubernetes.io/name: harness-application-controller
+    app.kubernetes.io/name: argocd-application-controller
     app.kubernetes.io/instance: argocd
     app.kubernetes.io/component: application-controller
     app.kubernetes.io/managed-by: Helm
@@ -21,7 +21,7 @@ spec:
     - port: metrics
   podSelector:
     matchLabels:
-      app.kubernetes.io/name: harness-application-controller
+      app.kubernetes.io/name: argocd-application-controller
       app.kubernetes.io/instance: argocd
   policyTypes:
   - Ingress
@@ -34,7 +34,7 @@ metadata:
   namespace: "default"
   labels:
     helm.sh/chart: gitops-helm-1.0.0
-    app.kubernetes.io/name: harness-applicationset-controller
+    app.kubernetes.io/name: argocd-applicationset-controller
     app.kubernetes.io/instance: argocd
     app.kubernetes.io/component: applicationset-controller
     app.kubernetes.io/managed-by: Helm
@@ -50,7 +50,7 @@ spec:
     - port: metrics
   podSelector:
     matchLabels:
-      app.kubernetes.io/name: harness-applicationset-controller
+      app.kubernetes.io/name: argocd-applicationset-controller
       app.kubernetes.io/instance: argocd
   policyTypes:
   - Ingress
@@ -61,7 +61,7 @@ kind: NetworkPolicy
 metadata:
   labels:
     helm.sh/chart: gitops-helm-1.0.0
-    app.kubernetes.io/name: harness-repo-server
+    app.kubernetes.io/name: argocd-repo-server
     app.kubernetes.io/instance: argocd
     app.kubernetes.io/component: repo-server
     app.kubernetes.io/managed-by: Helm
@@ -74,15 +74,15 @@ spec:
   - from:
     - podSelector:
         matchLabels:
-          app.kubernetes.io/name: harness-gitops-agent
+          app.kubernetes.io/name: argocd-gitops-agent
           app.kubernetes.io/instance: argocd
     - podSelector:
         matchLabels:
-          app.kubernetes.io/name: harness-application-controller
+          app.kubernetes.io/name: argocd-application-controller
           app.kubernetes.io/instance: argocd
     - podSelector:
         matchLabels:
-          app.kubernetes.io/name: harness-applicationset-controller
+          app.kubernetes.io/name: argocd-applicationset-controller
           app.kubernetes.io/instance: argocd
     ports:
     - port: repo-server
@@ -93,7 +93,7 @@ spec:
     - port: metrics
   podSelector:
     matchLabels:
-      app.kubernetes.io/name: harness-repo-server
+      app.kubernetes.io/name: argocd-repo-server
       app.kubernetes.io/instance: argocd
   policyTypes:
   - Ingress
@@ -104,7 +104,7 @@ kind: NetworkPolicy
 metadata:
   labels:
     helm.sh/chart: gitops-helm-1.0.0
-    app.kubernetes.io/name: harness-redis
+    app.kubernetes.io/name: argocd-redis
     app.kubernetes.io/instance: argocd
     app.kubernetes.io/component: redis
     app.kubernetes.io/managed-by: Helm
@@ -117,15 +117,15 @@ spec:
   - from:
     - podSelector:
         matchLabels:
-          app.kubernetes.io/name: harness-gitops-agent
+          app.kubernetes.io/name: argocd-gitops-agent
           app.kubernetes.io/instance: argocd
     - podSelector:
         matchLabels:
-          app.kubernetes.io/name: harness-repo-server
+          app.kubernetes.io/name: argocd-repo-server
           app.kubernetes.io/instance: argocd
     - podSelector:
         matchLabels:
-          app.kubernetes.io/name: harness-application-controller
+          app.kubernetes.io/name: argocd-application-controller
           app.kubernetes.io/instance: argocd
     ports:
     - port: redis
@@ -138,7 +138,7 @@ spec:
       protocol: TCP
   podSelector:
     matchLabels:
-      app.kubernetes.io/name: harness-redis
+      app.kubernetes.io/name: argocd-redis
       app.kubernetes.io/instance: argocd
   policyTypes:
   - Ingress
@@ -153,7 +153,7 @@ metadata:
   namespace: "default"
   labels:
     helm.sh/chart: argo-cd-5.51.6
-    app.kubernetes.io/name: harness-application-controller
+    app.kubernetes.io/name: argocd-application-controller
     app.kubernetes.io/instance: argocd
     app.kubernetes.io/component: application-controller
     app.kubernetes.io/managed-by: Helm
@@ -169,7 +169,7 @@ metadata:
   namespace: "default"
   labels:
     helm.sh/chart: argo-cd-5.51.6
-    app.kubernetes.io/name: harness-applicationset-controller
+    app.kubernetes.io/name: argocd-applicationset-controller
     app.kubernetes.io/instance: argocd
     app.kubernetes.io/component: applicationset-controller
     app.kubernetes.io/managed-by: Helm
@@ -185,7 +185,7 @@ metadata:
   namespace: "default"
   labels:
     helm.sh/chart: argo-cd-5.51.6
-    app.kubernetes.io/name: harness-repo-server
+    app.kubernetes.io/name: argocd-repo-server
     app.kubernetes.io/instance: argocd
     app.kubernetes.io/component: repo-server
     app.kubernetes.io/managed-by: Helm
@@ -201,7 +201,7 @@ metadata:
   namespace: "default"
   labels:
     helm.sh/chart: argo-cd-5.51.6
-    app.kubernetes.io/name: harness-redis
+    app.kubernetes.io/name: argocd-redis
     app.kubernetes.io/instance: argocd
     app.kubernetes.io/component: redis
     app.kubernetes.io/managed-by: Helm
@@ -217,7 +217,7 @@ metadata:
   namespace: "default"
   labels:
     helm.sh/chart: gitops-helm-1.0.0
-    app.kubernetes.io/name: harness-gitops-agent
+    app.kubernetes.io/name: argocd-gitops-agent
     app.kubernetes.io/instance: argocd
     app.kubernetes.io/component: gitops-agent
     app.kubernetes.io/managed-by: Helm
@@ -232,7 +232,7 @@ metadata:
   namespace: "default"
   labels:
     helm.sh/chart: gitops-helm-1.0.0
-    app.kubernetes.io/name: harness-gitops-agent-upgrader
+    app.kubernetes.io/name: argocd-gitops-agent-upgrader
     app.kubernetes.io/instance: argocd
     app.kubernetes.io/component: gitops-agent-upgrader
     app.kubernetes.io/managed-by: Helm
@@ -247,7 +247,7 @@ metadata:
   namespace: "default"
   labels:
     helm.sh/chart: argo-cd-5.51.6
-    app.kubernetes.io/name: harness-secret
+    app.kubernetes.io/name: argocd-secret
     app.kubernetes.io/instance: argocd
     app.kubernetes.io/component: server
     app.kubernetes.io/managed-by: Helm
@@ -261,7 +261,7 @@ kind: Secret
 metadata:
   labels:
     helm.sh/chart: gitops-helm-1.0.0
-    app.kubernetes.io/name: harness-agent-secret
+    app.kubernetes.io/name: argocd-agent-secret
     app.kubernetes.io/instance: argocd
     app.kubernetes.io/component: gitops-agent
     app.kubernetes.io/managed-by: Helm
@@ -281,7 +281,7 @@ metadata:
   namespace: "default"
   labels:
     helm.sh/chart: argo-cd-5.51.6
-    app.kubernetes.io/name: harness-cm
+    app.kubernetes.io/name: argocd-cm
     app.kubernetes.io/instance: argocd
     app.kubernetes.io/component: server
     app.kubernetes.io/managed-by: Helm
@@ -306,7 +306,7 @@ metadata:
   namespace: "default"
   labels:
     helm.sh/chart: argo-cd-5.51.6
-    app.kubernetes.io/name: harness-cmd-params-cm
+    app.kubernetes.io/name: argocd-cmd-params-cm
     app.kubernetes.io/instance: argocd
     app.kubernetes.io/component: server
     app.kubernetes.io/managed-by: Helm
@@ -351,7 +351,7 @@ metadata:
   namespace: "default"
   labels:
     helm.sh/chart: argo-cd-5.51.6
-    app.kubernetes.io/name: harness-gpg-keys-cm
+    app.kubernetes.io/name: argocd-gpg-keys-cm
     app.kubernetes.io/instance: argocd
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: argocd
@@ -365,7 +365,7 @@ metadata:
   namespace: "default"
   labels:
     helm.sh/chart: argo-cd-5.51.6
-    app.kubernetes.io/name: harness-rbac-cm
+    app.kubernetes.io/name: argocd-rbac-cm
     app.kubernetes.io/instance: argocd
     app.kubernetes.io/component: server
     app.kubernetes.io/managed-by: Helm
@@ -384,7 +384,7 @@ metadata:
   namespace: "default"
   labels:
     helm.sh/chart: argo-cd-5.51.6
-    app.kubernetes.io/name: harness-ssh-known-hosts-cm
+    app.kubernetes.io/name: argocd-ssh-known-hosts-cm
     app.kubernetes.io/instance: argocd
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: argocd
@@ -414,7 +414,7 @@ metadata:
   namespace: "default"
   labels:
     helm.sh/chart: argo-cd-5.51.6
-    app.kubernetes.io/name: harness-tls-certs-cm
+    app.kubernetes.io/name: argocd-tls-certs-cm
     app.kubernetes.io/instance: argocd
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: argocd
@@ -439,7 +439,7 @@ kind: ConfigMap
 metadata:
   labels:
     helm.sh/chart: gitops-helm-1.0.0
-    app.kubernetes.io/name: harness-gitops-agent-cm
+    app.kubernetes.io/name: argocd-gitops-agent-cm
     app.kubernetes.io/instance: argocd
     app.kubernetes.io/component: gitops-agent
     app.kubernetes.io/managed-by: Helm
@@ -20714,7 +20714,7 @@ metadata:
   name: argocd-application-controller
   labels:
     helm.sh/chart: argo-cd-5.51.6
-    app.kubernetes.io/name: harness-application-controller
+    app.kubernetes.io/name: argocd-application-controller
     app.kubernetes.io/instance: argocd
     app.kubernetes.io/component: application-controller
     app.kubernetes.io/managed-by: Helm
@@ -20739,7 +20739,7 @@ metadata:
   name: argocd-repo-server
   labels:
     helm.sh/chart: argo-cd-5.51.6
-    app.kubernetes.io/name: harness-repo-server
+    app.kubernetes.io/name: argocd-repo-server
     app.kubernetes.io/instance: argocd
     app.kubernetes.io/component: repo-server
     app.kubernetes.io/managed-by: Helm
@@ -20764,7 +20764,7 @@ metadata:
   name: gitops-agent
   labels:
     helm.sh/chart: gitops-helm-1.0.0
-    app.kubernetes.io/name: harness-gitops-agent
+    app.kubernetes.io/name: argocd-gitops-agent
     app.kubernetes.io/instance: argocd
     app.kubernetes.io/component: gitops-agent
     app.kubernetes.io/managed-by: Helm
@@ -20830,7 +20830,7 @@ metadata:
   name: argocd-application-controller
   labels:
     helm.sh/chart: argo-cd-5.51.6
-    app.kubernetes.io/name: harness-application-controller
+    app.kubernetes.io/name: argocd-application-controller
     app.kubernetes.io/instance: argocd
     app.kubernetes.io/component: application-controller
     app.kubernetes.io/managed-by: Helm
@@ -20852,7 +20852,7 @@ metadata:
   name: argocd-repo-server
   labels:
     helm.sh/chart: argo-cd-5.51.6
-    app.kubernetes.io/name: harness-repo-server
+    app.kubernetes.io/name: argocd-repo-server
     app.kubernetes.io/instance: argocd
     app.kubernetes.io/component: repo-server
     app.kubernetes.io/managed-by: Helm
@@ -20874,7 +20874,7 @@ metadata:
   name: gitops-agent
   labels:
     helm.sh/chart: gitops-helm-1.0.0
-    app.kubernetes.io/name: harness-gitops-agent
+    app.kubernetes.io/name: argocd-gitops-agent
     app.kubernetes.io/instance: argocd
     app.kubernetes.io/component: gitops-agent
     app.kubernetes.io/managed-by: Helm
@@ -20897,7 +20897,7 @@ metadata:
   namespace: "default"
   labels:
     helm.sh/chart: argo-cd-5.51.6
-    app.kubernetes.io/name: harness-application-controller
+    app.kubernetes.io/name: argocd-application-controller
     app.kubernetes.io/instance: argocd
     app.kubernetes.io/component: application-controller
     app.kubernetes.io/managed-by: Helm
@@ -20942,7 +20942,7 @@ metadata:
   namespace: "default"
   labels:
     helm.sh/chart: argo-cd-5.51.6
-    app.kubernetes.io/name: harness-applicationset-controller
+    app.kubernetes.io/name: argocd-applicationset-controller
     app.kubernetes.io/instance: argocd
     app.kubernetes.io/component: applicationset-controller
     app.kubernetes.io/managed-by: Helm
@@ -21037,7 +21037,7 @@ metadata:
   namespace: "default"
   labels:
     helm.sh/chart: argo-cd-5.51.6
-    app.kubernetes.io/name: harness-repo-server
+    app.kubernetes.io/name: argocd-repo-server
     app.kubernetes.io/instance: argocd
     app.kubernetes.io/component: repo-server
     app.kubernetes.io/managed-by: Helm
@@ -21053,7 +21053,7 @@ metadata:
   namespace: "default"
   labels:
     helm.sh/chart: argo-cd-5.51.6
-    app.kubernetes.io/name: harness-server
+    app.kubernetes.io/name: argocd-server
     app.kubernetes.io/instance: argocd
     app.kubernetes.io/component: server
     app.kubernetes.io/managed-by: Helm
@@ -21103,7 +21103,7 @@ metadata:
   namespace: "default"
   labels:
     helm.sh/chart: gitops-helm-1.0.0
-    app.kubernetes.io/name: harness-gitops-agent
+    app.kubernetes.io/name: argocd-gitops-agent
     app.kubernetes.io/instance: argocd
     app.kubernetes.io/component: gitops-agent
     app.kubernetes.io/managed-by: Helm
@@ -21188,7 +21188,7 @@ metadata:
   namespace: "default"
   labels:
     helm.sh/chart: gitops-helm-1.0.0
-    app.kubernetes.io/name: harness-gitops-agent-upgrader
+    app.kubernetes.io/name: argocd-gitops-agent-upgrader
     app.kubernetes.io/instance: argocd
     app.kubernetes.io/component: gitops-agent-upgrader
     app.kubernetes.io/managed-by: Helm
@@ -21228,7 +21228,7 @@ metadata:
   namespace: "default"
   labels:
     helm.sh/chart: argo-cd-5.51.6
-    app.kubernetes.io/name: harness-application-controller
+    app.kubernetes.io/name: argocd-application-controller
     app.kubernetes.io/instance: argocd
     app.kubernetes.io/component: application-controller
     app.kubernetes.io/managed-by: Helm
@@ -21251,7 +21251,7 @@ metadata:
   namespace: "default"
   labels:
     helm.sh/chart: argo-cd-5.51.6
-    app.kubernetes.io/name: harness-applicationset-controller
+    app.kubernetes.io/name: argocd-applicationset-controller
     app.kubernetes.io/instance: argocd
     app.kubernetes.io/component: applicationset-controller
     app.kubernetes.io/managed-by: Helm
@@ -21274,7 +21274,7 @@ metadata:
   namespace: "default"
   labels:
     helm.sh/chart: argo-cd-5.51.6
-    app.kubernetes.io/name: harness-repo-server
+    app.kubernetes.io/name: argocd-repo-server
     app.kubernetes.io/instance: argocd
     app.kubernetes.io/component: repo-server
     app.kubernetes.io/managed-by: Helm
@@ -21297,7 +21297,7 @@ metadata:
   namespace: "default"
   labels:
     helm.sh/chart: argo-cd-5.51.6
-    app.kubernetes.io/name: harness-server
+    app.kubernetes.io/name: argocd-server
     app.kubernetes.io/instance: argocd
     app.kubernetes.io/component: server
     app.kubernetes.io/managed-by: Helm
@@ -21320,7 +21320,7 @@ metadata:
   namespace: "default"
   labels:
     helm.sh/chart: gitops-helm-1.0.0
-    app.kubernetes.io/name: harness-gitops-agent
+    app.kubernetes.io/name: argocd-gitops-agent
     app.kubernetes.io/instance: argocd
     app.kubernetes.io/component: gitops-agent
     app.kubernetes.io/managed-by: Helm
@@ -21343,7 +21343,7 @@ metadata:
   namespace: "default"
   labels:
     helm.sh/chart: gitops-helm-1.0.0
-    app.kubernetes.io/name: harness-gitops-agent-upgrader
+    app.kubernetes.io/name: argocd-gitops-agent-upgrader
     app.kubernetes.io/instance: argocd
     app.kubernetes.io/component: gitops-agent-upgrader
     app.kubernetes.io/managed-by: Helm
@@ -21366,7 +21366,7 @@ metadata:
   namespace: "default"
   labels:
     helm.sh/chart: argo-cd-5.51.6
-    app.kubernetes.io/name: harness-metrics
+    app.kubernetes.io/name: argocd-metrics
     app.kubernetes.io/instance: argocd
     app.kubernetes.io/component: applicationset-controller
     app.kubernetes.io/managed-by: Helm
@@ -21380,7 +21380,7 @@ spec:
     port: 8080
     targetPort: metrics
   selector:
-    app.kubernetes.io/name: harness-applicationset-controller
+    app.kubernetes.io/name: argocd-applicationset-controller
     app.kubernetes.io/instance: argocd
 ---
 # Source: gitops-helm/charts/argo-cd/templates/argocd-applicationset/service.yaml
@@ -21391,7 +21391,7 @@ metadata:
   namespace: "default"
   labels:
     helm.sh/chart: argo-cd-5.51.6
-    app.kubernetes.io/name: harness-applicationset-controller
+    app.kubernetes.io/name: argocd-applicationset-controller
     app.kubernetes.io/instance: argocd
     app.kubernetes.io/component: applicationset-controller
     app.kubernetes.io/managed-by: Helm
@@ -21404,7 +21404,7 @@ spec:
     port: 7000
     targetPort: webhook
   selector:
-    app.kubernetes.io/name: harness-applicationset-controller
+    app.kubernetes.io/name: argocd-applicationset-controller
     app.kubernetes.io/instance: argocd
 ---
 # Source: gitops-helm/charts/argo-cd/templates/argocd-repo-server/metrics.yaml
@@ -21415,7 +21415,7 @@ metadata:
   namespace: "default"
   labels:
     helm.sh/chart: argo-cd-5.51.6
-    app.kubernetes.io/name: harness-repo-server-metrics
+    app.kubernetes.io/name: argocd-repo-server-metrics
     app.kubernetes.io/instance: argocd
     app.kubernetes.io/component: repo-server
     app.kubernetes.io/managed-by: Helm
@@ -21429,7 +21429,7 @@ spec:
     port: 8084
     targetPort: metrics
   selector:
-    app.kubernetes.io/name: harness-repo-server
+    app.kubernetes.io/name: argocd-repo-server
     app.kubernetes.io/instance: argocd
 ---
 # Source: gitops-helm/charts/argo-cd/templates/argocd-repo-server/service.yaml
@@ -21438,7 +21438,7 @@ kind: Service
 metadata:
   labels:
     helm.sh/chart: argo-cd-5.51.6
-    app.kubernetes.io/name: harness-repo-server
+    app.kubernetes.io/name: argocd-repo-server
     app.kubernetes.io/instance: argocd
     app.kubernetes.io/component: repo-server
     app.kubernetes.io/managed-by: Helm
@@ -21453,7 +21453,7 @@ spec:
     port: 8081
     targetPort: repo-server
   selector:
-    app.kubernetes.io/name: harness-repo-server
+    app.kubernetes.io/name: argocd-repo-server
     app.kubernetes.io/instance: argocd
 ---
 # Source: gitops-helm/charts/argo-cd/templates/argocd-server/service.yaml
@@ -21464,7 +21464,7 @@ metadata:
   namespace: "default"
   labels:
     helm.sh/chart: argo-cd-5.51.6
-    app.kubernetes.io/name: harness-server
+    app.kubernetes.io/name: argocd-server
     app.kubernetes.io/instance: argocd
     app.kubernetes.io/component: server
     app.kubernetes.io/managed-by: Helm
@@ -21482,7 +21482,7 @@ spec:
     port: 443
     targetPort: 8080
   selector:
-    app.kubernetes.io/name: harness-server
+    app.kubernetes.io/name: argocd-server
     app.kubernetes.io/instance: argocd
 ---
 # Source: gitops-helm/charts/argo-cd/templates/redis/service.yaml
@@ -21493,7 +21493,7 @@ metadata:
   namespace: "default"
   labels:
     helm.sh/chart: argo-cd-5.51.6
-    app.kubernetes.io/name: harness-redis
+    app.kubernetes.io/name: argocd-redis
     app.kubernetes.io/instance: argocd
     app.kubernetes.io/component: redis
     app.kubernetes.io/managed-by: Helm
@@ -21505,7 +21505,7 @@ spec:
     port: 6379
     targetPort: redis
   selector:
-    app.kubernetes.io/name: harness-redis
+    app.kubernetes.io/name: argocd-redis
     app.kubernetes.io/instance: argocd
 ---
 # Source: gitops-helm/charts/argo-cd/templates/argocd-applicationset/deployment.yaml
@@ -21516,7 +21516,7 @@ metadata:
   namespace: "default"
   labels:
     helm.sh/chart: argo-cd-5.51.6
-    app.kubernetes.io/name: harness-applicationset-controller
+    app.kubernetes.io/name: argocd-applicationset-controller
     app.kubernetes.io/instance: argocd
     app.kubernetes.io/component: applicationset-controller
     app.kubernetes.io/managed-by: Helm
@@ -21527,15 +21527,15 @@ spec:
   revisionHistoryLimit: 3
   selector:
     matchLabels:
-      app.kubernetes.io/name: harness-applicationset-controller
+      app.kubernetes.io/name: argocd-applicationset-controller
       app.kubernetes.io/instance: argocd
   template:
     metadata:
       annotations:
-        checksum/cmd-params: 72604beaefd4438e56e748191419fa68e798613b372555760ed5d69abd688403
+        checksum/cmd-params: 643e260bb0c28a7cf23d6f347a6415993e1c2cca43e374a872bcc00f1e1de183
       labels:
         helm.sh/chart: argo-cd-5.51.6
-        app.kubernetes.io/name: harness-applicationset-controller
+        app.kubernetes.io/name: argocd-applicationset-controller
         app.kubernetes.io/instance: argocd
         app.kubernetes.io/component: applicationset-controller
         app.kubernetes.io/managed-by: Helm
@@ -21724,7 +21724,7 @@ spec:
             podAffinityTerm:
               labelSelector:
                 matchLabels:
-                  app.kubernetes.io/name: harness-applicationset-controller
+                  app.kubernetes.io/name: argocd-applicationset-controller
               topologyKey: kubernetes.io/hostname
       volumes:
         - name: ssh-known-hosts
@@ -21761,7 +21761,7 @@ metadata:
   namespace: "default"
   labels:
     helm.sh/chart: argo-cd-5.51.6
-    app.kubernetes.io/name: harness-repo-server
+    app.kubernetes.io/name: argocd-repo-server
     app.kubernetes.io/instance: argocd
     app.kubernetes.io/component: repo-server
     app.kubernetes.io/managed-by: Helm
@@ -21772,16 +21772,16 @@ spec:
   revisionHistoryLimit: 3
   selector:
     matchLabels:
-      app.kubernetes.io/name: harness-repo-server
+      app.kubernetes.io/name: argocd-repo-server
       app.kubernetes.io/instance: argocd
   template:
     metadata:
       annotations:
-        checksum/cmd-params: 72604beaefd4438e56e748191419fa68e798613b372555760ed5d69abd688403
-        checksum/cm: ca3b9f8ea33b44e019468821e7aceffa293d1c2d23b030ae7d37a02607afb354
+        checksum/cmd-params: 643e260bb0c28a7cf23d6f347a6415993e1c2cca43e374a872bcc00f1e1de183
+        checksum/cm: 5bbc587501cf8edd3b3f8bc4d005f55de30a8c058559b95dfa42ce33f584f23e
       labels:
         helm.sh/chart: argo-cd-5.51.6
-        app.kubernetes.io/name: harness-repo-server
+        app.kubernetes.io/name: argocd-repo-server
         app.kubernetes.io/instance: argocd
         app.kubernetes.io/component: repo-server
         app.kubernetes.io/managed-by: Helm
@@ -22093,7 +22093,7 @@ spec:
             podAffinityTerm:
               labelSelector:
                 matchLabels:
-                  app.kubernetes.io/name: harness-repo-server
+                  app.kubernetes.io/name: argocd-repo-server
               topologyKey: kubernetes.io/hostname
       volumes:
       - emptyDir: {}
@@ -22138,7 +22138,7 @@ metadata:
   namespace: "default"
   labels:
     helm.sh/chart: argo-cd-5.51.6
-    app.kubernetes.io/name: harness-server
+    app.kubernetes.io/name: argocd-server
     app.kubernetes.io/instance: argocd
     app.kubernetes.io/component: server
     app.kubernetes.io/managed-by: Helm
@@ -22149,15 +22149,15 @@ spec:
   revisionHistoryLimit: 3
   selector:
     matchLabels:
-      app.kubernetes.io/name: harness-server
+      app.kubernetes.io/name: argocd-server
       app.kubernetes.io/instance: argocd
   template:
     metadata:
       annotations:
-        checksum/cmd-params: 72604beaefd4438e56e748191419fa68e798613b372555760ed5d69abd688403
+        checksum/cmd-params: 643e260bb0c28a7cf23d6f347a6415993e1c2cca43e374a872bcc00f1e1de183
       labels:
         helm.sh/chart: argo-cd-5.51.6
-        app.kubernetes.io/name: harness-server
+        app.kubernetes.io/name: argocd-server
         app.kubernetes.io/instance: argocd
         app.kubernetes.io/component: server
         app.kubernetes.io/managed-by: Helm
@@ -22449,7 +22449,7 @@ spec:
             podAffinityTerm:
               labelSelector:
                 matchLabels:
-                  app.kubernetes.io/name: harness-server
+                  app.kubernetes.io/name: argocd-server
               topologyKey: kubernetes.io/hostname
       volumes:
       - name: plugins-home
@@ -22496,7 +22496,7 @@ metadata:
   namespace: "default"
   labels:
     helm.sh/chart: argo-cd-5.51.6
-    app.kubernetes.io/name: harness-redis
+    app.kubernetes.io/name: argocd-redis
     app.kubernetes.io/instance: argocd
     app.kubernetes.io/component: redis
     app.kubernetes.io/managed-by: Helm
@@ -22507,12 +22507,12 @@ spec:
   revisionHistoryLimit: 3
   selector:
     matchLabels:
-      app.kubernetes.io/name: harness-redis
+      app.kubernetes.io/name: argocd-redis
   template:
     metadata:
       labels:
         helm.sh/chart: argo-cd-5.51.6
-        app.kubernetes.io/name: harness-redis
+        app.kubernetes.io/name: argocd-redis
         app.kubernetes.io/instance: argocd
         app.kubernetes.io/component: redis
         app.kubernetes.io/managed-by: Helm
@@ -22559,7 +22559,7 @@ spec:
             podAffinityTerm:
               labelSelector:
                 matchLabels:
-                  app.kubernetes.io/name: harness-redis
+                  app.kubernetes.io/name: argocd-redis
               topologyKey: kubernetes.io/hostname
       dnsPolicy: ClusterFirst
 ---
@@ -22571,7 +22571,7 @@ metadata:
   namespace: "default"
   labels:
     helm.sh/chart: gitops-helm-1.0.0
-    app.kubernetes.io/name: harness-gitops-agent
+    app.kubernetes.io/name: argocd-gitops-agent
     app.kubernetes.io/instance: argocd
     app.kubernetes.io/component: gitops-agent
     app.kubernetes.io/managed-by: Helm
@@ -22582,14 +22582,14 @@ spec:
   revisionHistoryLimit: 
   selector:
     matchLabels:
-      app.kubernetes.io/name: harness-gitops-agent
+      app.kubernetes.io/name: argocd-gitops-agent
       app.kubernetes.io/instance: argocd
   template:
     metadata:
       annotations:
       labels:
         helm.sh/chart: gitops-helm-1.0.0
-        app.kubernetes.io/name: harness-gitops-agent
+        app.kubernetes.io/name: argocd-gitops-agent
         app.kubernetes.io/instance: argocd
         app.kubernetes.io/component: gitops-agent
         app.kubernetes.io/managed-by: Helm
@@ -22697,7 +22697,7 @@ metadata:
   namespace: "default"
   labels:
     helm.sh/chart: argo-cd-5.51.6
-    app.kubernetes.io/name: harness-application-controller
+    app.kubernetes.io/name: argocd-application-controller
     app.kubernetes.io/instance: argocd
     app.kubernetes.io/component: application-controller
     app.kubernetes.io/managed-by: Helm
@@ -22710,16 +22710,16 @@ spec:
   serviceName: argocd-application-controller
   selector:
     matchLabels:
-      app.kubernetes.io/name: harness-application-controller
+      app.kubernetes.io/name: argocd-application-controller
       app.kubernetes.io/instance: argocd
   template:
     metadata:
       annotations:
-        checksum/cmd-params: 72604beaefd4438e56e748191419fa68e798613b372555760ed5d69abd688403
-        checksum/cm: ca3b9f8ea33b44e019468821e7aceffa293d1c2d23b030ae7d37a02607afb354
+        checksum/cmd-params: 643e260bb0c28a7cf23d6f347a6415993e1c2cca43e374a872bcc00f1e1de183
+        checksum/cm: 5bbc587501cf8edd3b3f8bc4d005f55de30a8c058559b95dfa42ce33f584f23e
       labels:
         helm.sh/chart: argo-cd-5.51.6
-        app.kubernetes.io/name: harness-application-controller
+        app.kubernetes.io/name: argocd-application-controller
         app.kubernetes.io/instance: argocd
         app.kubernetes.io/component: application-controller
         app.kubernetes.io/managed-by: Helm
@@ -22924,7 +22924,7 @@ spec:
             podAffinityTerm:
               labelSelector:
                 matchLabels:
-                  app.kubernetes.io/name: harness-application-controller
+                  app.kubernetes.io/name: argocd-application-controller
               topologyKey: kubernetes.io/hostname
       volumes:
       - name: argocd-home
@@ -22950,7 +22950,7 @@ metadata:
   namespace: "default"
   labels:
     helm.sh/chart: gitops-helm-1.0.0
-    app.kubernetes.io/name: harness-gitops-agent-upgrader
+    app.kubernetes.io/name: argocd-gitops-agent-upgrader
     app.kubernetes.io/instance: argocd
     app.kubernetes.io/component: gitops-agent-upgrader
     app.kubernetes.io/managed-by: Helm
@@ -22991,7 +22991,7 @@ metadata:
   namespace: "default"
   labels:
     helm.sh/chart: argo-cd-5.51.6
-    app.kubernetes.io/name: harness-applicationset-controller
+    app.kubernetes.io/name: argocd-applicationset-controller
     app.kubernetes.io/instance: argocd
     app.kubernetes.io/component: applicationset-controller
     app.kubernetes.io/managed-by: Helm
