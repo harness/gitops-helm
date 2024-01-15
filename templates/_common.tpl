@@ -41,7 +41,7 @@ Selector labels
 {{- if .name -}}
 app.kubernetes.io/name: {{ include "harness.name" .context }}-{{ .name }}
 {{ end -}}
-app.kubernetes.io/instance: {{ .context.Release.Name }}
+app.kubernetes.io/instance: gitops
 {{- if .component }}
 app.kubernetes.io/component: {{ .component }}
 {{- end }}
