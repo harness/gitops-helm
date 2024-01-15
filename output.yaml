@@ -6,7 +6,7 @@ metadata:
   labels:
     helm.sh/chart: gitops-helm-1.0.0
     app.kubernetes.io/name: harness-application-controller
-    app.kubernetes.io/instance: gitops
+    app.kubernetes.io/instance: argocd
     app.kubernetes.io/component: application-controller
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: harness-gitops
@@ -22,7 +22,7 @@ spec:
   podSelector:
     matchLabels:
       app.kubernetes.io/name: harness-application-controller
-      app.kubernetes.io/instance: gitops
+      app.kubernetes.io/instance: argocd
   policyTypes:
   - Ingress
 ---
@@ -35,7 +35,7 @@ metadata:
   labels:
     helm.sh/chart: gitops-helm-1.0.0
     app.kubernetes.io/name: harness-applicationset-controller
-    app.kubernetes.io/instance: gitops
+    app.kubernetes.io/instance: argocd
     app.kubernetes.io/component: applicationset-controller
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: harness-gitops
@@ -51,7 +51,7 @@ spec:
   podSelector:
     matchLabels:
       app.kubernetes.io/name: harness-applicationset-controller
-      app.kubernetes.io/instance: gitops
+      app.kubernetes.io/instance: argocd
   policyTypes:
   - Ingress
 ---
@@ -62,7 +62,7 @@ metadata:
   labels:
     helm.sh/chart: gitops-helm-1.0.0
     app.kubernetes.io/name: harness-repo-server
-    app.kubernetes.io/instance: gitops
+    app.kubernetes.io/instance: argocd
     app.kubernetes.io/component: repo-server
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: harness-gitops
@@ -75,15 +75,15 @@ spec:
     - podSelector:
         matchLabels:
           app.kubernetes.io/name: harness-gitops-agent
-          app.kubernetes.io/instance: gitops
+          app.kubernetes.io/instance: argocd
     - podSelector:
         matchLabels:
           app.kubernetes.io/name: harness-application-controller
-          app.kubernetes.io/instance: gitops
+          app.kubernetes.io/instance: argocd
     - podSelector:
         matchLabels:
           app.kubernetes.io/name: harness-applicationset-controller
-          app.kubernetes.io/instance: gitops
+          app.kubernetes.io/instance: argocd
     ports:
     - port: repo-server
       protocol: TCP
@@ -94,7 +94,7 @@ spec:
   podSelector:
     matchLabels:
       app.kubernetes.io/name: harness-repo-server
-      app.kubernetes.io/instance: gitops
+      app.kubernetes.io/instance: argocd
   policyTypes:
   - Ingress
 ---
@@ -105,7 +105,7 @@ metadata:
   labels:
     helm.sh/chart: gitops-helm-1.0.0
     app.kubernetes.io/name: harness-redis
-    app.kubernetes.io/instance: gitops
+    app.kubernetes.io/instance: argocd
     app.kubernetes.io/component: redis
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: harness-gitops
@@ -118,15 +118,15 @@ spec:
     - podSelector:
         matchLabels:
           app.kubernetes.io/name: harness-gitops-agent
-          app.kubernetes.io/instance: gitops
+          app.kubernetes.io/instance: argocd
     - podSelector:
         matchLabels:
           app.kubernetes.io/name: harness-repo-server
-          app.kubernetes.io/instance: gitops
+          app.kubernetes.io/instance: argocd
     - podSelector:
         matchLabels:
           app.kubernetes.io/name: harness-application-controller
-          app.kubernetes.io/instance: gitops
+          app.kubernetes.io/instance: argocd
     ports:
     - port: redis
       protocol: TCP
@@ -139,7 +139,7 @@ spec:
   podSelector:
     matchLabels:
       app.kubernetes.io/name: harness-redis
-      app.kubernetes.io/instance: gitops
+      app.kubernetes.io/instance: argocd
   policyTypes:
   - Ingress
   - Egress
@@ -218,7 +218,7 @@ metadata:
   labels:
     helm.sh/chart: gitops-helm-1.0.0
     app.kubernetes.io/name: harness-gitops-agent
-    app.kubernetes.io/instance: gitops
+    app.kubernetes.io/instance: argocd
     app.kubernetes.io/component: gitops-agent
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: harness-gitops
@@ -233,7 +233,7 @@ metadata:
   labels:
     helm.sh/chart: gitops-helm-1.0.0
     app.kubernetes.io/name: harness-gitops-agent-upgrader
-    app.kubernetes.io/instance: gitops
+    app.kubernetes.io/instance: argocd
     app.kubernetes.io/component: gitops-agent-upgrader
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: harness-gitops
@@ -262,7 +262,7 @@ metadata:
   labels:
     helm.sh/chart: gitops-helm-1.0.0
     app.kubernetes.io/name: harness-agent-secret
-    app.kubernetes.io/instance: gitops
+    app.kubernetes.io/instance: argocd
     app.kubernetes.io/component: gitops-agent
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: harness-gitops
@@ -440,7 +440,7 @@ metadata:
   labels:
     helm.sh/chart: gitops-helm-1.0.0
     app.kubernetes.io/name: harness-gitops-agent-cm
-    app.kubernetes.io/instance: gitops
+    app.kubernetes.io/instance: argocd
     app.kubernetes.io/component: gitops-agent
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: harness-gitops
@@ -20765,7 +20765,7 @@ metadata:
   labels:
     helm.sh/chart: gitops-helm-1.0.0
     app.kubernetes.io/name: harness-gitops-agent
-    app.kubernetes.io/instance: gitops
+    app.kubernetes.io/instance: argocd
     app.kubernetes.io/component: gitops-agent
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: harness-gitops
@@ -20875,7 +20875,7 @@ metadata:
   labels:
     helm.sh/chart: gitops-helm-1.0.0
     app.kubernetes.io/name: harness-gitops-agent
-    app.kubernetes.io/instance: gitops
+    app.kubernetes.io/instance: argocd
     app.kubernetes.io/component: gitops-agent
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: harness-gitops
@@ -21104,7 +21104,7 @@ metadata:
   labels:
     helm.sh/chart: gitops-helm-1.0.0
     app.kubernetes.io/name: harness-gitops-agent
-    app.kubernetes.io/instance: gitops
+    app.kubernetes.io/instance: argocd
     app.kubernetes.io/component: gitops-agent
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: harness-gitops
@@ -21189,7 +21189,7 @@ metadata:
   labels:
     helm.sh/chart: gitops-helm-1.0.0
     app.kubernetes.io/name: harness-gitops-agent-upgrader
-    app.kubernetes.io/instance: gitops
+    app.kubernetes.io/instance: argocd
     app.kubernetes.io/component: gitops-agent-upgrader
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: harness-gitops
@@ -21321,7 +21321,7 @@ metadata:
   labels:
     helm.sh/chart: gitops-helm-1.0.0
     app.kubernetes.io/name: harness-gitops-agent
-    app.kubernetes.io/instance: gitops
+    app.kubernetes.io/instance: argocd
     app.kubernetes.io/component: gitops-agent
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: harness-gitops
@@ -21344,7 +21344,7 @@ metadata:
   labels:
     helm.sh/chart: gitops-helm-1.0.0
     app.kubernetes.io/name: harness-gitops-agent-upgrader
-    app.kubernetes.io/instance: gitops
+    app.kubernetes.io/instance: argocd
     app.kubernetes.io/component: gitops-agent-upgrader
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: harness-gitops
@@ -22572,7 +22572,7 @@ metadata:
   labels:
     helm.sh/chart: gitops-helm-1.0.0
     app.kubernetes.io/name: harness-gitops-agent
-    app.kubernetes.io/instance: gitops
+    app.kubernetes.io/instance: argocd
     app.kubernetes.io/component: gitops-agent
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: harness-gitops
@@ -22583,14 +22583,14 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: harness-gitops-agent
-      app.kubernetes.io/instance: gitops
+      app.kubernetes.io/instance: argocd
   template:
     metadata:
       annotations:
       labels:
         helm.sh/chart: gitops-helm-1.0.0
         app.kubernetes.io/name: harness-gitops-agent
-        app.kubernetes.io/instance: gitops
+        app.kubernetes.io/instance: argocd
         app.kubernetes.io/component: gitops-agent
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/part-of: harness-gitops
@@ -22951,7 +22951,7 @@ metadata:
   labels:
     helm.sh/chart: gitops-helm-1.0.0
     app.kubernetes.io/name: harness-gitops-agent-upgrader
-    app.kubernetes.io/instance: gitops
+    app.kubernetes.io/instance: argocd
     app.kubernetes.io/component: gitops-agent-upgrader
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: harness-gitops
