@@ -21,7 +21,7 @@ Return valid version label
 {{- end -}}
 
 {{/*
-Common labels
+Argo CD Common labels
 */}}
 {{- define "harness.labels" -}}
 helm.sh/chart: {{ include "harness.chart" .context }}
@@ -35,11 +35,38 @@ app.kubernetes.io/version: {{ include "harness.versionLabelValue" .context }}
 {{- end }}
 
 {{/*
-Selector labels
+Harness Common labels
+*/}}
+{{- define "harness.agentLabels" -}}
+helm.sh/chart: {{ include "harness.chart" .context }}
+{{ include "harness.agentSelectorLabels" (dict "context" .context "component" .component "name" .name) }}
+app.kubernetes.io/managed-by: {{ .context.Release.Service }}
+app.kubernetes.io/part-of: harness-gitops
+app.kubernetes.io/version: {{ include "harness.versionLabelValue" .context }}
+{{- with .context.Values.global.additionalLabels }}
+{{ toYaml . }}
+{{- end }}
+{{- end }}
+
+{{/*
+Argo CD Selector labels
 */}}
 {{- define "harness.selectorLabels" -}}
 {{- if .name -}}
 app.kubernetes.io/name: {{ include "harness.name" .context }}-{{ .name }}
+{{ end -}}
+app.kubernetes.io/instance: {{ .context.Release.Name }}
+{{- if .component }}
+app.kubernetes.io/component: {{ .component }}
+{{- end }}
+{{- end }}
+
+{{/*
+Harness Selector labels
+*/}}
+{{- define "harness.agentSelectorLabels" -}}
+{{- if .name -}}
+app.kubernetes.io/name: {{ .context.Values.harness.nameOverride }}-{{ .name }}
 {{ end -}}
 app.kubernetes.io/instance: {{ .context.Release.Name }}
 {{- if .component }}

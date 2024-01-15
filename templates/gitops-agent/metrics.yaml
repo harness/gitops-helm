@@ -5,7 +5,7 @@ metadata:
   name: {{ ".Values.agent.name" }}-metrics
   namespace: {{ .Release.Namespace | quote }}
   labels:
-    {{- include "harness.labels" (dict "context" . "component" .Values.agent.name "name" (printf "%s-metrics" .Values.agent.name)) | nindent 4 }}
+    {{- include "harness.agentLabels" (dict "context" . "component" .Values.agent.name "name" (printf "%s-metrics" .Values.agent.name)) | nindent 4 }}
     {{- with .Values.agent.metrics.service.labels }}
       {{- toYaml . | nindent 4 }}
     {{- end }}
@@ -30,5 +30,5 @@ spec:
     port: {{ .Values.agent.metrics.service.servicePort }}
     targetPort: metrics
   selector:
-    {{- include "harness.selectorLabels" (dict "context" . "name" .Values.agent.name) | nindent 4 }}
+    {{- include "harness.agentSelectorLabels" (dict "context" . "name" .Values.agent.name) | nindent 4 }}
 {{- end }}

@@ -6,7 +6,7 @@ metadata:
   name: {{ .Values.agent.name }}
   namespace: {{ .Release.Namespace | quote }}
   labels:
-    {{- include "harness.labels" (dict "context" . "component" .Values.agent.name "name" .Values.agent.name) | nindent 4 }}
+    {{- include "harness.agentLabels" (dict "context" . "component" .Values.agent.name "name" .Values.agent.name) | nindent 4 }}
     {{- with .Values.agent.pdb.labels }}
       {{- toYaml . | nindent 4 }}
     {{- end }}
@@ -24,5 +24,5 @@ spec:
   {{- end }}
   selector:
     matchLabels:
-      {{- include "harness.selectorLabels" (dict "context" . "name" .Values.agent.name) | nindent 6 }}
+      {{- include "harness.agentSelectorLabels" (dict "context" . "name" .Values.agent.name) | nindent 6 }}
 {{- end }}

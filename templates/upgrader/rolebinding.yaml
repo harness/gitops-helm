@@ -5,7 +5,7 @@ metadata:
   name: {{ .Values.upgrader.name }}
   namespace: {{ .Release.Namespace | quote }}
   labels:
-    {{- include "harness.labels" (dict "context" . "component" .Values.upgrader.name "name" .Values.upgrader.name) | nindent 4 }}
+    {{- include "harness.agentLabels" (dict "context" . "component" .Values.upgrader.name "name" .Values.upgrader.name) | nindent 4 }}
 roleRef:
   kind: Role
   name: {{ .Values.upgrader.name }}

@@ -29,6 +29,6 @@ data:
 kind: ConfigMap
 metadata:
   labels:
-      {{- include "harness.labels" (dict "context" . "component" .Values.agent.name "name" (printf "%s-cm" .Values.agent.name)) | nindent 4 }}
+      {{- include "harness.agentLabels" (dict "context" . "component" .Values.agent.name "name" (printf "%s-cm" .Values.agent.name)) | nindent 4 }}
   name: {{ .Values.agent.name }}
   namespace: {{ .Release.Namespace }}
