@@ -12,19 +12,6 @@ argo-cd:
   # -- String to fully override `"argo-cd.fullname"`
   fullnameOverride: harness-gitops
 
-  ## Globally shared configuration
-  global:
-    # -- Toggle and define pod-level security context.
-    securityContext:
-      allowPrivilegeEscalation: false
-      capabilities:
-        drop:
-          - ALL
-      readOnlyRootFilesystem: true
-      runAsNonRoot: true
-      seccompProfile:
-        type: RuntimeDefault
-
   ## Argo Configs
   configs:
     # General Argo CD configuration
@@ -163,6 +150,9 @@ argo-cd:
       requests:
         cpu: "1"
         memory: 512Mi
+
+    containerSecurityContext:
+      readOnlyRootFilesystem: false
 
     serviceAccount:
       create: true
