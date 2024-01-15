@@ -12,7 +12,7 @@ spec:
   - from:
     - podSelector:
         matchLabels:
-          {{- include "harness.selectorLabels" (dict "context" . "name" .Values.agent.name) | nindent 10 }}
+          {{- include "harness.agentSelectorLabels" (dict "context" . "name" .Values.agent.name) | nindent 10 }}
     - podSelector:
         matchLabels:
           {{- include "harness.selectorLabels" (dict "context" . "name" .Values.controller.name) | nindent 10 }}

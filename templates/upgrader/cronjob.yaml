@@ -5,7 +5,7 @@ metadata:
   name: {{ .Values.agent.name }}-upgrader
   namespace: {{ .Release.Namespace | quote }}
   labels:
-    {{- include "harness.labels" (dict "context" . "component" .Values.upgrader.name "name" .Values.upgrader.name) | nindent 4 }}
+    {{- include "harness.agentLabels" (dict "context" . "component" .Values.upgrader.name "name" .Values.upgrader.name) | nindent 4 }}
 spec:
   schedule: "{{ .Values.upgrader.cron }}"
   concurrencyPolicy: Forbid

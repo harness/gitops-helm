@@ -7,8 +7,8 @@ argo-cd:
   # -- Disable this for BYOA flows, when Argo CD is already installed
   enabled: true
 
-  # -- Provide a name in place of `harness`
-  nameOverride: harness
+  # -- Provide a name in place of `argocd`
+  nameOverride: argocd
   # -- String to fully override `"argo-cd.fullname"`
   fullnameOverride: argocd
 
@@ -181,7 +181,7 @@ argo-cd:
 
 ## Variable Overrides for Harness configuration
 harness:
-
+  nameOverride: harness
   ## Harness specific identity data
   identity:
     # -- Account Identifier
@@ -509,7 +509,7 @@ upgrader:
 
 fullnameOverride: argocd
 
-nameOverride: harness
+nameOverride: argocd
 
 global:
   image:
