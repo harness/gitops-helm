@@ -11,7 +11,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: harness-gitops
     app.kubernetes.io/version: "v0.65.0"
-  name: harness-gitops-application-controller
+  name: argocd-application-controller
   namespace: "default"
 spec:
   ingress:
@@ -30,7 +30,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: harness-gitops-applicationset-controller
+  name: argocd-applicationset-controller
   namespace: "default"
   labels:
     helm.sh/chart: gitops-helm-1.0.0
@@ -67,7 +67,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: harness-gitops
     app.kubernetes.io/version: "v0.65.0"
-  name: harness-gitops-repo-server
+  name: argocd-repo-server
   namespace: "default"
 spec:
   ingress:
@@ -110,7 +110,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: harness-gitops
     app.kubernetes.io/version: "v0.65.0"
-  name: harness-gitops-redis
+  name: argocd-redis
   namespace: "default"
 spec:
   ingress:
@@ -181,7 +181,7 @@ apiVersion: v1
 kind: ServiceAccount
 automountServiceAccountToken: true
 metadata:
-  name: harness-gitops-repo-server
+  name: argocd-repo-server
   namespace: "default"
   labels:
     helm.sh/chart: argo-cd-5.51.6
@@ -197,7 +197,7 @@ apiVersion: v1
 kind: ServiceAccount
 automountServiceAccountToken: false
 metadata:
-  name: harness-gitops-redis
+  name: argocd-redis
   namespace: "default"
   labels:
     helm.sh/chart: argo-cd-5.51.6
@@ -327,8 +327,8 @@ data:
   controller.status.processors: "20"
   otlp.address: ""
   redis.compression: gzip
-  redis.server: harness-gitops-redis:6379
-  repo.server: harness-gitops-repo-server:8081
+  redis.server: argocd-redis:6379
+  repo.server: argocd-repo-server:8081
   reposerver.log.format: text
   reposerver.log.level: info
   reposerver.parallelism.limit: "0"
@@ -20711,7 +20711,7 @@ spec:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: harness-gitops-application-controller
+  name: argocd-application-controller
   labels:
     helm.sh/chart: argo-cd-5.51.6
     app.kubernetes.io/name: harness-application-controller
@@ -20736,7 +20736,7 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: harness-gitops-repo-server
+  name: argocd-repo-server
   labels:
     helm.sh/chart: argo-cd-5.51.6
     app.kubernetes.io/name: harness-repo-server
@@ -20827,7 +20827,7 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: harness-gitops-application-controller
+  name: argocd-application-controller
   labels:
     helm.sh/chart: argo-cd-5.51.6
     app.kubernetes.io/name: harness-application-controller
@@ -20839,7 +20839,7 @@ metadata:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: harness-gitops-application-controller
+  name: argocd-application-controller
 subjects:
 - kind: ServiceAccount
   name: argocd-application-controller
@@ -20849,7 +20849,7 @@ subjects:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: harness-gitops-repo-server
+  name: argocd-repo-server
   labels:
     helm.sh/chart: argo-cd-5.51.6
     app.kubernetes.io/name: harness-repo-server
@@ -20861,10 +20861,10 @@ metadata:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: harness-gitops-repo-server
+  name: argocd-repo-server
 subjects:
 - kind: ServiceAccount
-  name: harness-gitops-repo-server
+  name: argocd-repo-server
   namespace: default
 ---
 # Source: gitops-helm/templates/gitops-agent/clusterrolebinding.yaml
@@ -20893,7 +20893,7 @@ subjects:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: harness-gitops-application-controller
+  name: argocd-application-controller
   namespace: "default"
   labels:
     helm.sh/chart: argo-cd-5.51.6
@@ -20938,7 +20938,7 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: harness-gitops-applicationset-controller
+  name: argocd-applicationset-controller
   namespace: "default"
   labels:
     helm.sh/chart: argo-cd-5.51.6
@@ -21033,7 +21033,7 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: harness-gitops-repo-server
+  name: argocd-repo-server
   namespace: "default"
   labels:
     helm.sh/chart: argo-cd-5.51.6
@@ -21049,7 +21049,7 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: harness-gitops-server
+  name: argocd-server
   namespace: "default"
   labels:
     helm.sh/chart: argo-cd-5.51.6
@@ -21224,7 +21224,7 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: harness-gitops-application-controller
+  name: argocd-application-controller
   namespace: "default"
   labels:
     helm.sh/chart: argo-cd-5.51.6
@@ -21237,7 +21237,7 @@ metadata:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: harness-gitops-application-controller
+  name: argocd-application-controller
 subjects:
 - kind: ServiceAccount
   name: argocd-application-controller
@@ -21247,7 +21247,7 @@ subjects:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: harness-gitops-applicationset-controller
+  name: argocd-applicationset-controller
   namespace: "default"
   labels:
     helm.sh/chart: argo-cd-5.51.6
@@ -21260,7 +21260,7 @@ metadata:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: harness-gitops-applicationset-controller
+  name: argocd-applicationset-controller
 subjects:
   - kind: ServiceAccount
     name: argocd-applicationset-controller
@@ -21270,7 +21270,7 @@ subjects:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: harness-gitops-repo-server
+  name: argocd-repo-server
   namespace: "default"
   labels:
     helm.sh/chart: argo-cd-5.51.6
@@ -21283,17 +21283,17 @@ metadata:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: harness-gitops-repo-server
+  name: argocd-repo-server
 subjects:
 - kind: ServiceAccount
-  name: harness-gitops-repo-server
+  name: argocd-repo-server
   namespace: default
 ---
 # Source: gitops-helm/charts/argo-cd/templates/argocd-server/rolebinding.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: harness-gitops-server
+  name: argocd-server
   namespace: "default"
   labels:
     helm.sh/chart: argo-cd-5.51.6
@@ -21306,7 +21306,7 @@ metadata:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: harness-gitops-server
+  name: argocd-server
 subjects:
 - kind: ServiceAccount
   name: argocd-server
@@ -21362,7 +21362,7 @@ subjects:
 apiVersion: v1
 kind: Service
 metadata:
-  name: harness-gitops-applicationset-controller-metrics
+  name: argocd-applicationset-controller-metrics
   namespace: "default"
   labels:
     helm.sh/chart: argo-cd-5.51.6
@@ -21387,7 +21387,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: harness-gitops-applicationset-controller
+  name: argocd-applicationset-controller
   namespace: "default"
   labels:
     helm.sh/chart: argo-cd-5.51.6
@@ -21411,7 +21411,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: harness-gitops-repo-server-metrics
+  name: argocd-repo-server-metrics
   namespace: "default"
   labels:
     helm.sh/chart: argo-cd-5.51.6
@@ -21444,7 +21444,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: argocd
     app.kubernetes.io/version: "v2.9.3"
-  name: harness-gitops-repo-server
+  name: argocd-repo-server
   namespace: "default"
 spec:
   ports:
@@ -21460,7 +21460,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: harness-gitops-server
+  name: argocd-server
   namespace: "default"
   labels:
     helm.sh/chart: argo-cd-5.51.6
@@ -21489,7 +21489,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: harness-gitops-redis
+  name: argocd-redis
   namespace: "default"
   labels:
     helm.sh/chart: argo-cd-5.51.6
@@ -21512,7 +21512,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: harness-gitops-applicationset-controller
+  name: argocd-applicationset-controller
   namespace: "default"
   labels:
     helm.sh/chart: argo-cd-5.51.6
@@ -21532,7 +21532,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/cmd-params: 9b0af87fa082e89e6db411b973ba9a2eef777b409ac904f86ced6061dc74a835
+        checksum/cmd-params: 72604beaefd4438e56e748191419fa68e798613b372555760ed5d69abd688403
       labels:
         helm.sh/chart: argo-cd-5.51.6
         app.kubernetes.io/name: harness-applicationset-controller
@@ -21757,7 +21757,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: harness-gitops-repo-server
+  name: argocd-repo-server
   namespace: "default"
   labels:
     helm.sh/chart: argo-cd-5.51.6
@@ -21777,7 +21777,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/cmd-params: 9b0af87fa082e89e6db411b973ba9a2eef777b409ac904f86ced6061dc74a835
+        checksum/cmd-params: 72604beaefd4438e56e748191419fa68e798613b372555760ed5d69abd688403
         checksum/cm: ca3b9f8ea33b44e019468821e7aceffa293d1c2d23b030ae7d37a02607afb354
       labels:
         helm.sh/chart: argo-cd-5.51.6
@@ -21789,7 +21789,7 @@ spec:
         app.kubernetes.io/version: "v2.9.3"
     spec:
       terminationGracePeriodSeconds: 30
-      serviceAccountName: harness-gitops-repo-server
+      serviceAccountName: argocd-repo-server
       containers:
       - name: repo-server
         image: docker.io/harness/argocd:v2.9.3
@@ -21906,13 +21906,13 @@ spec:
           - name: REDIS_USERNAME
             valueFrom:
               secretKeyRef:
-                name: harness-gitops-redis
+                name: argocd-redis
                 key: redis-username
                 optional: true
           - name: REDIS_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: harness-gitops-redis
+                name: argocd-redis
                 key: redis-password
                 optional: true
           - name: ARGOCD_DEFAULT_CACHE_EXPIRATION
@@ -22134,7 +22134,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: harness-gitops-server
+  name: argocd-server
   namespace: "default"
   labels:
     helm.sh/chart: argo-cd-5.51.6
@@ -22154,7 +22154,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/cmd-params: 9b0af87fa082e89e6db411b973ba9a2eef777b409ac904f86ced6061dc74a835
+        checksum/cmd-params: 72604beaefd4438e56e748191419fa68e798613b372555760ed5d69abd688403
       labels:
         helm.sh/chart: argo-cd-5.51.6
         app.kubernetes.io/name: harness-server
@@ -22340,13 +22340,13 @@ spec:
           - name: REDIS_USERNAME
             valueFrom:
               secretKeyRef:
-                name: harness-gitops-redis
+                name: argocd-redis
                 key: redis-username
                 optional: true
           - name: REDIS_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: harness-gitops-redis
+                name: argocd-redis
                 key: redis-password
                 optional: true
           - name: ARGOCD_DEFAULT_CACHE_EXPIRATION
@@ -22492,7 +22492,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: harness-gitops-redis
+  name: argocd-redis
   namespace: "default"
   labels:
     helm.sh/chart: argo-cd-5.51.6
@@ -22525,7 +22525,7 @@ spec:
         seccompProfile:
           type: RuntimeDefault
       terminationGracePeriodSeconds: 30
-      serviceAccountName: harness-gitops-redis
+      serviceAccountName: argocd-redis
       containers:
       - name: redis
         image: redis:7.0.11-alpine
@@ -22693,7 +22693,7 @@ spec:
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: harness-gitops-application-controller
+  name: argocd-application-controller
   namespace: "default"
   labels:
     helm.sh/chart: argo-cd-5.51.6
@@ -22707,7 +22707,7 @@ spec:
   replicas: 1
   # TODO: Remove for breaking release as history limit cannot be patched
   revisionHistoryLimit: 5
-  serviceName: harness-gitops-application-controller
+  serviceName: argocd-application-controller
   selector:
     matchLabels:
       app.kubernetes.io/name: harness-application-controller
@@ -22715,7 +22715,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/cmd-params: 9b0af87fa082e89e6db411b973ba9a2eef777b409ac904f86ced6061dc74a835
+        checksum/cmd-params: 72604beaefd4438e56e748191419fa68e798613b372555760ed5d69abd688403
         checksum/cm: ca3b9f8ea33b44e019468821e7aceffa293d1c2d23b030ae7d37a02607afb354
       labels:
         helm.sh/chart: argo-cd-5.51.6
@@ -22843,13 +22843,13 @@ spec:
           - name: REDIS_USERNAME
             valueFrom:
               secretKeyRef:
-                name: harness-gitops-redis
+                name: argocd-redis
                 key: redis-username
                 optional: true
           - name: REDIS_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: harness-gitops-redis
+                name: argocd-redis
                 key: redis-password
                 optional: true
           - name: ARGOCD_DEFAULT_CACHE_EXPIRATION
@@ -22987,7 +22987,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: harness-gitops-applicationset-controller
+  name: argocd-applicationset-controller
   namespace: "default"
   labels:
     helm.sh/chart: argo-cd-5.51.6
@@ -23005,6 +23005,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: harness-gitops-applicationset-controller
+                name: argocd-applicationset-controller
                 port:
                   name: webhook
