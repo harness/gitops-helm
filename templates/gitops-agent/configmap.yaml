@@ -1,4 +1,5 @@
-{{- $redisHa := (index .Values "redis-ha") -}}
+{{- $argo := (index .Values "argo-cd") -}}
+{{- $redisHa := (index $argo "redis-ha") -}}
 apiVersion: v1
 data:
   GITOPS_ACCOUNT_IDENTIFIER: {{ .Values.harness.identity.accountIdentifier }}
