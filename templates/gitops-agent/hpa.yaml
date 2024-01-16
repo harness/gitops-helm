@@ -1,4 +1,3 @@
-{{- $argo := (index .Values "argo-cd") -}}
 {{- if .Values.agent.autoscaling.enabled }}
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler

@@ -1,4 +1,3 @@
-{{- $argo := (index .Values "argo-cd") -}}
 {{- if .Values.agent.pdb.enabled }}
 apiVersion: policy/v1
 kind: PodDisruptionBudget
