@@ -1,3 +1,5 @@
+{{- $argo := (index .Values "argo-cd") -}}
+{{- $redisHa := (index $argo "redis-ha") -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -55,6 +57,10 @@ spec:
       containers:
       - command:
           - /app/agent
+          {{- if $redisHa }}
+          - --redis
+          - argocd-redis-ha-haproxy:6379
+          {{- end }}
         name: {{ .Values.agent.name }}
         image: {{ .Values.agent.image.repository }}:{{ .Values.agent.image.tag }}
         imagePullPolicy: {{ .Values.agent.image.imagePullPolicy }}
