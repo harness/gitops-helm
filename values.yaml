@@ -29,10 +29,6 @@ argo-cd:
       # It should be false for Namespaced Agent installations
       cluster.inClusterEnabled: "true"
 
-    params:
-      # Setting default Redis Compression as "gzip" (options: "none", "gzip")
-      redis.compression: gzip
-
   ## Custom resource configuration
   crds:
     # -- Keep CRDs on chart uninstall
@@ -75,29 +71,6 @@ argo-cd:
 
   ## Argo CD Repo Server
   repoServer:
-    # -- Environment variables to pass to repo server
-    env:
-      - name: HELM_PLUGINS
-        value: /helm-sops-tools/helm-plugins/
-      - name: HELM_SECRETS_CURL_PATH
-        value: /helm-sops-tools/curl
-      - name: HELM_SECRETS_SOPS_PATH
-        value: /helm-sops-tools/sops
-      - name: HELM_SECRETS_KUBECTL_PATH
-        value: /helm-sops-tools/kubectl
-      - name: HELM_SECRETS_BACKEND
-        value: sops
-      - name: HELM_SECRETS_VALUES_ALLOW_SYMLINKS
-        value: "false"
-      - name: HELM_SECRETS_VALUES_ALLOW_ABSOLUTE_PATH
-        value: "true"
-      - name: HELM_SECRETS_VALUES_ALLOW_PATH_TRAVERSAL
-        value: "false"
-      - name: HELM_SECRETS_WRAPPER_ENABLED
-        value: "true"
-      - name: HELM_SECRETS_HELM_PATH
-        value: /usr/local/bin/helm
-
     # -- Init containers to add to the repo server pods
     initContainers:
       - name: sops-helm-secrets-tool
@@ -208,7 +181,6 @@ harness:
       podsDiscovery: 120
     logLevel: "debug"
     agentFetchType: "POLLER"
-    redisCompression: "gzip"
 
   secrets:
     agentSecret: ""
@@ -239,6 +211,9 @@ agent:
 
   # -- GitOps Agent identifier name
   harnessName: gitops-agent
+
+  # -- Create cluster role for the agent, required for in-cluster
+  createClusterRole: true
 
   # -- The number of agent pods to run
   replicas: 1

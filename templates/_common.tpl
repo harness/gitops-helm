@@ -84,3 +84,14 @@ Create the name of the GitOps Agent service account to use
     {{ default "default" .Values.agent.serviceAccount.name }}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Disaster Recovery cluster name
+*/}}
+{{- define "harness.agentClusterName" -}}
+  {{- if .Values.harness.disasterRecovery }}
+  {{ .Values.agent.harnessName }}-agent-{{ .Values.harness.disasterRecovery.identifier }}
+  {{- else -}}
+  {{ .Values.agent.harnessName }}-agent
+  {{- end }}
+{{- end -}}
