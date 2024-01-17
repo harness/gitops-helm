@@ -3,7 +3,7 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: {{ .Values.agent.harnessName }}-agent
+  name: {{ template "harness.agentClusterName" . }}
   labels:
     {{- include "harness.agentLabels" (dict "context" . "component" .Values.agent.name "name" .Values.agent.name) | nindent 4 }}
 rules:
