@@ -236,10 +236,10 @@ agent:
     enabled: false
 
     # -- Add HTTP proxy
-    httpProxy: {}
+    httpProxy: ""
 
     # -- Add HTTPS proxy
-    httpsProxy: {}
+    httpsProxy: ""
 
   ## Create an OpenShift agent
   openshift:
