@@ -10,7 +10,7 @@ entries:
         url: https://argoproj.github.io/argo-helm/pgp_keys.asc
     apiVersion: v2
     appVersion: v2.9.3
-    created: "2024-01-16T23:35:57.781275+05:30"
+    created: "2024-01-17T19:57:41.080947+05:30"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
@@ -38,7 +38,7 @@ entries:
     version: 5.51.6
   gitops-helm:
   - apiVersion: v2
-    created: "2024-01-16T23:35:57.772751+05:30"
+    created: "2024-01-17T19:57:41.073759+05:30"
     dependencies:
     - condition: argo-cd.enabled
       name: argo-cd
@@ -46,9 +46,9 @@ entries:
       version: 5.51.6
     description: A Helm chart for Harness GitOps Agent - for more information, please
       visit https://developer.harness.io/docs/category/gitops.
-    digest: b13640d5deb53808f787e40ae11b3319953a30b8d4ad51b2bbb1081fe484acd5
+    digest: b0823a79369a95a40c58a2c8fee39dadbf07a3f1e29bb8ecebd86d8b184f4d02
     name: gitops-helm
     urls:
-    - https://harness.github.io/gitops-helm/gitops-helm-1.0.4.tgz
-    version: 1.0.4
-generated: "2024-01-16T23:35:57.757488+05:30"
+    - https://harness.github.io/gitops-helm/gitops-helm-1.0.5.tgz
+    version: 1.0.5
+generated: "2024-01-17T19:57:41.065219+05:30"
