@@ -1,4 +1,5 @@
-{{- if .Values.harness.createClusterRoles }}
+{{- $argo := (index .Values "argo-cd") -}}
+{{- if and .Values.harness.createClusterRoles $argo.enabled }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
