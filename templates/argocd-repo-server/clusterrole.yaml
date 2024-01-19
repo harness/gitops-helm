@@ -1,0 +1,19 @@
+{{- if .Values.harness.createClusterRoles }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ include "argo-cd.repoServer.fullname" . }}-{{ .Release.Namespace }}
+  labels:
+    {{- include "harness.labels" (dict "context" . "component" .Values.repoServer.name "name" .Values.repoServer.name) | nindent 4 }}
+rules:
+  - apiGroups:
+    - '*'
+    resources:
+    - '*'
+    verbs:
+    - '*'
+  - nonResourceURLs:
+    - '*'
+    verbs:
+    - '*'
+{{- end }}

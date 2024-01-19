@@ -1,4 +1,4 @@
-{{- if .Values.agent.createClusterRole }}
+{{- if .Values.harness.createClusterRoles }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
