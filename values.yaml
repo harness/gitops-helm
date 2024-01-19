@@ -12,6 +12,9 @@ argo-cd:
   # -- String to fully override `"argo-cd.fullname"`
   fullnameOverride: argocd
 
+  # -- These are added as custom templates in each component
+  createClusterRoles: false
+
   ## Argo Configs
   configs:
     # General Argo CD configuration
@@ -188,6 +191,9 @@ harness:
       enabled: false
       secret: ""
 
+  # -- Create cluster role for Argo CD and GitOps agent, required for in-cluster
+  createClusterRoles: true
+
   # Default Harness network policy rules used by all components
   networkPolicy:
     # -- Create NetworkPolicy objects for all components
@@ -211,9 +217,6 @@ agent:
 
   # -- GitOps Agent identifier name
   harnessName: gitops-agent
-
-  # -- Create cluster role for the agent, required for in-cluster
-  createClusterRole: true
 
   # -- The number of agent pods to run
   replicas: 1
