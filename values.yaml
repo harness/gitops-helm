@@ -499,12 +499,16 @@ global:
 
 repoServer:
   name: repo-server
+  serviceAccount:
+    create: true
 
 applicationSet:
   name: applicationset-controller
 
 controller:
   name: application-controller
+  serviceAccount:
+    create: true
 
 redis:
   name: redis
