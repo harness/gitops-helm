@@ -93,6 +93,9 @@ argo-cd:
     volumeMounts:
       - mountPath: /helm-sops-tools
         name: helm-sops-tools
+      - mountPath: /usr/local/sbin/helm
+        subPath: helm
+        name: helm-sops-tools
 
     # -- Additional volumes to the repo server pod
     volumes:
