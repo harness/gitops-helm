@@ -4,6 +4,6 @@ description: A Helm chart for Harness GitOps Agent - for more information, pleas
 version: 1.0.13
 dependencies:
   - name: argo-cd
-    version: 5.51.6
+    version: 5.53.1
     repository: https://argoproj.github.io/argo-helm
     condition: argo-cd.enabled
