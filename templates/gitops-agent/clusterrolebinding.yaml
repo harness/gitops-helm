@@ -11,6 +11,6 @@ roleRef:
   name: {{ include "harness.agentClusterName" . }}
 subjects:
 - kind: ServiceAccount
-  name: {{ include "harness.agentServiceAccountName" . }}
+  name: {{ include "harness.agent.serviceAccountName" . }}
   namespace: {{ .Release.Namespace }}
 {{- end }}
