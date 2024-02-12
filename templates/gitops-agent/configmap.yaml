@@ -27,7 +27,7 @@ data:
   HTTP_PROXY: {{ .Values.agent.proxy.httpProxy }}
   NO_PROXY: localhost,argocd-repo-server,argocd-redis,127.0.0.1,argocd-redis-ha-haproxy,$(KUBERNETES_SERVICE_HOST),kubernetes.default.svc,{{ .Values.agent.name }}
   {{- end }}
-  {{-  if $redisHa.haproxy.enabled }}
+  {{-  if and $argo.enabled $redisHa.haproxy.enabled }}
   REDIS_SERVER: argocd-redis-ha-haproxy:6379
   {{- end }}
 kind: ConfigMap
