@@ -11,5 +11,5 @@ roleRef:
   name: {{ .Values.agent.name }}
 subjects:
 - kind: ServiceAccount
-  name: {{ template "harness.agentServiceAccountName" . }}
+  name: {{ template "harness.agent.serviceAccountName" . }}
   namespace: {{ .Release.Namespace }}
