@@ -183,7 +183,6 @@ harness:
       agentHttpTarget: ""
       # -- Enable mTLS for GitOps agent
       mtls: false
-
     ## Reconciliation Config - Reconcile GitOps entities from Agent's Cluster
     reconcile:
       enabled: true
@@ -512,8 +511,8 @@ upgrader:
     # -- Upgrade all related images in GitOps Agent including Argo CD, Redis etc.
     upgradeAll: false
     # -- Cert Paths for mTLS in upgrader
-    mtlsClientCertificateFilePath: /etc/mtls/client.crt
-    mtlsClientCertificateKeyFilePath: /etc/mtls/client.key
+    clientCertificateFilePath: /etc/mtls/client.crt
+    clientCertificateKeyFilePath: /etc/mtls/client.key
 
 
 # <---Duplicated Argo CD overrides for overridden templates--->
