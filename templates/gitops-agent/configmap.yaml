@@ -15,6 +15,9 @@ data:
   {{- end }}
   GITOPS_SERVICE_HTTP_TLS_ENABLED: "{{ .Values.harness.configMap.http.tlsEnabled }}"
   GITOPS_SERVICE_HTTP_CERT_FILES: {{ .Values.harness.configMap.http.certPath }}
+  GITOPS_SERVICE_MTLS_ENABLED: "{{ .Values.harness.configMap.http.mtls }}"
+  GITOPS_SERVICE_HTTP_CLIENT_CERT: /etc/mtls/client.crt
+  GITOPS_SERVICE_HTTP_CLIENT_KEY: /etc/mtls/client.key
   AGENT_HTTP_TARGET: {{ .Values.harness.configMap.http.agentHttpTarget }}
   GITOPS_SERVICE_PROTOCOL: {{ .Values.harness.configMap.agentProtocol }}
   GITOPS_AGENT_ENABLE_RECONCILE: "{{ .Values.harness.configMap.reconcile.enabled }}"

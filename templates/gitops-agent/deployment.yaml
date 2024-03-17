@@ -88,6 +88,8 @@ spec:
           name: plugins-home
         - mountPath: /tmp
           name: tmp
+        - mountPath: /etc/mtls
+          name: mtls-certs
         {{- if .Values.harness.secrets.caData.enabled }}
         - mountPath: /tmp/ca.bundle
           name: certvol
@@ -187,6 +189,15 @@ spec:
             path: tls.key
           - key: ca.crt
             path: ca.crt
+      - name: mtls-certs
+        secret:
+          secretName: {{ .Values.agent.name }}-mtls
+          optional: true
+          items:
+          - key: client.crt
+            path: client.crt
+          - key: client.key
+            path: client.key
       {{ if .Values.harness.secrets.caData.enabled }}
       - name: certvol
         secret:

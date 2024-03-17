@@ -178,6 +178,7 @@ harness:
       tlsEnabled: false
       certPath: "/tmp/ca.bundle"
       agentHttpTarget: ""
+      mtls: false
     reconcile:
       enabled: true
       interval: 100
@@ -190,6 +191,8 @@ harness:
     caData:
       enabled: false
       secret: ""
+    clientCert: ""
+    clientKey: ""
 
   # -- Create cluster role for Argo CD and GitOps agent, required for in-cluster
   createClusterRoles: true
@@ -482,6 +485,11 @@ upgrader:
 
   # -- Docker image for upgrader
   image: harness/upgrader:latest
+  config:
+    upgradeAll: false
+    clientCertificateFilePath: /etc/mtls/client.crt
+    clientCertificateKeyFilePath: /etc/mtls/client.key
+
 
 # <---Duplicated Argo CD overrides for overridden templates--->
 
