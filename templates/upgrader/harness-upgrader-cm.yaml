@@ -8,8 +8,8 @@ data:
     namespace: {{ .Release.Namespace }}
     containerName: gitops-agent
     {{- if .Values.harness.configMap.http.mtls }}
-    clientCertificateFilePath: {{ .Values.upgrader.config.clientCertificateFilePath }}
-    clientCertificateKeyFilePath: {{ .Values.upgrader.config.clientCertificateKeyFilePath }}
+    clientCertificateFilePath: {{ .Values.upgrader.config.mtlsClientCertificateFilePath }}
+    clientCertificateKeyFilePath: {{ .Values.upgrader.config.mtlsClientCertificateKeyFilePath }}
     {{- end }}
     gitopsAgentConfig:
       upgrader:
