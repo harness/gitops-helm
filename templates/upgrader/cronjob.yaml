@@ -33,6 +33,8 @@ spec:
                   value: localhost,argocd-repo-server,argocd-redis,127.0.0.1,argocd-redis-ha-haproxy,kubernetes.default.svc,{{ .Values.agent.name }}
             {{- end }}
               volumeMounts:
+                - name: mtls-certs
+                  mountPath: /etc/mtls
                 - name: config-volume
                   mountPath: /etc/config
                 {{- if .Values.harness.secrets.caData.enabled }}
@@ -53,6 +55,15 @@ spec:
                   - key: ca.bundle
                     path: ca.bundle
             {{- end }}
+            - name: mtls-certs
+              secret:
+                secretName: {{ .Values.agent.name }}-mtls
+                optional: true
+                items:
+                  - key: client.crt
+                    path: client.crt
+                  - key: client.key
+                    path: client.key
           restartPolicy: Never
 ---
 {{- end }}

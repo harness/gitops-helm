@@ -7,7 +7,13 @@ data:
     workloadName: {{ .Values.agent.name }}
     namespace: {{ .Release.Namespace }}
     containerName: gitops-agent
+    {{- if .Values.harness.configMap.http.mtls }}
+    clientCertificateFilePath: {{ .Values.upgrader.config.mtlsClientCertificateFilePath }}
+    clientCertificateKeyFilePath: {{ .Values.upgrader.config.mtlsClientCertificateKeyFilePath }}
+    {{- end }}
     gitopsAgentConfig:
+      upgrader:
+        all: {{ .Values.upgrader.config.upgradeAll }}
       gitopsServerHost: {{ .Values.harness.gitopsServerHost }}
       {{- if .Values.harness.secrets.caData.enabled }}
       caData: /tmp/ca.bundle
