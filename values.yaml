@@ -173,26 +173,40 @@ harness:
     agentIdentifier: ""
 
   configMap:
+    # -- Legacy config: GitOps Agent communication protocol
     agentProtocol : "HTTP1"
     http:
+      # -- Enable TLS for GitOps agent
       tlsEnabled: false
       certPath: "/tmp/ca.bundle"
+      # -- DoNotEdit - GitOps Agent HTTP Target
       agentHttpTarget: ""
+      # -- Enable mTLS for GitOps agent
       mtls: false
+
+    ## Reconciliation Config - Reconcile GitOps entities from Agent's Cluster
     reconcile:
       enabled: true
+      # -- Interval for periodic reconcile
       interval: 100
+      # -- Interval to discover Pods for Instance Sync
       podsDiscovery: 120
+    # -- Log Level set to Debug
     logLevel: "debug"
+    # -- Legacy config: GitOps Agent Fetch Tasks by Polling
     agentFetchType: "POLLER"
 
   secrets:
+    # -- DoNotEdit - GitOps Agent Secret uniquely identifies a GitOps Agent in the Service
     agentSecret: ""
+
+    # -- Self-signed Certificate config (Certificate field under "Advanced" section of UI while creating GitOps Agent)
     caData:
       enabled: false
       secret: ""
-    clientCert: ""
-    clientKey: ""
+    # -- Client Certificate and Key for mTLS
+    mtlsClientCert: ""
+    mtlsClientKey: ""
 
   # -- Create cluster role for Argo CD and GitOps agent, required for in-cluster
   createClusterRoles: true
@@ -202,10 +216,10 @@ harness:
     # -- Create NetworkPolicy objects for all components
     create: true
 
-  # -- Host for GitOps Service
+  # -- GitOps Service Host Address
   gitopsServerHost: ""
 
-  ## Disaster Recovery configuration
+  ## -- Legacy config: Disaster Recovery
   disasterRecovery:
     # -- Enable Disaster Recovery Agent
     enabled: false
@@ -486,7 +500,9 @@ upgrader:
   # -- Docker image for upgrader
   image: harness/upgrader:latest
   config:
+    # -- Upgrade all related images in GitOps Agent including Argo CD, Redis etc.
     upgradeAll: false
+    # -- Cert Paths for mTLS in upgrader
     clientCertificateFilePath: /etc/mtls/client.crt
     clientCertificateKeyFilePath: /etc/mtls/client.key
 
