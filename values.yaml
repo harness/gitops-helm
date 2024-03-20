@@ -196,6 +196,15 @@ harness:
     # -- Legacy config: GitOps Agent Fetch Tasks by Polling
     agentFetchType: "POLLER"
 
+    # -- non-default Argo CD name overrides for Harness GitOps Agent
+    argocd:
+      repoServer: "argocd-repo-server"
+      redis: "argocd-redis"
+      redisHa: "argocd-redis-ha"
+      redisHaProxy: "argocd-redis-ha-haproxy"
+      controller: "argocd-application-controller"
+      applicationSet: "argocd-applicationset-controller"
+
   secrets:
     # -- DoNotEdit - GitOps Agent Secret uniquely identifies a GitOps Agent in the Service
     agentSecret: ""
