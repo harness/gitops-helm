@@ -19,6 +19,9 @@ spec:
             - name: upgrader
               image: {{ .Values.upgrader.image }}
               imagePullPolicy: Always
+              envFrom:
+                - configMapRef:
+                    name: {{ .Values.agent.name }}-upgrader
               env:
                 - name: POD_NAMESPACE
                   valueFrom:
@@ -32,6 +35,11 @@ spec:
                 - name: NO_PROXY
                   value: localhost,argocd-repo-server,argocd-redis,127.0.0.1,argocd-redis-ha-haproxy,kubernetes.default.svc,{{ .Values.agent.name }}
             {{- end }}
+                - name: UPGRADER_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      key: GITOPS_AGENT_TOKEN
+                      name: gitops-agent
               volumeMounts:
                 - name: mtls-certs
                   mountPath: /etc/mtls
