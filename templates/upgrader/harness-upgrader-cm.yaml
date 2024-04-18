@@ -18,6 +18,7 @@ data:
   UPGRADER_CLIENT_CERTIFICATE_KEY_FILE_PATH: {{ .Values.upgrader.config.clientCertificateKeyFilePath }}
   {{- end }}
   UPGRADER_GITOPS_AGENT_HTTP_TARGET: {{ .Values.harness.gitopsServerHost }}
+  UPGRADER_USE_V2: "true"
   UPGRADER_GITOPS_ALL: "{{ .Values.upgrader.config.upgradeAll }}"
 kind: ConfigMap
 metadata:
