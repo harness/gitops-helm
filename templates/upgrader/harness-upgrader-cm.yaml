@@ -1,23 +1,25 @@
 {{- if .Values.upgrader.enabled }}
 apiVersion: v1
 data:
-  config.yaml: |
-    mode: GitopsAgent
-    dryRun: false
-    workloadName: {{ .Values.agent.name }}
-    namespace: {{ .Release.Namespace }}
-    containerName: gitops-agent
-    {{- if .Values.harness.configMap.http.mtls }}
-    clientCertificateFilePath: {{ .Values.upgrader.config.mtlsClientCertificateFilePath }}
-    clientCertificateKeyFilePath: {{ .Values.upgrader.config.mtlsClientCertificateKeyFilePath }}
-    {{- end }}
-    gitopsAgentConfig:
-      upgrader:
-        all: {{ .Values.upgrader.config.upgradeAll }}
-      gitopsServerHost: {{ .Values.harness.gitopsServerHost }}
-      {{- if .Values.harness.secrets.caData.enabled }}
-      caData: /tmp/ca.bundle
-      {{- end }}
+  UPGRADER_GITOPS_ACCOUNT_IDENTIFIER: {{ .Values.harness.identity.accountIdentifier }}
+  UPGRADER_GITOPS_AGENT_IDENTIFIER: {{ .Values.harness.identity.agentIdentifier }}
+  {{- if ne .Values.harness.identity.orgIdentifier "" }}
+  UPGRADER_GITOPS_ORG_IDENTIFIER: {{ .Values.harness.identity.orgIdentifier }}
+  {{- end }}
+  {{- if ne .Values.harness.identity.projectIdentifier "" }}
+  UPGRADER_GITOPS_PROJECT_IDENTIFIER: {{ .Values.harness.identity.projectIdentifier }}
+  {{- end }}
+  UPGRADER_MODE: GitopsAgent
+  UPGRADER_NAMESPACE: {{ .Release.Namespace }}
+  UPGRADER_WORKLOAD_NAME: {{ .Values.agent.name }}
+  UPGRADER_CONTAINER_NAME: gitops-agent
+  {{- if .Values.harness.configMap.http.mtls }}
+  UPGRADER_CLIENT_CERTIFICATE_FILE_PATH: {{ .Values.upgrader.config.clientCertificateFilePath }}
+  UPGRADER_CLIENT_CERTIFICATE_KEY_FILE_PATH: {{ .Values.upgrader.config.clientCertificateKeyFilePath }}
+  {{- end }}
+  UPGRADER_GITOPS_AGENT_HTTP_TARGET: {{ .Values.harness.gitopsServerHost }}
+  UPGRADER_GITOPS_USE_V2: "true"
+  UPGRADER_GITOPS_ALL: "{{ .Values.upgrader.config.upgradeAll }}"
 kind: ConfigMap
 metadata:
   name: {{ .Values.agent.name }}-upgrader
