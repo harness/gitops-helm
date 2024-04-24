@@ -246,6 +246,9 @@ agent:
   # -- The number of agent pods to run
   replicas: 1
 
+  # -- Enable High Availability for the GitOps Agent
+  highAvailability: false
+
   # -- GitOps Agent image
   image:
     # -- Repository to use for GitOps Agent

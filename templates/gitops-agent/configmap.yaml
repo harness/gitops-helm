@@ -31,6 +31,7 @@ data:
   GITOPS_ARGOCD_REDIS_HA_PROXY: "{{ .Values.harness.configMap.argocd.redisHaProxy }}"
   GITOPS_ARGOCD_APP_CONTROLLER: "{{ .Values.harness.configMap.argocd.controller }}"
   GITOPS_ARGOCD_APPSET_CONTROLLER: "{{ .Values.harness.configMap.argocd.applicationSet }}"
+  GITOPS_AGENT_AVAILABILITY_MODE: "{{ if .Values.agent.highAvailability }}HA{{ else }}NON-HA{{ end }}"
   {{-  if .Values.agent.proxy.enabled }}
   HTTPS_PROXY: {{ .Values.agent.proxy.httpsProxy }}
   HTTP_PROXY: {{ .Values.agent.proxy.httpProxy }}
