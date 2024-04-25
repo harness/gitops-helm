@@ -95,10 +95,8 @@ spec:
           name: certvol
           subPath: ca.bundle
         {{- end }}
-        {{- if .Values.agent.openshift.enabled }}
         - mountPath: /app/logs
           name: log-volume
-        {{- end }}
         startupProbe:
           exec:
             command:
@@ -207,10 +205,8 @@ spec:
             - key: ca.bundle
               path: ca.bundle
       {{- end }}
-      {{- if .Values.agent.openshift.enabled }}
       - name: log-volume
         emptyDir: { }
-      {{- end }}
       {{- if .Values.agent.hostNetwork }}
       hostNetwork: {{ .Values.agent.hostNetwork }}
       {{- end }}
