@@ -25,21 +25,20 @@ data:
   GITOPS_AGENT_DISCOVER_APPLICATION_PODS_DURATION_IN_SECS: "{{ .Values.harness.configMap.reconcile.podsDiscovery }}"
   LOG_LEVEL: {{ .Values.harness.configMap.logLevel }}
   GITOPS_AGENT_FETCH_TYPE: "{{ .Values.harness.configMap.agentFetchType }}"
-  GITOPS_ARGOCD_REPO: "{{ .Values.harness.configMap.argocd.repoServer }}"
-  GITOPS_ARGOCD_REDIS: "{{ .Values.harness.configMap.argocd.redis }}"
-  GITOPS_ARGOCD_REDIS_HA: "{{ .Values.harness.configMap.argocd.redisHa }}"
-  GITOPS_ARGOCD_REDIS_HA_PROXY: "{{ .Values.harness.configMap.argocd.redisHaProxy }}"
-  GITOPS_ARGOCD_APP_CONTROLLER: "{{ .Values.harness.configMap.argocd.controller }}"
-  GITOPS_ARGOCD_APPSET_CONTROLLER: "{{ .Values.harness.configMap.argocd.applicationSet }}"
-  GITOPS_AGENT_AVAILABILITY_MODE: "{{ if .Values.agent.highAvailability }}HA{{ else }}NON-HA{{ end }}"
+  GITOPS_ARGOCD_REPO: {{ .Values.harness.configMap.argocd.repoServer }}
+  GITOPS_ARGOCD_REDIS: {{ .Values.harness.configMap.argocd.redis }}
+  GITOPS_ARGOCD_REDIS_HA: {{ .Values.harness.configMap.argocd.redisHa }}
+  GITOPS_ARGOCD_REDIS_HA_PROXY: {{ .Values.harness.configMap.argocd.redisHaProxy }}
+  GITOPS_ARGOCD_APP_CONTROLLER: {{ .Values.harness.configMap.argocd.controller }}
+  GITOPS_ARGOCD_APPSET_CONTROLLER: {{ .Values.harness.configMap.argocd.applicationSet }}
+  GITOPS_AGENT_AVAILABILITY_MODE: {{ if .Values.agent.highAvailability }}HA{{ else }}NON-HA{{ end }}
+  ARGOCD_SERVER_REPO_SERVER: {{ if .Values.harness.configMap.argocd.repoServerSvc }} {{ .Values.harness.configMap.argocd.repoServerSvc }}:8081{{ else }}{{ .Values.harness.configMap.argocd.repoServer }}:8081{{ end }}
   {{-  if .Values.agent.proxy.enabled }}
   HTTPS_PROXY: {{ .Values.agent.proxy.httpsProxy }}
   HTTP_PROXY: {{ .Values.agent.proxy.httpProxy }}
   NO_PROXY: localhost,argocd-repo-server,argocd-redis,127.0.0.1,argocd-redis-ha-haproxy,$(KUBERNETES_SERVICE_HOST),kubernetes.default.svc,{{ .Values.agent.name }}
   {{- end }}
-  {{-  if and $argo.enabled $redisHa.haproxy.enabled }}
-  REDIS_SERVER: argocd-redis-ha-haproxy:6379
-  {{- end }}
+  REDIS_SERVER: {{ include "redisServer" . }}:6379
 kind: ConfigMap
 metadata:
   labels:
