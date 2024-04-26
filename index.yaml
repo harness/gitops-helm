@@ -52,7 +52,7 @@ entries:
     - https://harness.github.io/gitops-helm/releases/gitops-helm-1.1.5.tgz
     version: 1.1.5
   - apiVersion: v2
-    created: "2024-04-26T20:51:01.6526+02:00"
+    created: "2024-04-19T19:31:22.856433+05:30"
     dependencies:
     - condition: argo-cd.enabled
       name: argo-cd
