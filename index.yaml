@@ -80,7 +80,7 @@ entries:
     - https://harness.github.io/gitops-helm/releases/gitops-helm-1.1.3.tgz
     version: 1.1.3
   - apiVersion: v2
-    created: "2024-04-19T19:31:22.838851+05:30"
+    created: "2024-04-19T19:31:22.824657+05:30"
     dependencies:
     - condition: argo-cd.enabled
       name: argo-cd
@@ -108,7 +108,7 @@ entries:
     - https://harness.github.io/gitops-helm/releases/gitops-helm-1.1.1.tgz
     version: 1.1.1
   - apiVersion: v2
-    created: "2024-04-26T20:51:01.619517+02:00"
+    created: "2024-04-19T19:31:22.814438+05:30"
     dependencies:
     - condition: argo-cd.enabled
       name: argo-cd
