@@ -95,3 +95,36 @@ Disaster Recovery cluster name
     {{ .Values.agent.harnessName }}-agent
 {{- end -}}
 {{- end -}}
+
+{{/*
+Set value for redis server, this can be used in case of external redis server also
+just set the value of .Values.harness.configMap.argocd.redisSvc
+*/}}
+{{- define "redisServer" -}}
+    {{- if .Values.harness.configMap.argocd.redisSvc -}}
+      {{- .Values.harness.configMap.argocd.redisSvc -}}
+    {{- else -}}
+      {{- if .Values.agent.highAvailability -}}
+        {{- .Values.harness.configMap.argocd.redisHaProxy -}}
+      {{- else -}}
+        {{- .Values.harness.configMap.argocd.redis -}}
+      {{- end -}}
+    {{- end -}}
+{{- end -}}
+
+{{- define "argo-cd.name" -}}
+{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{/*
+Selector labels
+*/}}
+{{- define "argo-cd.selectorLabels" -}}
+{{- if .name -}}
+app.kubernetes.io/name: {{ include "argo-cd.name" .context }}-{{ .name }}
+{{ end -}}
+app.kubernetes.io/instance: {{ .context.Release.Name }}
+{{- if .component }}
+app.kubernetes.io/component: {{ .component }}
+{{- end }}
+{{- end }}
