@@ -201,12 +201,16 @@ harness:
     argocd:
       repoServer: "argocd-repo-server"
       redis: "argocd-redis"
-      redisHa: "argocd-redis-ha"
-      redisHaProxy: "argocd-redis-ha-haproxy"
+      redisHa: "redis-ha"
+      redisHaProxy: "redis-ha-haproxy"
       controller: "argocd-application-controller"
       applicationSet: "argocd-applicationset-controller"
+
       repoServerSvc: ""
       redisSvc: ""
+      # -- this is only used for the redis server
+      redisHaSvc: "argocd-redis-ha"
+      redisHaProxySvc: "argocd-redis-ha-haproxy"
 
   secrets:
     # -- DoNotEdit - GitOps Agent Secret uniquely identifies a GitOps Agent in the Service
@@ -260,7 +264,7 @@ agent:
     repository: harness/gitops-agent
     # -- Tag to use for the GitOps Agent
     # @default -- `""` (defaults to global.image.tag)
-    tag: v0.65.0
+    tag: v0.73.0
     # -- Image pull policy for GitOps Agent
     # @default -- `""` (defaults to global.image.imagePullPolicy)
     imagePullPolicy: Always
