@@ -105,9 +105,9 @@ just set the value of .Values.harness.configMap.argocd.redisSvc
       {{- .Values.harness.configMap.argocd.redisSvc -}}
     {{- else -}}
       {{- if .Values.agent.highAvailability -}}
-        {{- .Values.harness.configMap.argocd.redisHaProxy -}}
+        {{- .Values.harness.configMap.argocd.redisHaProxySvc -}}
       {{- else -}}
-        {{- .Values.harness.configMap.argocd.redis -}}
+        {{- .Values.harness.configMap.argocd.redisHaSvc -}}
       {{- end -}}
     {{- end -}}
 {{- end -}}
