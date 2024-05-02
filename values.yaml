@@ -208,6 +208,7 @@ harness:
 
       repoServerSvc: ""
       redisSvc: ""
+      # -- this is only used for the redis server
       redisHaSvc: "argocd-redis-ha"
       redisHaProxySvc: "argocd-redis-ha-haproxy"
 
