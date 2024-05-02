@@ -264,7 +264,7 @@ agent:
     repository: harness/gitops-agent
     # -- Tag to use for the GitOps Agent
     # @default -- `""` (defaults to global.image.tag)
-    tag: v0.65.0
+    tag: v0.73.0
     # -- Image pull policy for GitOps Agent
     # @default -- `""` (defaults to global.image.imagePullPolicy)
     imagePullPolicy: Always
