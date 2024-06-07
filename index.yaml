@@ -1,44 +1,22 @@
 apiVersion: v1
 entries:
-  argo-cd:
-  - annotations:
-      artifacthub.io/changes: |
-        - kind: changed
-          description: Bump argo-cd to v2.9.4
-      artifacthub.io/signKey: |
-        fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
-        url: https://argoproj.github.io/argo-helm/pgp_keys.asc
-    apiVersion: v2
-    appVersion: v2.9.4
-    created: "2024-05-02T23:54:04.469743+05:30"
-    dependencies:
-    - condition: redis-ha.enabled
-      name: redis-ha
-      repository: https://dandydeveloper.github.io/charts/
-      version: 4.23.0
-    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
-      tool for Kubernetes.
-    digest: 3b4f7ae372693b1d14e7e0e1faa7ae2d468691d50227842d176a23db7209739e
-    home: https://github.com/argoproj/argo-helm
-    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
-    keywords:
-    - argoproj
-    - argocd
-    - gitops
-    kubeVersion: '>=1.23.0-0'
-    maintainers:
-    - name: argoproj
-      url: https://argoproj.github.io/
-    name: argo-cd
-    sources:
-    - https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd
-    - https://github.com/argoproj/argo-cd
-    urls:
-    - https://harness.github.io/gitops-helm/charts/argo-cd-5.53.1.tgz
-    version: 5.53.1
   gitops-helm:
   - apiVersion: v2
-    created: "2024-05-02T23:54:04.538864+05:30"
+    created: "2024-06-07T13:58:01.803657+02:00"
+    dependencies:
+    - condition: argo-cd.enabled
+      name: argo-cd
+      repository: https://argoproj.github.io/argo-helm
+      version: 5.53.1
+    description: A Helm chart for Harness GitOps Agent - for more information, please
+      visit https://developer.harness.io/docs/category/gitops.
+    digest: 96f524aeab226f4cce830762ce853f75ac77947963b43cf4536f16a4d65fc066
+    name: gitops-helm
+    urls:
+    - https://harness.github.io/gitops-helm/gitops-helm-1.1.7.tgz
+    version: 1.1.7
+  - apiVersion: v2
+    created: "2024-06-07T13:58:01.792142+02:00"
     dependencies:
     - condition: argo-cd.enabled
       name: argo-cd
@@ -49,10 +27,10 @@ entries:
     digest: 28f554f8c7b4ad73eff3053f058bfe47773668b3c70785c16008c92ad456e1ec
     name: gitops-helm
     urls:
-    - https://harness.github.io/gitops-helm/releases/gitops-helm-1.1.6.tgz
+    - https://harness.github.io/gitops-helm/gitops-helm-1.1.6.tgz
     version: 1.1.6
   - apiVersion: v2
-    created: "2024-05-02T23:54:04.531081+05:30"
+    created: "2024-06-07T13:58:01.783088+02:00"
     dependencies:
     - condition: argo-cd.enabled
       name: argo-cd
@@ -63,10 +41,10 @@ entries:
     digest: 5ec9168b54e571eaf762d94d1b327be8df19e026bb133782d9fad92a5fde1b20
     name: gitops-helm
     urls:
-    - https://harness.github.io/gitops-helm/releases/gitops-helm-1.1.5.tgz
+    - https://harness.github.io/gitops-helm/gitops-helm-1.1.5.tgz
     version: 1.1.5
   - apiVersion: v2
-    created: "2024-05-02T23:54:04.51603+05:30"
+    created: "2024-06-07T13:58:01.767131+02:00"
     dependencies:
     - condition: argo-cd.enabled
       name: argo-cd
@@ -77,10 +55,10 @@ entries:
     digest: a08e6a3181b8838d740a6765986841e7fc266bba8faee6afc3ea45353288c38d
     name: gitops-helm
     urls:
-    - https://harness.github.io/gitops-helm/releases/gitops-helm-1.1.4.tgz
+    - https://harness.github.io/gitops-helm/gitops-helm-1.1.4.tgz
     version: 1.1.4
   - apiVersion: v2
-    created: "2024-05-02T23:54:04.507698+05:30"
+    created: "2024-06-07T13:58:01.755439+02:00"
     dependencies:
     - condition: argo-cd.enabled
       name: argo-cd
@@ -91,10 +69,10 @@ entries:
     digest: ccdbd7f7e6b3130a54861ab668d44f5defa28c59c4c23bca79c1ab0433089e13
     name: gitops-helm
     urls:
-    - https://harness.github.io/gitops-helm/releases/gitops-helm-1.1.3.tgz
+    - https://harness.github.io/gitops-helm/gitops-helm-1.1.3.tgz
     version: 1.1.3
   - apiVersion: v2
-    created: "2024-05-02T23:54:04.499464+05:30"
+    created: "2024-06-07T13:58:01.747091+02:00"
     dependencies:
     - condition: argo-cd.enabled
       name: argo-cd
@@ -105,10 +83,10 @@ entries:
     digest: 56d367846bb3662e6733c3b1b39f140650040496afe30f98da5cd7d8044c141c
     name: gitops-helm
     urls:
-    - https://harness.github.io/gitops-helm/releases/gitops-helm-1.1.2.tgz
+    - https://harness.github.io/gitops-helm/gitops-helm-1.1.2.tgz
     version: 1.1.2
   - apiVersion: v2
-    created: "2024-05-02T23:54:04.489913+05:30"
+    created: "2024-06-07T13:58:01.737109+02:00"
     dependencies:
     - condition: argo-cd.enabled
       name: argo-cd
@@ -119,10 +97,10 @@ entries:
     digest: 1f28f97b43c2c262629c88627a3555829ffe75ee41e362e6739229eeddf724fa
     name: gitops-helm
     urls:
-    - https://harness.github.io/gitops-helm/releases/gitops-helm-1.1.1.tgz
+    - https://harness.github.io/gitops-helm/gitops-helm-1.1.1.tgz
     version: 1.1.1
   - apiVersion: v2
-    created: "2024-05-02T23:54:04.480609+05:30"
+    created: "2024-06-07T13:58:01.727996+02:00"
     dependencies:
     - condition: argo-cd.enabled
       name: argo-cd
@@ -133,6 +111,6 @@ entries:
     digest: db09e4bd081f0126944c95a1506960388c8ad65058cf457e317af1c625442342
     name: gitops-helm
     urls:
-    - https://harness.github.io/gitops-helm/releases/gitops-helm-1.1.0.tgz
+    - https://harness.github.io/gitops-helm/gitops-helm-1.1.0.tgz
     version: 1.1.0
-generated: "2024-05-02T23:54:04.459289+05:30"
+generated: "2024-06-07T13:58:01.715343+02:00"
