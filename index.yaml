@@ -38,7 +38,7 @@ entries:
     version: 5.53.1
   gitops-helm:
   - apiVersion: v2
-    created: "2024-06-17T11:43:05.634997+02:00"
+    created: "2024-06-13T12:19:12.369425+02:00"
     dependencies:
     - condition: argo-cd.enabled
       name: argo-cd
