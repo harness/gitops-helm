@@ -46,13 +46,13 @@ entries:
       version: 5.53.1
     description: A Helm chart for Harness GitOps Agent - for more information, please
       visit https://developer.harness.io/docs/category/gitops.
-    digest: 710b159372bbc25efc614f214aff78d038b63a2ee602354c84bf441d6cf1c4de
+    digest: 148c14d8996bff8c9d9b18b1039621f69dc208c9c38feb781464dadd06657d8e
     name: gitops-helm
     urls:
     - https://harness.github.io/gitops-helm/releases/gitops-helm-1.1.8.tgz
     version: 1.1.8
   - apiVersion: v2
-    created: "2024-06-07T18:04:00.042107+05:30"
+    created: "2024-06-17T11:37:00.327756+02:00"
     dependencies:
     - condition: argo-cd.enabled
       name: argo-cd
@@ -163,4 +163,4 @@ entries:
     urls:
     - https://harness.github.io/gitops-helm/releases/gitops-helm-1.1.0.tgz
     version: 1.1.0
-generated: "2024-06-07T18:03:59.95094+05:30"
+generated: "2024-06-17T11:43:05.542107+02:00"
