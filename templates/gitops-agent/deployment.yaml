@@ -74,6 +74,35 @@ spec:
               name: {{ .Values.agent.name }}
           - secretRef:
               name: {{ .Values.agent.name }}
+        env:
+          - name: REDIS_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: {{ default "argocd-redis" .Values.externalRedis.existingSecret }}
+                key: redis-username
+                optional: true
+          - name: REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ default "argocd-redis" .Values.externalRedis.existingSecret }}
+                {{- if .Values.externalRedis.host }}
+                key: redis-password
+                optional: true
+                {{- else }}
+                key: auth
+                {{- end }}
+          - name: REDIS_SENTINEL_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: {{ default (include "argo-cd.redis.fullname" .) .Values.externalRedis.existingSecret }}
+                key: redis-sentinel-username
+                optional: true
+          - name: REDIS_SENTINEL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ default (include "argo-cd.redis.fullname" .) .Values.externalRedis.existingSecret }}
+                key: redis-sentinel-password
+                optional: true
         volumeMounts:
         {{- with .Values.agent.volumeMounts }}
           {{- toYaml . | nindent 8 }}
