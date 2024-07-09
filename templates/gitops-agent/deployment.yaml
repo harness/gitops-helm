@@ -1,4 +1,3 @@
-{{- $argo := (index .Values "argo-cd") -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -99,26 +98,25 @@ spec:
           - name: REDIS_SENTINEL_USERNAME
             valueFrom:
               secretKeyRef:
-                name:
-                {{ if $argo.enabled }}
+                name: {{ $argo := (index .Values "argo-cd") }}
+                {{- if $argo.enabled -}}
                 {{ default (include "argo-cd.redis.fullname" .) .Values.externalRedis.existingSecret }}
-                {{ else }}
-                {{ .Values.externalRedis.existingSecret }}
-                {{ end }}
+                {{- else -}}
+                {{ default "redis-sentinel-username" .Values.externalRedis.existingSecret }}
+                {{- end }}
                 key: redis-sentinel-username
                 optional: true
           - name: REDIS_SENTINEL_PASSWORD
             valueFrom:
               secretKeyRef:
-                name:
-                {{ if $argo.enabled }}
+                name: {{ $argo := (index .Values "argo-cd") }}
+                {{- if $argo.enabled -}}
                 {{ default (include "argo-cd.redis.fullname" .) .Values.externalRedis.existingSecret }}
-                {{ else }}
-                {{ .Values.externalRedis.existingSecret }}
-                {{ end }}
+                {{- else -}}
+                {{ default "redis-sentinel-password" .Values.externalRedis.existingSecret }}
+                {{- end }}
                 key: redis-sentinel-password
                 optional: true
-
         volumeMounts:
         {{- with .Values.agent.volumeMounts }}
           {{- toYaml . | nindent 8 }}
