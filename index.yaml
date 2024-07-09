@@ -4,21 +4,21 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
-          description: Bump argo-cd to v2.9.4
+          description: Bump argo-cd to v2.10.9
       artifacthub.io/signKey: |
         fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
         url: https://argoproj.github.io/argo-helm/pgp_keys.asc
     apiVersion: v2
-    appVersion: v2.9.4
-    created: "2024-07-09T19:24:45.354718+02:00"
+    appVersion: v2.10.9
+    created: "2024-07-09T19:32:01.902481+02:00"
     dependencies:
     - condition: redis-ha.enabled
       name: redis-ha
       repository: https://dandydeveloper.github.io/charts/
-      version: 4.23.0
+      version: 4.26.1
     description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
       tool for Kubernetes.
-    digest: 3b4f7ae372693b1d14e7e0e1faa7ae2d468691d50227842d176a23db7209739e
+    digest: 0fe91377dd73723bab624314f1dc60f59b49dfdcb71df43af9ecb15ce1b09f19
     home: https://github.com/argoproj/argo-helm
     icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
     keywords:
@@ -34,11 +34,11 @@ entries:
     - https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd
     - https://github.com/argoproj/argo-cd
     urls:
-    - https://harness.github.io/gitops-helm/charts/argo-cd-5.53.1.tgz
-    version: 5.53.1
+    - https://harness.github.io/gitops-helm/charts/argo-cd-6.7.18.tgz
+    version: 6.7.18
   gitops-helm:
   - apiVersion: v2
-    created: "2024-07-09T19:24:45.456995+02:00"
+    created: "2024-07-09T19:32:01.999347+02:00"
     dependencies:
     - condition: argo-cd.enabled
       name: argo-cd
@@ -46,7 +46,7 @@ entries:
       version: 6.7.18
     description: A Helm chart for Harness GitOps Agent - for more information, please
       visit https://developer.harness.io/docs/category/gitops.
-    digest: 88024144935cf15d804e65d7880dccf640defc45efc64ef259db505b6c505973
+    digest: 976494964135aeec7837d51b2412908f732e6be7006bd83db6d530c147178286
     name: gitops-helm
     urls:
     - https://harness.github.io/gitops-helm/releases/gitops-helm-1.1.9.tgz
@@ -177,4 +177,4 @@ entries:
     urls:
     - https://harness.github.io/gitops-helm/releases/gitops-helm-1.1.0.tgz
     version: 1.1.0
-generated: "2024-06-17T11:43:05.542107+02:00"
+generated: "2024-07-09T19:32:01.893675+02:00"
