@@ -55,20 +55,20 @@ spec:
       containers:
       - command:
           - /app/agent
+          {{- with .Values.agent.logFormat }}
+          - --logformat
+          - {{ . | quote }}
+          {{- end }}
+          {{- with .Values.agent.logLevel }}
+          - --loglevel
+          - {{ . | quote }}
+          {{- end }}
+          {{- with .Values.agent.extraArgs }}
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
         name: {{ .Values.agent.name }}
         image: {{ .Values.agent.image.repository }}:{{ .Values.agent.image.tag }}
         imagePullPolicy: {{ .Values.agent.image.imagePullPolicy }}
-        {{- with .Values.agent.logFormat }}
-        - --logformat
-        - {{ . | quote }}
-        {{- end }}
-        {{- with .Values.agent.logLevel }}
-        - --loglevel
-        - {{ . | quote }}
-        {{- end }}
-        {{- with .Values.agent.extraArgs }}
-          {{- toYaml . | nindent 8 }}
-        {{- end }}
         envFrom:
           - configMapRef:
               name: {{ .Values.agent.name }}
