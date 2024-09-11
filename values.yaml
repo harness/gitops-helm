@@ -519,6 +519,7 @@ upgrader:
   config:
     # -- Upgrade all related images in GitOps Agent including Argo CD, Redis etc.
     upgradeAll: false
+    registryMirror: ""
     # -- Cert Paths for mTLS in upgrader
     clientCertificateFilePath: /etc/mtls/client.crt
     clientCertificateKeyFilePath: /etc/mtls/client.key

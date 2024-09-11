@@ -17,6 +17,9 @@ data:
   UPGRADER_CLIENT_CERTIFICATE_FILE_PATH: {{ .Values.upgrader.config.clientCertificateFilePath }}
   UPGRADER_CLIENT_CERTIFICATE_KEY_FILE_PATH: {{ .Values.upgrader.config.clientCertificateKeyFilePath }}
   {{- end }}
+  {{- if ne .Values.upgrader.config.registryMirror "" }}
+  UPGRADER_REGISTRY_MIRROR: {{ .Values.upgrader.config.registryMirror }}
+  {{- end}}
   UPGRADER_GITOPS_AGENT_HTTP_TARGET: {{ .Values.harness.gitopsServerHost }}
   UPGRADER_GITOPS_USE_V2: "true"
   UPGRADER_GITOPS_ALL: "{{ .Values.upgrader.config.upgradeAll }}"
