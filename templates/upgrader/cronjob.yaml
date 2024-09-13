@@ -47,7 +47,7 @@ spec:
                   mountPath: /etc/config
                 {{- if .Values.harness.secrets.caData.enabled }}
                 - name: certvol
-                  mountPath: /tmp/ca.bundle
+                  mountPath: /ca-bundle/ca.bundle
                   subPath: ca.bundle
                 {{- end }}
           volumes:
