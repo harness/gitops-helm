@@ -38,6 +38,20 @@ entries:
     version: 6.7.18
   gitops-helm:
   - apiVersion: v2
+    created: "2024-09-24T12:11:07.224779+05:30"
+    dependencies:
+    - condition: argo-cd.enabled
+      name: argo-cd
+      repository: https://argoproj.github.io/argo-helm
+      version: 6.7.18
+    description: A Helm chart for Harness GitOps Agent - for more information, please
+      visit https://developer.harness.io/docs/category/gitops.
+    digest: ceadc9d77b0c06b2c02d7fd2a8710b63fa6c5943fc7b32af5502a466b78bf65d
+    name: gitops-helm
+    urls:
+    - releases/gitops-helm-1.1.10.tgz
+    version: 1.1.10
+  - apiVersion: v2
     created: "2024-07-09T19:32:01.999347+02:00"
     dependencies:
     - condition: argo-cd.enabled
@@ -46,7 +60,7 @@ entries:
       version: 6.7.18
     description: A Helm chart for Harness GitOps Agent - for more information, please
       visit https://developer.harness.io/docs/category/gitops.
-    digest: 976494964135aeec7837d51b2412908f732e6be7006bd83db6d530c147178286
+    digest: 784bed5378b7fabb5c622d831adc93eec6824b7bf2a89a8588d31a5a39cf10cd
     name: gitops-helm
     urls:
     - https://harness.github.io/gitops-helm/releases/gitops-helm-1.1.9.tgz
@@ -60,7 +74,7 @@ entries:
       version: 5.53.1
     description: A Helm chart for Harness GitOps Agent - for more information, please
       visit https://developer.harness.io/docs/category/gitops.
-    digest: 148c14d8996bff8c9d9b18b1039621f69dc208c9c38feb781464dadd06657d8e
+    digest: 184fcf9410e8028dcc8de8a0d17df9c0f14bdf3c204ac5747e59d093b6540c42
     name: gitops-helm
     urls:
     - https://harness.github.io/gitops-helm/releases/gitops-helm-1.1.8.tgz
@@ -74,7 +88,7 @@ entries:
       version: 5.53.1
     description: A Helm chart for Harness GitOps Agent - for more information, please
       visit https://developer.harness.io/docs/category/gitops.
-    digest: 4f8a0bb38b3ae37a79e5e9cc7bb8933864b0611d814433329adec0da58ccabfc
+    digest: 1cbce29646a6489b384b82fac1d3cbc976d819c89fe1dc56d194dc2daa6c2cad
     name: gitops-helm
     urls:
     - https://harness.github.io/gitops-helm/releases/gitops-helm-1.1.7.tgz
@@ -88,7 +102,7 @@ entries:
       version: 5.53.1
     description: A Helm chart for Harness GitOps Agent - for more information, please
       visit https://developer.harness.io/docs/category/gitops.
-    digest: 28f554f8c7b4ad73eff3053f058bfe47773668b3c70785c16008c92ad456e1ec
+    digest: 637b4cdefaeba5734743cecf503c578d3bd79b3036b84d22baba2045be955dc1
     name: gitops-helm
     urls:
     - https://harness.github.io/gitops-helm/releases/gitops-helm-1.1.6.tgz
@@ -102,7 +116,7 @@ entries:
       version: 5.53.1
     description: A Helm chart for Harness GitOps Agent - for more information, please
       visit https://developer.harness.io/docs/category/gitops.
-    digest: 5ec9168b54e571eaf762d94d1b327be8df19e026bb133782d9fad92a5fde1b20
+    digest: 2017798fb2fcf27eca114e9229455cd89a4c1a60a37a853720adc06513c1d625
     name: gitops-helm
     urls:
     - https://harness.github.io/gitops-helm/releases/gitops-helm-1.1.5.tgz
@@ -116,7 +130,7 @@ entries:
       version: 5.53.1
     description: A Helm chart for Harness GitOps Agent - for more information, please
       visit https://developer.harness.io/docs/category/gitops.
-    digest: a08e6a3181b8838d740a6765986841e7fc266bba8faee6afc3ea45353288c38d
+    digest: bfa9c85650f4a25ba8e47f436cda166414c1c311ee2768c84271ef40afeef1f7
     name: gitops-helm
     urls:
     - https://harness.github.io/gitops-helm/releases/gitops-helm-1.1.4.tgz
@@ -130,7 +144,7 @@ entries:
       version: 5.53.1
     description: A Helm chart for Harness GitOps Agent - for more information, please
       visit https://developer.harness.io/docs/category/gitops.
-    digest: ccdbd7f7e6b3130a54861ab668d44f5defa28c59c4c23bca79c1ab0433089e13
+    digest: 061db9696e736a5e65b54086b4e5fb32907149bb5e2462c007760e6b3b9a7ddf
     name: gitops-helm
     urls:
     - https://harness.github.io/gitops-helm/releases/gitops-helm-1.1.3.tgz
@@ -144,7 +158,7 @@ entries:
       version: 5.53.1
     description: A Helm chart for Harness GitOps Agent - for more information, please
       visit https://developer.harness.io/docs/category/gitops.
-    digest: 56d367846bb3662e6733c3b1b39f140650040496afe30f98da5cd7d8044c141c
+    digest: 5224c7166232f5b3b2852703b15c7968f2881b3d0281a2c57612cdf9a775d584
     name: gitops-helm
     urls:
     - https://harness.github.io/gitops-helm/releases/gitops-helm-1.1.2.tgz
@@ -158,7 +172,7 @@ entries:
       version: 5.53.1
     description: A Helm chart for Harness GitOps Agent - for more information, please
       visit https://developer.harness.io/docs/category/gitops.
-    digest: 1f28f97b43c2c262629c88627a3555829ffe75ee41e362e6739229eeddf724fa
+    digest: 41b9f1c112ca7bd7ec939c363420f2b91bb9f83f146a6a8246c9ebf94df234d7
     name: gitops-helm
     urls:
     - https://harness.github.io/gitops-helm/releases/gitops-helm-1.1.1.tgz
@@ -172,9 +186,9 @@ entries:
       version: 5.53.1
     description: A Helm chart for Harness GitOps Agent - for more information, please
       visit https://developer.harness.io/docs/category/gitops.
-    digest: db09e4bd081f0126944c95a1506960388c8ad65058cf457e317af1c625442342
+    digest: 3828e57541f89394d6f05ee655b7e75de2de786eedc5d4727be9dbf46d209b53
     name: gitops-helm
     urls:
     - https://harness.github.io/gitops-helm/releases/gitops-helm-1.1.0.tgz
     version: 1.1.0
-generated: "2024-07-09T19:32:01.893675+02:00"
+generated: "2024-09-24T12:11:07.197168+05:30"
