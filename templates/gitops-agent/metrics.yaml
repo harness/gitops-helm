@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ ".Values.agent.name" }}-metrics
+  name: {{ .Values.agent.name }}-metrics
   namespace: {{ .Release.Namespace | quote }}
   labels:
     {{- include "harness.agentLabels" (dict "context" . "component" .Values.agent.name "name" (printf "%s-metrics" .Values.agent.name)) | nindent 4 }}
