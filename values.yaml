@@ -341,9 +341,10 @@ agent:
     maxUnavailable: ""
 
   ## Agent metrics service configuration
+  addPrometheusAnnotations: false
   metrics:
     # -- Deploy metrics service
-    enabled: false
+    enabled: true 
     service:
       # -- Metrics service type
       type: ClusterIP
@@ -354,7 +355,7 @@ agent:
       # -- Metrics service labels
       labels: {}
       # -- Metrics service port
-      servicePort: 8083
+      servicePort: 2112 
       # -- Metrics service port name
       portName: http-metrics
     serviceMonitor:

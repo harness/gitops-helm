@@ -158,6 +158,10 @@ spec:
           timeoutSeconds: {{ .Values.agent.livenessProbe.timeoutSeconds }}
           successThreshold: {{ .Values.agent.livenessProbe.successThreshold }}
           failureThreshold: {{ .Values.agent.livenessProbe.failureThreshold }}
+        port:
+        - containerPort: 2112
+          name: metrics
+          protocol: TCP
         readinessProbe:
           httpGet:
             path: /healthz
