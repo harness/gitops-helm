@@ -158,7 +158,7 @@ spec:
           timeoutSeconds: {{ .Values.agent.livenessProbe.timeoutSeconds }}
           successThreshold: {{ .Values.agent.livenessProbe.successThreshold }}
           failureThreshold: {{ .Values.agent.livenessProbe.failureThreshold }}
-        port:
+        ports:
         - containerPort: 2112
           name: metrics
           protocol: TCP
