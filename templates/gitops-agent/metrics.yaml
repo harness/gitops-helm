@@ -9,9 +9,9 @@ metadata:
     {{- with .Values.agent.metrics.service.labels }}
       {{- toYaml . | nindent 4 }}
     {{- end }}
-  {{- if or .Values.agent.metrics.service.annotations .Values.global.addPrometheusAnnotations }}
+  {{- if or .Values.agent.metrics.service.annotations .Values.agent.addPrometheusAnnotations }}
   annotations:
-    {{- if .Values.global.addPrometheusAnnotations }}
+    {{- if .Values.agent.addPrometheusAnnotations }}
     prometheus.io/port: {{ .Values.agent.metrics.service.servicePort | quote }}
     prometheus.io/scrape: "true"
     {{- end }}
