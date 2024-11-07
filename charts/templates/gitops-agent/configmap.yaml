@@ -1,0 +1,47 @@
+{{- $argo := (index .Values "argo-cd") -}}
+{{- $redisHa := (index $argo "redis-ha") -}}
+apiVersion: v1
+data:
+  GITOPS_ACCOUNT_IDENTIFIER: {{ .Values.harness.identity.accountIdentifier }}
+  GITOPS_AGENT_IDENTIFIER: {{ .Values.harness.identity.agentIdentifier }}
+  {{- if ne .Values.harness.identity.orgIdentifier "" }}
+  GITOPS_ORG_IDENTIFIER: {{ .Values.harness.identity.orgIdentifier }}
+  {{- end }}
+  {{- if ne .Values.harness.identity.projectIdentifier "" }}
+  GITOPS_PROJECT_IDENTIFIER: {{ .Values.harness.identity.projectIdentifier }}
+  {{- end }}
+  {{- if .Values.harness.disasterRecovery.enabled }}
+  GITOPS_DISASTER_RECOVERY_IDENTIFIER: {{ .Values.harness.disasterRecovery.identifier }}
+  {{- end }}
+  GITOPS_SERVICE_HTTP_TLS_ENABLED: "{{ .Values.harness.configMap.http.tlsEnabled }}"
+  GITOPS_SERVICE_HTTP_CERT_FILES: {{ .Values.harness.configMap.http.certPath }}
+  GITOPS_SERVICE_MTLS_ENABLED: "{{ .Values.harness.configMap.http.mtls }}"
+  GITOPS_SERVICE_HTTP_CLIENT_CERT: /etc/mtls/client.crt
+  GITOPS_SERVICE_HTTP_CLIENT_KEY: /etc/mtls/client.key
+  AGENT_HTTP_TARGET: {{ .Values.harness.configMap.http.agentHttpTarget }}
+  GITOPS_SERVICE_PROTOCOL: {{ .Values.harness.configMap.agentProtocol }}
+  GITOPS_AGENT_ENABLE_RECONCILE: "{{ .Values.harness.configMap.reconcile.enabled }}"
+  GITOPS_AGENT_RECONCILE_INTERVAL: "{{ .Values.harness.configMap.reconcile.interval }}"
+  GITOPS_AGENT_DISCOVER_APPLICATION_PODS_DURATION_IN_SECS: "{{ .Values.harness.configMap.reconcile.podsDiscovery }}"
+  LOG_LEVEL: {{ .Values.harness.configMap.logLevel }}
+  GITOPS_AGENT_FETCH_TYPE: "{{ .Values.harness.configMap.agentFetchType }}"
+  GITOPS_ARGOCD_REPO: {{ .Values.harness.configMap.argocd.repoServer }}
+  GITOPS_ARGOCD_REDIS: {{ .Values.harness.configMap.argocd.redis }}
+  GITOPS_ARGOCD_REDIS_HA: {{ .Values.harness.configMap.argocd.redisHa }}
+  GITOPS_ARGOCD_REDIS_HA_PROXY: {{ .Values.harness.configMap.argocd.redisHaProxy }}
+  GITOPS_ARGOCD_APP_CONTROLLER: {{ .Values.harness.configMap.argocd.controller }}
+  GITOPS_ARGOCD_APPSET_CONTROLLER: {{ .Values.harness.configMap.argocd.applicationSet }}
+  GITOPS_AGENT_AVAILABILITY_MODE: {{ if .Values.agent.highAvailability }}HA{{ else }}NON-HA{{ end }}
+  ARGOCD_SERVER_REPO_SERVER: {{ if .Values.harness.configMap.argocd.repoServerSvc }} {{ .Values.harness.configMap.argocd.repoServerSvc }}:8081{{ else }}{{ .Values.harness.configMap.argocd.repoServer }}:8081{{ end }}
+  {{-  if .Values.agent.proxy.enabled }}
+  HTTPS_PROXY: {{ .Values.agent.proxy.httpsProxy }}
+  HTTP_PROXY: {{ .Values.agent.proxy.httpProxy }}
+  NO_PROXY: localhost,argocd-repo-server,argocd-redis,127.0.0.1,argocd-redis-ha-haproxy,$(KUBERNETES_SERVICE_HOST),kubernetes.default.svc,{{ .Values.agent.name }}
+  {{- end }}
+  REDIS_SERVER: {{ include "redisServer" . }}:6379
+kind: ConfigMap
+metadata:
+  labels:
+      {{- include "harness.agentLabels" (dict "context" . "component" .Values.agent.name "name" (printf "%s-cm" .Values.agent.name)) | nindent 4 }}
+  name: {{ .Values.agent.name }}
+  namespace: {{ .Release.Namespace }}
