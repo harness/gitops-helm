@@ -27,6 +27,7 @@ spec:
         {{ $key }}: {{ $value | quote }}
         {{- end }}
         {{- end }}
+        checksum/secrets: {{ include (print $.Template.BasePath "/gitops-agent/secret.yaml") . | sha256sum }}
       labels:
         {{- include "harness.agentLabels" (dict "context" . "component" .Values.agent.name "name" .Values.agent.name) | nindent 8 }}
         {{- with .Values.agent.podLabels }}
