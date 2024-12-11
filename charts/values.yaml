@@ -2,7 +2,7 @@
 ## Ref: https://github.com/harness/gitops-helm
 ## Documentation: https://developer.harness.io/docs/category/gitops
 
-## Variable Overrides for Argo CD configuration
+## Variable Overrides for Argo CD configuration.
 argo-cd:
   # -- Disable this for BYOA flows, when Argo CD is already installed
   enabled: true
