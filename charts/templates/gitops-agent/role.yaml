@@ -49,7 +49,9 @@ rules:
   - argoproj.io
   resources:
   - applications
+  {{- if $argo.applicationSet.enabled }}
   - applicationsets
+  {{- end }}
   - appprojects
   verbs:
   - create
