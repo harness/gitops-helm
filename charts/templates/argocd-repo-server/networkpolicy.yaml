@@ -16,11 +16,9 @@ spec:
     - podSelector:
         matchLabels:
           {{- include "harness.selectorLabels" (dict "context" . "name" .Values.controller.name) | nindent 10 }}
-    {{- if $argo.applicationSet.enabled }}
     - podSelector:
         matchLabels:
           {{- include "harness.selectorLabels" (dict "context" . "name" .Values.applicationSet.name) | nindent 10 }}
-    {{- end }}
     ports:
     - port: repo-server
       protocol: TCP
