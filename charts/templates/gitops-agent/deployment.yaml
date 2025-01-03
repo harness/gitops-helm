@@ -118,6 +118,10 @@ spec:
                 {{- end }}
                 key: redis-sentinel-password
                 optional: true
+          {{- if .Values.agent.metrics.enabled }}      
+          - name: GITOPS_AGENT_METRICS_PORT
+            value: "2112"
+          {{- end }}
         volumeMounts:
         {{- with .Values.agent.volumeMounts }}
           {{- toYaml . | nindent 8 }}
