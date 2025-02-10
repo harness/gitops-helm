@@ -241,6 +241,9 @@ harness:
     # -- DR Agent Identifier
     identifier: ""
 
+  flux:
+    enabled: false
+
 ## Harness GitOps Agent
 agent:
   # -- GitOps Agent entity name
@@ -535,7 +538,7 @@ nameOverride: argocd
 global:
   image:
     repository: docker.io/harness/argocd
-    tag: v2.13.2
+    tag: v2.13.5
     imagePullPolicy: Always
   logging:
     format: text
