@@ -39,9 +39,9 @@ data:
   NO_PROXY: localhost,argocd-repo-server,argocd-redis,127.0.0.1,argocd-redis-ha-haproxy,$(KUBERNETES_SERVICE_HOST),kubernetes.default.svc,{{ .Values.agent.name }}
   {{- end }}
   REDIS_SERVER: {{ include "redisServer" . }}:6379
-  GITOPS_AGENT_NUM_FETCHERS: {{ .Values.agent.numFetchers }}
-  GITOPS_AGENT_NUM_PROCESSORS: {{ .Values.agent.numProcessors }}
-  GITOPS_AGENT_NUM_RESPONDERS: {{ .Values.agent.numResponders }}
+  GITOPS_AGENT_NUM_FETCHERS: "{{ .Values.agent.numFetchers }}"
+  GITOPS_AGENT_NUM_PROCESSORS: "{{ .Values.agent.numProcessors }}"
+  GITOPS_AGENT_NUM_RESPONDERS: "{{ .Values.agent.numResponders }}"
 kind: ConfigMap
 metadata:
   labels:
