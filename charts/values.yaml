@@ -503,6 +503,17 @@ agent:
   #  - mountPath: /usr/local/bin/kubelogin
   #    name: custom-tools
   #    subPath: kubelogin
+  
+  # -- It is recommended to set the following 3 values to the same.
+  
+  # -- Number of task fetchers running concurrently for the gitops agent
+  numFetchers: 1
+
+  # -- Number of task processors running concurrently for the gitops agent
+  numProcessors: 1
+
+  # -- Number of task responders running concurrently for the gitops agent
+  numResponders: 1
 
 ## Harness GitOps Agent upgrader
 upgrader:
