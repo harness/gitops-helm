@@ -515,6 +515,11 @@ agent:
   # -- Number of task responders running concurrently for the gitops agent
   numResponders: 1
 
+  # -- Any additional env variables to be used by the gitops agent can be configured here
+  additionalConfig: 
+    GITOPS_AGENT_MAPPING_TIMEOUT_SECONDS: "60"
+    GITOPS_AGENT_ENABLE_RECONCILE_MEMORY_OPTIMIZATION: "true"
+    GITOPS_AGENT_SELF_HEAL_SYNC_FILTER_OUT: "true"
 ## Harness GitOps Agent upgrader
 upgrader:
   # -- Agent upgrader name
