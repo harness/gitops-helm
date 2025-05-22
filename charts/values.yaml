@@ -302,7 +302,7 @@ agent:
     # -- Enable Horizontal Pod Autoscaler ([HPA]) for the GitOps Agent
     enabled: false
     # -- Minimum number of replicas for the GitOps Agent [HPA]
-    minReplicas: 1
+    minReplicas: 2
     # -- Maximum number of replicas for the GitOps Agent [HPA]
     maxReplicas: 5
     # -- Average CPU utilization percentage for the GitOps Agent [HPA]
