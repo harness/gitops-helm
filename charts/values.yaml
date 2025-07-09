@@ -259,7 +259,7 @@ agent:
   highAvailability: false
 
   # -- Enable FIPS mode
-  fips: false
+  fipsEnabled: false
 
   # -- GitOps Agent image
   image:

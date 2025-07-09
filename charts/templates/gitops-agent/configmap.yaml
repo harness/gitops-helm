@@ -42,7 +42,7 @@ data:
   GITOPS_AGENT_NUM_FETCHERS: "{{ .Values.agent.numFetchers }}"
   GITOPS_AGENT_NUM_PROCESSORS: "{{ .Values.agent.numProcessors }}"
   GITOPS_AGENT_NUM_RESPONDERS: "{{ .Values.agent.numResponders }}"
-  FIPS_ENABLED: {{ .Values.agent.fips }}
+  FIPS_ENABLED: {{ .Values.agent.fipsEnabled }}
   {{- include "harnesscommon.tplvalues.render" ( dict "value" .Values.agent.additionalConfig "context" $) | nindent 2}}
 kind: ConfigMap
 metadata:
