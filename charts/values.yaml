@@ -258,6 +258,9 @@ agent:
   # -- Enable High Availability for the GitOps Agent
   highAvailability: false
 
+  # -- Enable FIPS mode
+  fipsEnabled: false
+
   # -- GitOps Agent image
   image:
     # -- Repository to use for GitOps Agent
