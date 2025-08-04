@@ -191,7 +191,7 @@ harness:
       # -- Interval to discover Pods for Instance Sync
       podsDiscovery: 120
       # -- Enable ApplicationSet Reconcile
-      appsetReconcile: true
+      appsetReconcile: false
     # -- Log Level set to Debug
     logLevel: "debug"
     # -- Legacy config: GitOps Agent Fetch Tasks by Polling
