@@ -190,10 +190,13 @@ harness:
       interval: 100
       # -- Interval to discover Pods for Instance Sync
       podsDiscovery: 120
+      # -- Enable ApplicationSet Reconcile
+      appsetReconcile: false
     # -- Log Level set to Debug
     logLevel: "debug"
     # -- Legacy config: GitOps Agent Fetch Tasks by Polling
     agentFetchType: "POLLER"
+    
 
     # -- non-default Argo CD name overrides for Harness GitOps Agent
     # -- this is matched against app.kubernetes.io/name label

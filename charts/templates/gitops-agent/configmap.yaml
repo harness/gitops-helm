@@ -23,6 +23,7 @@ data:
   GITOPS_AGENT_ENABLE_RECONCILE: "{{ .Values.harness.configMap.reconcile.enabled }}"
   GITOPS_AGENT_RECONCILE_INTERVAL: "{{ .Values.harness.configMap.reconcile.interval }}"
   GITOPS_AGENT_DISCOVER_APPLICATION_PODS_DURATION_IN_SECS: "{{ .Values.harness.configMap.reconcile.podsDiscovery }}"
+  GITOPS_AGENT_APPSET_RECONCILE_ENABLE: "{{ .Values.harness.configMap.reconcile.appsetReconcile }}"
   LOG_LEVEL: {{ .Values.harness.configMap.logLevel }}
   GITOPS_AGENT_FETCH_TYPE: "{{ .Values.harness.configMap.agentFetchType }}"
   GITOPS_ARGOCD_REPO: {{ .Values.harness.configMap.argocd.repoServer }}
