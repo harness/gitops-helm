@@ -57,7 +57,7 @@ spec:
             {{- if .Values.harness.secrets.caData.enabled }}
             - name: certvol
               secret:
-                secretName: {{ .Values.agent.name }}-ca
+                secretName: {{ if .Values.agent.existingSecrets.caBundle }}{{ .Values.agent.existingSecrets.caBundle }}{{ else }}{{ .Values.agent.name }}-ca{{ end }}
                 optional: true
                 items:
                   - key: ca.bundle
@@ -65,7 +65,7 @@ spec:
             {{- end }}
             - name: mtls-certs
               secret:
-                secretName: {{ .Values.agent.name }}-mtls
+                secretName: {{ if .Values.agent.existingSecrets.mtls }}{{ .Values.agent.existingSecrets.mtls }}{{ else }}{{ .Values.agent.name }}-mtls{{ end }}
                 optional: true
                 items:
                   - key: client.crt

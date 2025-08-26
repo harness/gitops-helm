@@ -12,3 +12,22 @@ Please refer to [Install a Harness GitOps Agent](https://developer.harness.io/do
 This repository is maintained at [gitops-helm](https://github.com/harness/gitops-helm) by [Harness](http://harness.io/).
 
 For further support to override your Argo CD components, refer to [Argo CD's values.yaml](https://github.com/argoproj/argo-helm/blob/main/charts/argo-cd/values.yaml) file.
+
+## Using Existing Secrets
+
+Instead of creating new secrets, you can use existing secrets by specifying them in the `agent.existingSecrets` section of your values file:
+
+```yaml
+agent:
+  existingSecrets:
+    # Existing secret for agent token (must contain GITOPS_AGENT_TOKEN key)
+    agentToken: "my-agent-token-secret"
+    
+    # Existing secret for CA bundle (must contain ca.bundle key)
+    caBundle: "my-ca-bundle-secret"
+    
+    # Existing secret for mTLS client certificate and key (must contain client.crt and client.key keys)
+    mtls: "my-mtls-secret"
+```
+
+This allows you to manage your secrets separately from the Helm chart installation.
