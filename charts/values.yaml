@@ -258,6 +258,20 @@ agent:
   # -- The number of agent pods to run
   replicas: 1
 
+  # -- Configuration for using existing secrets instead of creating new ones
+  existingSecrets:
+    # -- Existing secret for agent token. When specified, the main agent secret will not be created
+    # Secret must contain GITOPS_AGENT_TOKEN key
+    agentToken: 
+    
+    # -- Existing secret for CA bundle. When specified, the agent-ca secret will not be created
+    # Secret must contain ca.bundle key
+    caBundle: 
+    
+    # -- Existing secret for mTLS client certificate and key. When specified, the agent-mtls secret will not be created
+    # Secret must contain client.crt and client.key keys
+    mtls: ""
+
   # -- Enable High Availability for the GitOps Agent
   highAvailability: false
 
