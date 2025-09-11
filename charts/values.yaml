@@ -574,7 +574,7 @@ nameOverride: argocd
 global:
   image:
     repository: docker.io/harness/argocd
-    tag: v2.14.9
+    tag: v2.14.16
     imagePullPolicy: Always
   logging:
     format: text
