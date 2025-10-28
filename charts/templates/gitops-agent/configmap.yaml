@@ -44,6 +44,8 @@ data:
   GITOPS_AGENT_NUM_PROCESSORS: "{{ .Values.agent.numProcessors }}"
   GITOPS_AGENT_NUM_RESPONDERS: "{{ .Values.agent.numResponders }}"
   FIPS_ENABLED: "{{ .Values.agent.fipsEnabled }}"
+  HARNESS_GITOPS_AGENT_HOST: "{{ .Values.agent.name }}"
+  HARNESS_GITOPS_AGENT_PORT: "{{ .Values.agent.service.targetPort }}"
   {{- include "harnesscommon.tplvalues.render" ( dict "value" .Values.agent.additionalConfig "context" $) | nindent 2}}
 kind: ConfigMap
 metadata:

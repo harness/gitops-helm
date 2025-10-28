@@ -88,6 +88,36 @@ argo-cd:
         volumeMounts:
           - mountPath: /helm-sops-tools
             name: helm-sops-tools
+    extraContainers:
+      - command: [ /var/run/argocd/argocd-cmp-server ]
+        image: harness/gitops-agent-installer-helper:v0.0.3
+        imagePullPolicy: IfNotPresent
+        name: argocd-harness-plugin
+        resources:
+          limits:
+            cpu: "0.5"
+            memory: 512Mi
+          requests:
+            cpu: "0.5"
+            memory: 512Mi
+        securityContext:
+          capabilities:
+            drop:
+            - NET_RAW
+          runAsGroup: 999
+          runAsUser: 999
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts: 
+        - mountPath: /var/run/argocd
+          name: var-files
+        - mountPath: /home/argocd/cmp-server/plugins
+          name: plugins
+        - mountPath: /tmp
+          name: tmp
+        - mountPath: /home/argocd/cmp-server/config/plugin.yaml
+          name: argocd-harness-plugin
+          subPath: harness.yaml
 
     # -- Additional volumeMounts to the repo server main container
     volumeMounts:
@@ -101,6 +131,9 @@ argo-cd:
     volumes:
       - name: helm-sops-tools
         emptyDir: {}
+      - name: argocd-harness-plugin
+        configMap:
+          name: argocd-harness-plugin
 
     # -- Resource limits and requests for the repo server pods
     resources:
@@ -246,6 +279,9 @@ harness:
 
   flux:
     enabled: false
+  
+  argocdHarnessPlugin:
+    enabled: true
 
 ## Harness GitOps Agent
 agent:
@@ -304,6 +340,15 @@ agent:
   ## Create an OpenShift agent
   openshift:
     enabled: false
+  service:
+    enabled: true
+    type: ClusterIP
+    port: 7910
+    targetPort: 7910
+    # clusterIP: None   # (optional, only if you want a headless service)
+    labels: {}
+    annotations: {}
+
 
   serviceAccount:
     # -- Create agent service account
@@ -508,9 +553,6 @@ agent:
         - ALL
 
   # -- Additional containers to be added to the agent pod
-  ## Ref: https://argo-cd.readthedocs.io/en/stable/user-guide/config-management-plugins/
-  ## Note: Supports use of custom Helm templates
-  extraContainers: []
 
   # -- Init containers to add to the agent pods
   initContainers: []

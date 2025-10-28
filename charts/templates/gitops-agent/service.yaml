@@ -1,0 +1,28 @@
+{{- if .Values.agent.service.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.agent.name }}
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    {{- include "harness.agentLabels" (dict "context" . "component" .Values.agent.name "name" .Values.agent.name) | nindent 4 }}
+    {{- with .Values.agent.service.labels }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.agent.service.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  type: {{ .Values.agent.service.type | default "ClusterIP" }}
+  {{- if and .Values.agent.service.clusterIP (eq .Values.agent.service.type "ClusterIP") }}
+  clusterIP: {{ .Values.agent.service.clusterIP }}
+  {{- end }}
+  ports:
+    - name: http
+      protocol: TCP
+      port: {{ .Values.agent.service.port | default 7910 }}
+      targetPort: {{ .Values.agent.service.targetPort | default 7910 }}
+  selector:
+    {{- include "harness.agentSelectorLabels" (dict "context" . "name" .Values.agent.name) | nindent 4 }}
+{{- end }}

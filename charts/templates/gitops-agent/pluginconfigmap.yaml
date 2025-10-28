@@ -1,0 +1,61 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-harness-plugin
+data:
+  {{- if .Values.harness.argocdHarnessPlugin.enabled }}
+  harness.yaml: |
+    ---
+    apiVersion: argoproj.io/v1alpha1
+    kind: ConfigManagementPlugin
+    metadata:
+      name: argocd-harness-plugin
+    spec:
+      allowConcurrency: true
+      discover:
+        find:
+          command:
+            - /bin/bash
+            - -c
+            - |
+              if [ -f "Chart.yaml" ] || [ -f "values.yaml" ]; then
+                echo "helm"
+              elif find . -name '*.yaml' -o -name '*.yml' | grep -q .; then
+                echo "native"
+              else
+                exit 1
+              fi
+      generate:
+        command:
+          - /bin/bash
+          - -c
+          - |
+            if [ -f "Chart.yaml" ] || [ -f "values.yaml" ]; then
+              helm template $ARGOCD_APP_NAME --include-crds . \
+                | argocd-harness-plugin generate -
+            else
+              argocd-harness-plugin generate .
+            fi
+      lockRepo: false
+  {{- else }}
+  harness.yaml: |
+    ---
+    apiVersion: argoproj.io/v1alpha1
+    kind: ConfigManagementPlugin
+    metadata:
+      name: argocd-harness-plugin
+    spec:
+      allowConcurrency: false
+      discover:
+        find:
+          command:
+            - /bin/bash
+            - -c
+            - "exit 1"
+      generate:
+        command:
+          - /bin/bash
+          - -c
+          - "exit 0"
+      lockRepo: false
+  {{- end }}
