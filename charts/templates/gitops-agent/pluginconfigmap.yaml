@@ -1,7 +1,10 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
+  labels:
+    {{- include "harness.agentLabels" (dict "context" . "component" .Values.agent.name "name" "agent-secret") | nindent 4 }}
   name: argocd-harness-plugin
+  namespace: {{ .Release.Namespace }}
 data:
   {{- if .Values.harness.argocdHarnessPlugin.enabled }}
   harness.yaml: |
