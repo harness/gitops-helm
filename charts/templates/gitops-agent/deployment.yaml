@@ -145,15 +145,6 @@ spec:
         {{- end }}
         - mountPath: /app/logs
           name: log-volume
-        startupProbe:
-          exec:
-            command:
-              - test
-              - -s
-              - logs/agent.log
-          initialDelaySeconds: {{ .Values.agent.startupProbe.initialDelaySeconds }}
-          periodSeconds: {{ .Values.agent.startupProbe.periodSeconds }}
-          failureThreshold: {{ .Values.agent.startupProbe.failureThreshold }}
         livenessProbe:
           httpGet:
             path: /healthz?full=true
