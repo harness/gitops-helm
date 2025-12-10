@@ -118,6 +118,9 @@ argo-cd:
         - mountPath: /home/argocd/cmp-server/config/plugin.yaml
           name: argocd-harness-plugin
           subPath: harness.yaml
+        - mountPath: /usr/local/bin/helm
+          name: helm-sops-tools
+          subPath: helm
 
     # -- Additional volumeMounts to the repo server main container
     volumeMounts:
