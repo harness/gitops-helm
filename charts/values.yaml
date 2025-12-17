@@ -31,6 +31,13 @@ argo-cd:
       # This allows for a cluster entity to be created for the cluster that your agent is installed in
       # It should be false for Namespaced Agent installations
       cluster.inClusterEnabled: "true"
+      # Since argocd 3.0 the default resource tracking method is 'annotation'
+      # Explicitly setting to label for backward compatibility with argo v2.x (this can be overriden in override.yaml)
+      application.resourceTrackingMethod: "label"
+      # Since argocd 3.0 default compare options to ignore the status field has been changed from crd to all resources
+      # Explicitly setting to crd for backward compatibility with argocd v2.x (this can be overriden in override.yaml)
+      resource.compareoptions: |
+        ignoreResourceStatusField: crd
 
   ## Custom resource configuration
   crds:

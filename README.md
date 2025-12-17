@@ -31,3 +31,6 @@ agent:
 ```
 
 This allows you to manage your secrets separately from the Helm chart installation.
+
+## Troubleshooting
+Common trobleshooting questions can be found [here](https://developer.harness.io/docs/continuous-delivery/gitops/resources/troubleshooting/)
