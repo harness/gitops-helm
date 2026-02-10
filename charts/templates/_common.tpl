@@ -174,13 +174,10 @@ Default ArgoCD service name based on subchart naming convention
 Get Redis service name (regular or HA)
 */}}
 {{- define "argocd.redisServiceName" -}}
-{{- $redisHaEnabled := false -}}
-{{- if index .Values "argo-cd" "redis-ha" -}}
-  {{- $redisHaEnabled = index .Values "argo-cd" "redis-ha" "enabled" | default false -}}
-{{- end -}}
-{{- if $redisHaEnabled -}}
+{{- if .Values.agent.highAvailability -}}
   {{- include "argocd.serviceName" (dict "context" . "component" "redis-ha-haproxy" "Values" .Values) -}}
 {{- else -}}
   {{- include "argocd.serviceName" (dict "context" . "component" "redis" "Values" .Values) -}}
 {{- end -}}
 {{- end -}}
+
