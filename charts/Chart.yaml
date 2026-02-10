@@ -1,7 +1,7 @@
 apiVersion: v2
 name: gitops-helm
 description: A Helm chart for Harness GitOps Agent - for more information, please visit https://developer.harness.io/docs/category/gitops.
-version: 1.2.1
+version: 1.2.0
 dependencies:
   - name: argo-cd
     version: 9.0.0
