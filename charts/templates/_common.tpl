@@ -175,8 +175,8 @@ Get Redis service name (regular or HA)
 */}}
 {{- define "argocd.redisServiceName" -}}
 {{- $redisHaEnabled := false -}}
-{{- if .Values.redisHa -}}
-  {{- $redisHaEnabled = .Values.redisHa.enabled | default false -}}
+{{- if index .Values "argo-cd" "redis-ha" -}}
+  {{- $redisHaEnabled = index .Values "argo-cd" "redis-ha" "enabled" | default false -}}
 {{- end -}}
 {{- if $redisHaEnabled -}}
   {{- include "argocd.serviceName" (dict "context" . "component" "redis-ha-haproxy" "Values" .Values) -}}
