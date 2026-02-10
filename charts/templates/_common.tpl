@@ -127,3 +127,60 @@ Usage:
         {{- end }}
     {{- end }}
 {{- end -}}
+
+{{/*
+Build ArgoCD service name with priority for explicit service overrides
+*/}}
+{{- define "argocd.serviceName" -}}
+{{- if eq .component "repo-server" -}}
+  {{- if .Values.harness.configMap.argocd.repoServerSvc -}}
+    {{- .Values.harness.configMap.argocd.repoServerSvc -}}
+  {{- else -}}
+    {{- include "argocd.defaultServiceName" . -}}
+  {{- end -}}
+{{- else if eq .component "redis" -}}
+  {{- if .Values.harness.configMap.argocd.redisSvc -}}
+    {{- .Values.harness.configMap.argocd.redisSvc -}}
+  {{- else -}}
+    {{- include "argocd.defaultServiceName" . -}}
+  {{- end -}}
+{{- else if eq .component "redis-ha-haproxy" -}}
+  {{- if .Values.harness.configMap.argocd.redisHaProxySvc -}}
+    {{- .Values.harness.configMap.argocd.redisHaProxySvc -}}
+  {{- else -}}
+    {{- include "argocd.defaultServiceName" . -}}
+  {{- end -}}
+{{- else -}}
+  {{- include "argocd.defaultServiceName" . -}}
+{{- end -}}
+{{- end -}}
+ 
+{{/*
+Default ArgoCD service name based on subchart naming convention
+*/}}
+{{- define "argocd.defaultServiceName" -}}
+{{- $fullnameOverride := index .Values "argo-cd" "fullnameOverride" -}}
+{{- $nameOverride := index .Values "argo-cd" "nameOverride" -}}
+{{- if $fullnameOverride -}}
+  {{- $fullnameOverride -}}-{{ .component }}
+{{- else if $nameOverride -}}
+  {{- .context.Release.Name -}}-{{ $nameOverride -}}-{{ .component }}
+{{- else -}}
+  {{- .context.Release.Name -}}-argo-cd-{{ .component }}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Get Redis service name (regular or HA)
+*/}}
+{{- define "argocd.redisServiceName" -}}
+{{- $redisHaEnabled := false -}}
+{{- if .Values.redisHa -}}
+  {{- $redisHaEnabled = .Values.redisHa.enabled | default false -}}
+{{- end -}}
+{{- if $redisHaEnabled -}}
+  {{- include "argocd.serviceName" (dict "context" . "component" "redis-ha-haproxy" "Values" .Values) -}}
+{{- else -}}
+  {{- include "argocd.serviceName" (dict "context" . "component" "redis" "Values" .Values) -}}
+{{- end -}}
+{{- end -}}

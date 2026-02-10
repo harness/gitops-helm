@@ -37,7 +37,7 @@ data:
   {{-  if .Values.agent.proxy.enabled }}
   HTTPS_PROXY: {{ .Values.agent.proxy.httpsProxy }}
   HTTP_PROXY: {{ .Values.agent.proxy.httpProxy }}
-  NO_PROXY: localhost,argocd-repo-server,argocd-redis,127.0.0.1,argocd-redis-ha-haproxy,$(KUBERNETES_SERVICE_HOST),kubernetes.default.svc,{{ .Values.agent.name }}
+  NO_PROXY: localhost,{{ include "argocd.serviceName" (dict "context" . "component" "repo-server" "Values" .Values) | default "argocd-repo-server" }},{{ include "argocd.redisServiceName" . | default "argocd-redis" }},127.0.0.1,$(KUBERNETES_SERVICE_HOST),kubernetes.default.svc,{{ .Values.agent.name | default "gitops-agent" }}
   {{- end }}
   REDIS_SERVER: {{ include "redisServer" . }}:6379
   GITOPS_AGENT_NUM_FETCHERS: "{{ .Values.agent.numFetchers }}"

@@ -28,12 +28,18 @@ spec:
                     fieldRef:
                       fieldPath: metadata.namespace
             {{- if .Values.agent.proxy.enabled }}
-                - name: HTTPS_PROXY
-                  value: {{ .Values.agent.proxy.httpsProxy }}
-                - name: HTTP_PROXY
-                  value: {{ .Values.agent.proxy.httpProxy }}
+                - name: PROXY_HOST
+                  value: {{ .Values.upgrader.config.proxyHost }}
+                - name: PROXY_PORT
+                  value: {{ .Values.upgrader.config.proxyPort }}
+                - name: PROXY_SCHEME
+                  value: {{ .Values.upgrader.config.proxyScheme }}
+                - name: PROXY_USER
+                  value: {{ .Values.upgrader.config.proxyUser }}
+                - name: PROXY_PASSWORD
+                  value: {{ .Values.upgrader.config.proxyPassword }}
                 - name: NO_PROXY
-                  value: localhost,argocd-repo-server,argocd-redis,127.0.0.1,argocd-redis-ha-haproxy,kubernetes.default.svc,{{ .Values.agent.name }}
+                  value: localhost,{{ include "argocd.serviceName" (dict "context" . "component" "repo-server" "Values" .Values) | default "argocd-repo-server" }},{{ include "argocd.redisServiceName" . | default "argocd-redis" }},127.0.0.1,$(KUBERNETES_SERVICE_HOST),kubernetes.default.svc,{{ .Values.agent.name | default "gitops-agent" }}
             {{- end }}
                 - name: UPGRADER_TOKEN
                   valueFrom:

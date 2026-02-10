@@ -609,9 +609,20 @@ upgrader:
     # -- Upgrade all related images in GitOps Agent including Argo CD, Redis etc.
     upgradeAll: false
     registryMirror: ""
+    # -- Proxy configuration for upgrader
+    # HTTPS_PROXY=proxyScheme://proxyUser:proxyPassword@proxyHost:proxyPort
+    proxyHost: ""
+    proxyPort: ""
+    proxyScheme: ""
+    noProxy: ""
+    proxyUser: ""
+    proxyPassword: ""
+    
     # -- Cert Paths for mTLS in upgrader
     clientCertificateFilePath: /etc/mtls/client.crt
     clientCertificateKeyFilePath: /etc/mtls/client.key
+    
+
 
 
 # <---Duplicated Argo CD overrides for overridden templates--->
