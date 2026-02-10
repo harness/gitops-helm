@@ -33,13 +33,13 @@ data:
   GITOPS_ARGOCD_APP_CONTROLLER: {{ .Values.harness.configMap.argocd.controller }}
   GITOPS_ARGOCD_APPSET_CONTROLLER: {{ .Values.harness.configMap.argocd.applicationSet }}
   GITOPS_AGENT_AVAILABILITY_MODE: {{ if .Values.agent.highAvailability }}HA{{ else }}NON-HA{{ end }}
-  ARGOCD_SERVER_REPO_SERVER: {{ if .Values.harness.configMap.argocd.repoServerSvc }} {{ .Values.harness.configMap.argocd.repoServerSvc }}:8081{{ else }}{{ .Values.harness.configMap.argocd.repoServer }}:8081{{ end }}
+  ARGOCD_SERVER_REPO_SERVER: {{ include "argocd.serviceName" (dict "context" . "component" "repo-server" "Values" .Values) | default "argocd-repo-server" }}:8081
   {{-  if .Values.agent.proxy.enabled }}
   HTTPS_PROXY: {{ .Values.agent.proxy.httpsProxy }}
   HTTP_PROXY: {{ .Values.agent.proxy.httpProxy }}
   NO_PROXY: localhost,{{ include "argocd.serviceName" (dict "context" . "component" "repo-server" "Values" .Values) | default "argocd-repo-server" }},{{ include "argocd.redisServiceName" . | default "argocd-redis" }},127.0.0.1,$(KUBERNETES_SERVICE_HOST),kubernetes.default.svc,{{ .Values.agent.name | default "gitops-agent" }}
   {{- end }}
-  REDIS_SERVER: {{ include "redisServer" . }}:6379
+  REDIS_SERVER: {{ include "argocd.redisServiceName" . | default "argocd-redis" }}:6379
   GITOPS_AGENT_NUM_FETCHERS: "{{ .Values.agent.numFetchers }}"
   GITOPS_AGENT_NUM_PROCESSORS: "{{ .Values.agent.numProcessors }}"
   GITOPS_AGENT_NUM_RESPONDERS: "{{ .Values.agent.numResponders }}"
