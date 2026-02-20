@@ -175,9 +175,23 @@ Get Redis service name (regular or HA)
 */}}
 {{- define "argocd.redisServiceName" -}}
 {{- if .Values.agent.highAvailability -}}
-  {{- include "argocd.serviceName" (dict "context" . "component" "redis-ha-haproxy" "Values" .Values) -}}
+  {{- if .Values.harness.configMap.argocd.redisHaProxySvc -}}
+    {{- .Values.harness.configMap.argocd.redisHaProxySvc -}}
+  {{- else -}}
+    {{- $redisHa := (index .Values "argo-cd" "redis-ha") -}}
+    {{- $redisHaContext := dict "Chart" (dict "Name" "redis-ha") "Release" .Release "Values" $redisHa -}}
+    {{- if and $redisHa.enabled $redisHa.haproxy.enabled -}}
+      {{- printf "%s-haproxy" (include "redis-ha.fullname" $redisHaContext) | trunc 63 | trimSuffix "-" -}}
+    {{- else -}}
+      {{- include "argocd.serviceName" (dict "context" . "component" "redis-ha-haproxy" "Values" .Values) -}}
+    {{- end -}}
+  {{- end -}}
 {{- else -}}
-  {{- include "argocd.serviceName" (dict "context" . "component" "redis" "Values" .Values) -}}
+  {{- if .Values.harness.configMap.argocd.redisSvc -}}
+    {{- .Values.harness.configMap.argocd.redisSvc -}}
+  {{- else -}}
+    {{- include "argocd.serviceName" (dict "context" . "component" "redis" "Values" .Values) -}}
+  {{- end -}}
 {{- end -}}
 {{- end -}}
 

@@ -251,7 +251,7 @@ harness:
 
       repoServerSvc: ""
       redisSvc: ""
-      redisHaProxySvc: "argocd-redis-ha-haproxy"
+      redisHaProxySvc: ""
 
   secrets:
     # -- DoNotEdit - GitOps Agent Secret uniquely identifies a GitOps Agent in the Service
