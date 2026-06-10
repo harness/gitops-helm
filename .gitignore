@@ -3,3 +3,11 @@
 .idea/vcs.xml
 .idea/gitops-helm.iml
 .DS_Store
+
+# AI Agent user-specific settings (configs in .claude/ etc. ARE committed)
+.claude/settings.json
+.claude/settings.local.json
+.cursor/settings.json
+.cursor/mcp.json
+.windsurf/settings.json
+.opencode/settings.json
