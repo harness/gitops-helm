@@ -43,6 +43,12 @@ data:
   GITOPS_AGENT_NUM_FETCHERS: "{{ .Values.agent.numFetchers }}"
   GITOPS_AGENT_NUM_PROCESSORS: "{{ .Values.agent.numProcessors }}"
   GITOPS_AGENT_NUM_RESPONDERS: "{{ .Values.agent.numResponders }}"
+  {{- if .Values.agent.zts.url }}
+  GITOPS_AGENT_ZTS_URL: "{{ .Values.agent.zts.url }}"
+  GITOPS_AGENT_ZTS_MODE: "{{ .Values.agent.zts.mode }}"
+  GITOPS_AGENT_ZTS_TIMEOUT_SECONDS: "{{ .Values.agent.zts.timeoutSeconds }}"
+  GITOPS_AGENT_ZTS_RETRY_COUNT: "{{ .Values.agent.zts.retryCount }}"
+  {{- end }}
   FIPS_ENABLED: "{{ .Values.agent.fipsEnabled }}"
   HARNESS_GITOPS_AGENT_HOST: "{{ .Values.agent.name }}"
   HARNESS_GITOPS_AGENT_PORT: "{{ .Values.agent.service.targetPort }}"

@@ -583,6 +583,17 @@ agent:
   # -- Number of task responders running concurrently for the gitops agent
   numResponders: 1
 
+  # -- Zero Trust Service configuration for task verification
+  zts:
+    # -- ZTS server URL (empty = disabled). Include /api/ suffix, e.g. http://zts:4210/api/
+    url: ""
+    # -- ZTS mode: "shadow" (log only), "enforce" (block denied tasks), or "disabled"
+    mode: "shadow"
+    # -- Timeout in seconds for ZTS verify/output requests
+    timeoutSeconds: 5
+    # -- Number of retries for failed ZTS requests
+    retryCount: 2
+
   # -- Any additional env variables to be used by the gitops agent can be configured here
   additionalConfig: 
     GITOPS_AGENT_MAPPING_TIMEOUT_SECONDS: "60"
