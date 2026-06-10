@@ -67,6 +67,21 @@ spec:
             {{- with .Values.agent.extraArgs }}
               {{- toYaml . | nindent 8 }}
             {{- end }}
+            {{- if .Values.externalRedis.tls.enabled }}
+            - --redis-use-tls
+            {{- if .Values.externalRedis.tls.insecureSkipVerify }}
+            - --redis-insecure-skip-tls-verify
+            {{- else if .Values.externalRedis.tls.existingSecret }}
+            - --redis-ca-certificate
+            - {{ .Values.externalRedis.tls.mountPath }}/ca.crt
+            {{- end }}
+            {{- if and .Values.externalRedis.tls.clientCertEnabled .Values.externalRedis.tls.existingSecret }}
+            - --redis-client-certificate
+            - {{ .Values.externalRedis.tls.mountPath }}/client.crt
+            - --redis-client-key
+            - {{ .Values.externalRedis.tls.mountPath }}/client.key
+            {{- end }}
+            {{- end }}
         name: {{ .Values.agent.name }}
         image: {{ .Values.agent.image.repository }}:{{ .Values.agent.image.tag }}
         imagePullPolicy: {{ .Values.agent.image.imagePullPolicy }}
@@ -142,6 +157,11 @@ spec:
         - mountPath: /tmp/ca.bundle
           name: certvol
           subPath: ca.bundle
+        {{- end }}
+        {{- if and .Values.externalRedis.tls.enabled .Values.externalRedis.tls.existingSecret }}
+        - mountPath: {{ .Values.externalRedis.tls.mountPath }}
+          name: redis-tls-certs
+          readOnly: true
         {{- end }}
         - mountPath: /app/logs
           name: log-volume
@@ -247,6 +267,21 @@ spec:
           items:
             - key: ca.bundle
               path: ca.bundle
+      {{- end }}
+      {{- if and .Values.externalRedis.tls.enabled .Values.externalRedis.tls.existingSecret }}
+      - name: redis-tls-certs
+        secret:
+          secretName: {{ .Values.externalRedis.tls.existingSecret }}
+          optional: false
+          items:
+            - key: ca.crt
+              path: ca.crt
+            {{- if .Values.externalRedis.tls.clientCertEnabled }}
+            - key: client.crt
+              path: client.crt
+            - key: client.key
+              path: client.key
+            {{- end }}
       {{- end }}
       - name: log-volume
         emptyDir: { }
