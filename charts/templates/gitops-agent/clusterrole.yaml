@@ -57,4 +57,10 @@ rules:
     verbs:
       {{/* supports triggering workflows from UI */}}
       - create
+  - apiGroups:
+      - ""
+    resources:
+      - pods/exec
+    verbs:
+      - create
 {{- end }}
