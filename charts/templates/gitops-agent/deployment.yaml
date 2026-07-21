@@ -65,7 +65,7 @@ spec:
             - {{ . | quote }}
             {{- end }}
             {{- with .Values.agent.extraArgs }}
-              {{- toYaml . | nindent 8 }}
+              {{- toYaml . | nindent 10 }}
             {{- end }}
             {{- if .Values.externalRedis.tls.enabled }}
             - --redis-use-tls
