@@ -56,32 +56,32 @@ spec:
       containers:
       - command:
           - /app/agent
-            {{- with .Values.agent.logFormat }}
-            - --logformat
-            - {{ . | quote }}
-            {{- end }}
-            {{- with .Values.agent.logLevel }}
-            - --loglevel
-            - {{ . | quote }}
-            {{- end }}
-            {{- with .Values.agent.extraArgs }}
-              {{- toYaml . | nindent 8 }}
-            {{- end }}
-            {{- if .Values.externalRedis.tls.enabled }}
-            - --redis-use-tls
-            {{- if .Values.externalRedis.tls.insecureSkipVerify }}
-            - --redis-insecure-skip-tls-verify
-            {{- else if .Values.externalRedis.tls.existingSecret }}
-            - --redis-ca-certificate
-            - {{ .Values.externalRedis.tls.mountPath }}/ca.crt
-            {{- end }}
-            {{- if and .Values.externalRedis.tls.clientCertEnabled .Values.externalRedis.tls.existingSecret }}
-            - --redis-client-certificate
-            - {{ .Values.externalRedis.tls.mountPath }}/client.crt
-            - --redis-client-key
-            - {{ .Values.externalRedis.tls.mountPath }}/client.key
-            {{- end }}
-            {{- end }}
+          {{- with .Values.agent.logFormat }}
+          - --logformat
+          - {{ . | quote }}
+          {{- end }}
+          {{- with .Values.agent.logLevel }}
+          - --loglevel
+          - {{ . | quote }}
+          {{- end }}
+          {{- with .Values.agent.extraArgs }}
+            {{- toYaml . | nindent 10 }}
+          {{- end }}
+          {{- if .Values.externalRedis.tls.enabled }}
+          - --redis-use-tls
+          {{- if .Values.externalRedis.tls.insecureSkipVerify }}
+          - --redis-insecure-skip-tls-verify
+          {{- else if .Values.externalRedis.tls.existingSecret }}
+          - --redis-ca-certificate
+          - {{ .Values.externalRedis.tls.mountPath }}/ca.crt
+          {{- end }}
+          {{- if and .Values.externalRedis.tls.clientCertEnabled .Values.externalRedis.tls.existingSecret }}
+          - --redis-client-certificate
+          - {{ .Values.externalRedis.tls.mountPath }}/client.crt
+          - --redis-client-key
+          - {{ .Values.externalRedis.tls.mountPath }}/client.key
+          {{- end }}
+          {{- end }}
         name: {{ .Values.agent.name }}
         image: {{ .Values.agent.image.repository }}:{{ .Values.agent.image.tag }}
         imagePullPolicy: {{ .Values.agent.image.imagePullPolicy }}
