@@ -309,6 +309,67 @@ harness:
   argocdHarnessPlugin:
     enabled: false
 
+    # -- ConfigManagementPlugin spec.version
+    version: v1.0
+
+    # -- ConfigManagementPlugin spec.allowConcurrency
+    allowConcurrency: true
+
+    # -- ConfigManagementPlugin spec.lockRepo
+    lockRepo: false
+
+    discover:
+      find:
+        # -- ConfigManagementPlugin spec.discover.find.command. Scoped
+        # narrowly to .harness.yaml presence so this plugin only auto-claims
+        # apps that opted in via that file — apps that don't set
+        # spec.source.plugin.name or drop a .harness.yaml are left alone.
+        command:
+          - /bin/sh
+          - -c
+          - "test -f .harness.yaml"
+
+    init:
+      # -- ConfigManagementPlugin spec.init.command. Runs helm dependency build
+      # unconditionally before generate, so Helm subchart dependencies declared
+      # in Chart.yaml get resolved even if charts/ isn't vendored in the repo.
+      command:
+        - /bin/sh
+        - -c
+        - |
+          set -o pipefail
+          if [ -f "Chart.yaml" ]; then
+            helm dependency build > /dev/null 2>&1 || true
+          fi
+
+    generate:
+      # -- ConfigManagementPlugin spec.generate.command. Detects Helm vs
+      # Kustomize vs plain manifests, with an optional .harness.yaml
+      # override (tool: helm|kustomize|native) for ambiguous repos.
+      command:
+        - /bin/sh
+        - -c
+        - |
+          set -o pipefail
+          if [ -f ".harness.yaml" ] && grep -q '^tool:' ".harness.yaml"; then
+            TOOL=$(grep '^tool:' ".harness.yaml" | head -1 | cut -d: -f2 | tr -d ' "')
+            echo "argocd-harness-plugin: tool selection overridden by .harness.yaml: $TOOL" >&2
+          else
+            TOOL=""
+          fi
+
+          if [ "$TOOL" = "kustomize" ] || { [ -z "$TOOL" ] && { [ -f "kustomization.yaml" ] || [ -f "kustomization.yml" ] || [ -f "Kustomization" ]; }; }; then
+            echo "argocd-harness-plugin: detected Kustomize" >&2
+            kustomize build . | argocd-harness-plugin generate -
+          elif [ "$TOOL" = "helm" ] || { [ -z "$TOOL" ] && { [ -f "Chart.yaml" ] || [ -f "values.yaml" ]; }; }; then
+            echo "argocd-harness-plugin: detected Helm chart" >&2
+            helm template $ARGOCD_APP_NAME -n $ARGOCD_APP_NAMESPACE ${ARGOCD_ENV_HELM_ARGS} --include-crds . \
+              | argocd-harness-plugin generate -
+          else
+            echo "argocd-harness-plugin: no Chart.yaml/kustomization file found, treating as plain manifests" >&2
+            argocd-harness-plugin generate .
+          fi
+
 ## Harness GitOps Agent
 agent:
   # -- GitOps Agent entity name

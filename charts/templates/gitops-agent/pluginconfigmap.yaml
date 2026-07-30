@@ -14,34 +14,19 @@ data:
     metadata:
       name: argocd-harness-plugin
     spec:
-      version: v1.0
-      allowConcurrency: true
+      version: {{ .Values.harness.argocdHarnessPlugin.version }}
+      allowConcurrency: {{ .Values.harness.argocdHarnessPlugin.allowConcurrency }}
       discover:
         find:
           command:
-            - /bin/sh
-            - -c
-            - |
-              if [ -f "Chart.yaml" ] || [ -f "values.yaml" ]; then  
-                echo "Harness Plugin discovered Helm Chart. Proceeding to generate manifests."
-              elif find . -name '*.yaml' -o -name '*.yml' | grep -q .; then
-                echo "Harness Plugin discovered Native Kubernetes Manifests. Proceeding to generate manifests."
-              else
-                exit 1
-              fi
+            {{- toYaml .Values.harness.argocdHarnessPlugin.discover.find.command | nindent 12 }}
+      init:
+        command:
+          {{- toYaml .Values.harness.argocdHarnessPlugin.init.command | nindent 10 }}
       generate:
         command:
-          - /bin/sh
-          - -c
-          - |
-            set -o pipefail 
-            if [ -f "Chart.yaml" ] || [ -f "values.yaml" ]; then
-              helm template $ARGOCD_APP_NAME -n $ARGOCD_APP_NAMESPACE ${ARGOCD_ENV_HELM_ARGS} --include-crds . \
-                | argocd-harness-plugin generate -
-            else
-              argocd-harness-plugin generate .
-            fi
-      lockRepo: false
+          {{- toYaml .Values.harness.argocdHarnessPlugin.generate.command | nindent 10 }}
+      lockRepo: {{ .Values.harness.argocdHarnessPlugin.lockRepo }}
   {{- else }}
   harness.yaml: |
     ---
