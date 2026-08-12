@@ -370,6 +370,12 @@ harness:
             argocd-harness-plugin generate .
           fi
 
+  developerMirrordRbac:
+    # -- Enable Role and RoleBinding for developer mirrord access in the target namespace
+    enabled: false
+    # -- List of Kubernetes/Google user identities to bind to the developer-mirrord Role
+    users: []
+
 ## Harness GitOps Agent
 agent:
   # -- GitOps Agent entity name

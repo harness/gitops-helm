@@ -1,0 +1,29 @@
+{{- if .Values.harness.developerMirrordRbac.enabled }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: developer-mirrord
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    {{- include "harness.agentLabels" (dict "context" . "component" "developer-mirrord" "name" "developer-mirrord") | nindent 4 }}
+rules:
+- apiGroups:
+  - batch
+  resources:
+  - jobs
+  verbs:
+  - create
+  - get
+  - list
+  - watch
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  - pods/log
+  verbs:
+  - get
+  - list
+  - watch
+{{- end }}
