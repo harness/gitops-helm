@@ -14,7 +14,6 @@ data:
     metadata:
       name: argocd-harness-plugin
     spec:
-      version: {{ .Values.harness.argocdHarnessPlugin.version }}
       allowConcurrency: {{ .Values.harness.argocdHarnessPlugin.allowConcurrency }}
       discover:
         find:

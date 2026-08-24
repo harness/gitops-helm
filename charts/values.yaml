@@ -309,9 +309,6 @@ harness:
   argocdHarnessPlugin:
     enabled: false
 
-    # -- ConfigManagementPlugin spec.version
-    version: v1.0
-
     # -- ConfigManagementPlugin spec.allowConcurrency
     allowConcurrency: true
 
@@ -327,7 +324,12 @@ harness:
         command:
           - /bin/sh
           - -c
-          - "test -f .harness.yaml"
+          - |
+            if [ -f ".harness.yaml" ]; then
+              echo "Harness Plugin discovered .harness.yaml marker. Proceeding to generate manifests."
+            else
+              exit 1
+            fi
 
     init:
       # -- ConfigManagementPlugin spec.init.command. Runs helm dependency build
