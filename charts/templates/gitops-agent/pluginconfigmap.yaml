@@ -6,7 +6,6 @@ metadata:
   name: argocd-harness-plugin
   namespace: {{ .Release.Namespace }}
 data:
-  {{- if .Values.harness.argocdHarnessPlugin.enabled }}
   harness.yaml: |
     ---
     apiVersion: argoproj.io/v1alpha1
@@ -26,25 +25,3 @@ data:
         command:
           {{- toYaml .Values.harness.argocdHarnessPlugin.generate.command | nindent 10 }}
       lockRepo: {{ .Values.harness.argocdHarnessPlugin.lockRepo }}
-  {{- else }}
-  harness.yaml: |
-    ---
-    apiVersion: argoproj.io/v1alpha1
-    kind: ConfigManagementPlugin
-    metadata:
-      name: argocd-harness-plugin
-    spec:
-      allowConcurrency: false
-      discover:
-        find:
-          command:
-            - /bin/sh
-            - -c
-            - "exit 1"
-      generate:
-        command:
-          - /bin/sh
-          - -c
-          - "exit 0"
-      lockRepo: false
-  {{- end }}

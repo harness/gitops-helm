@@ -307,8 +307,6 @@ harness:
     enabled: false
   
   argocdHarnessPlugin:
-    enabled: false
-
     # -- ConfigManagementPlugin spec.allowConcurrency
     allowConcurrency: true
 
