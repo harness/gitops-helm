@@ -165,6 +165,8 @@ spec:
         {{- end }}
         - mountPath: /app/logs
           name: log-volume
+        - mountPath: /app/migration-staging
+          name: migration-staging
         livenessProbe:
           httpGet:
             path: /healthz?full=true
@@ -284,6 +286,9 @@ spec:
             {{- end }}
       {{- end }}
       - name: log-volume
+        emptyDir: { }
+      # Migration package ciphertext is staged here, never in a Kubernetes Secret.
+      - name: migration-staging
         emptyDir: { }
       {{- if .Values.agent.hostNetwork }}
       hostNetwork: {{ .Values.agent.hostNetwork }}
