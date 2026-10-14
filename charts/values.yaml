@@ -55,6 +55,11 @@ argo-cd:
         cpu: "1"
         memory: 2Gi
 
+    ## Metrics service configuration
+    metrics:
+      # -- Deploy metrics service
+      enabled: true
+
   ## Argo CD ApplicationSet controller
   applicationSet:
 
@@ -271,6 +276,11 @@ harness:
       repoServerSvc: ""
       redisSvc: ""
       redisHaProxySvc: ""
+
+      # -- Override full host:port for metrics scrapes; empty uses release-prefixed Service DNS from argocd.serviceName
+      repoServerMetricsAddr: ""
+      appControllerMetricsAddr: ""
+      appSetControllerMetricsAddr: ""
 
   secrets:
     # -- DoNotEdit - GitOps Agent Secret uniquely identifies a GitOps Agent in the Service

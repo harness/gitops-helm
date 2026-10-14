@@ -32,6 +32,9 @@ data:
   GITOPS_ARGOCD_REDIS_HA_PROXY: {{ .Values.harness.configMap.argocd.redisHaProxy }}
   GITOPS_ARGOCD_APP_CONTROLLER: {{ .Values.harness.configMap.argocd.controller }}
   GITOPS_ARGOCD_APPSET_CONTROLLER: {{ .Values.harness.configMap.argocd.applicationSet }}
+  GITOPS_AGENT_ARGOCD_REPO_SERVER_METRICS_ADDR: {{ .Values.harness.configMap.argocd.repoServerMetricsAddr | default (printf "%s:8084" (include "argocd.serviceName" (dict "context" . "component" "repo-server-metrics" "Values" .Values))) }}
+  GITOPS_AGENT_ARGOCD_APP_CONTROLLER_METRICS_ADDR: {{ .Values.harness.configMap.argocd.appControllerMetricsAddr | default (printf "%s:8082" (include "argocd.serviceName" (dict "context" . "component" "application-controller-metrics" "Values" .Values))) }}
+  GITOPS_AGENT_ARGOCD_APPSET_CONTROLLER_METRICS_ADDR: {{ .Values.harness.configMap.argocd.appSetControllerMetricsAddr | default (printf "%s:8080" (include "argocd.serviceName" (dict "context" . "component" "applicationset-controller-metrics" "Values" .Values))) }}
   GITOPS_AGENT_AVAILABILITY_MODE: {{ if .Values.agent.highAvailability }}HA{{ else }}NON-HA{{ end }}
   ARGOCD_SERVER_REPO_SERVER: {{ include "argocd.serviceName" (dict "context" . "component" "repo-server" "Values" .Values) | default "argocd-repo-server" }}:8081
   {{-  if .Values.agent.proxy.enabled }}
