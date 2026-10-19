@@ -89,7 +89,7 @@ argo-cd:
     # -- Init containers to add to the repo server pods
     initContainers:
       - name: sops-helm-secrets-tool
-        image: harness/gitops-agent-installer-helper:v0.0.3
+        image: harness/gitops-agent-installer-helper:v0.3.0
         imagePullPolicy: IfNotPresent
         command: [ sh, -ec ]
         args:
@@ -113,16 +113,16 @@ argo-cd:
             name: helm-sops-tools
     extraContainers:
       - command: [ /var/run/argocd/argocd-cmp-server ]
-        image: harness/gitops-agent-installer-helper:v0.0.3
+        image: harness/gitops-agent-installer-helper:v0.3.0
         imagePullPolicy: IfNotPresent
         name: argocd-harness-plugin
         resources:
           limits:
-            cpu: "0.5"
-            memory: 512Mi
+            cpu: 1
+            memory: 1Gi
           requests:
-            cpu: "0.5"
-            memory: 512Mi
+            cpu: 1
+            memory: 1Gi
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
@@ -198,8 +198,8 @@ argo-cd:
       create: true
 
     image:
-      repository: redis
-      tag: 7.4.1-alpine
+      repository: harness/redis
+      tag: 7.4.8
 
   ## ArgoCD Server, Dex and Notifications Controller are not required for Harness GitOps Agent
   server:
@@ -418,7 +418,7 @@ agent:
     repository: harness/gitops-agent
     # -- Tag to use for the GitOps Agent
     # @default -- `""` (defaults to global.image.tag)
-    tag: v0.84.1
+    tag: v0.128.0
     # -- Image pull policy for GitOps Agent
     # @default -- `""` (defaults to global.image.imagePullPolicy)
     imagePullPolicy: Always
@@ -735,7 +735,7 @@ nameOverride: argocd
 global:
   image:
     repository: docker.io/harness/argocd
-    tag: v2.14.9
+    tag: v3.5.3
     imagePullPolicy: Always
   logging:
     format: text
