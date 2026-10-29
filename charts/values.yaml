@@ -87,30 +87,7 @@ argo-cd:
   ## Argo CD Repo Server
   repoServer:
     # -- Init containers to add to the repo server pods
-    initContainers:
-      - name: sops-helm-secrets-tool
-        image: harness/gitops-agent-installer-helper:v0.3.0
-        imagePullPolicy: IfNotPresent
-        command: [ sh, -ec ]
-        args:
-          - |
-            cp -r /custom-tools/. /helm-sops-tools
-            cp /helm-sops-tools/helm-plugins/helm-secrets/scripts/wrapper/helm.sh /helm-sops-tools/helm
-            mkdir -p /helm-sops-tools/helm-secrets && cp /helm-sops-tools/helm-plugins/helm-secrets/scripts/wrapper/helm.sh /helm-sops-tools/helm-secrets/helm
-            chmod +x /helm-sops-tools/helm-secrets/*
-            chmod +x /helm-sops-tools/*
-        securityContext:
-          allowPrivilegeEscalation: false
-          capabilities:
-            drop:
-              - ALL
-          runAsNonRoot: true
-          runAsUser: 65534
-          seccompProfile:
-            type: RuntimeDefault
-        volumeMounts:
-          - mountPath: /helm-sops-tools
-            name: helm-sops-tools
+    initContainers: []
     extraContainers:
       - command: [ /var/run/argocd/argocd-cmp-server ]
         image: harness/gitops-agent-installer-helper:v0.3.0
