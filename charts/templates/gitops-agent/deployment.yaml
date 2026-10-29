@@ -95,6 +95,8 @@ spec:
             valueFrom:
               fieldRef:
                 fieldPath: metadata.name
+          - name: AGENT_POD_SELECTOR
+            value: {{ include "harness.agentPodSelector" . | quote }}
           - name: REDIS_USERNAME
             valueFrom:
               secretKeyRef:

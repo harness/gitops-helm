@@ -75,6 +75,16 @@ app.kubernetes.io/component: {{ .component }}
 {{- end }}
 
 {{/*
+Label selector string (k=v,k=v) for the GitOps Agent pods, rendered from the Deployment's own selector labels
+*/}}
+{{- define "harness.agentPodSelector" -}}
+{{- $labels := include "harness.agentSelectorLabels" (dict "context" . "name" .Values.agent.name) | fromYaml -}}
+{{- $pairs := list -}}
+{{- range $k := keys $labels | sortAlpha }}{{ $pairs = append $pairs (printf "%s=%v" $k (index $labels $k)) }}{{ end -}}
+{{- join "," $pairs -}}
+{{- end }}
+
+{{/*
 Create the name of the GitOps Agent service account to use
 */}}
 {{- define "harness.agent.serviceAccountName" -}}
