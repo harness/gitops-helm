@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.3.0
+
+The default `sops-helm-secrets-tool` init container was removed from `argo-cd.repoServer.initContainers` (now `[]`) as part of the SOPS / helm-secrets removal.
+The `helm-sops-tools` volume, its mount and `valuesFileSchemes` are unchanged, so existing overrides keep rendering.
+Agents whose overrides define their own `initContainers` are unaffected.
+
 ## 1.2.0
 
 This upgrade contains upgrade of [argo-cd v9.0.0](https://github.com/argoproj/argo-helm/blob/argo-cd-9.0.0/charts/argo-cd/Chart.yaml) helm chart.
