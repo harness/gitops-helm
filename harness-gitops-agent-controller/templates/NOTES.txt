@@ -10,7 +10,9 @@ Verify the controller:
    kubectl -n {{ .Release.Namespace }} rollout status deploy/{{ include "harness-gitops-agent-controller.fullname" . }}
    kubectl -n {{ .Release.Namespace }} logs deploy/{{ include "harness-gitops-agent-controller.fullname" . }} -f
 
-Next: create a HarnessGitopsAgent and zero or more HarnessGitopsProjectMapping
-resources (see the harness-gitops-agent-bootstrap chart). The API key Secret
+Next: enable the bootstrap resources in the gitops-helm chart to create a
+HarnessGitopsAgent and zero or more HarnessGitopsProjectMapping resources
+(install/upgrade gitops-helm with `--set harnessAgent.enabled=true`, plus
+`projectMappings` and `appProject.enabled=true` as needed). The API key Secret
 referenced by the Agent's spec.apiKeySecretRef must exist in namespace
 "{{ default .Release.Namespace .Values.manager.apiKeySecretNamespace }}".
