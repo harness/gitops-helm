@@ -1,0 +1,16 @@
+{{ .Chart.Name }} {{ .Chart.Version }} installed as release "{{ .Release.Name }}" in namespace "{{ .Release.Namespace }}".
+
+{{- if .Values.crds.enabled }}
+The HarnessGitopsAgent and HarnessGitopsProjectMapping CRDs were installed with the chart{{ if .Values.crds.keep }}, annotated helm.sh/resource-policy: keep so `helm uninstall` will not remove them{{ end }}.
+{{- else }}
+CRD install was skipped (crds.enabled=false) — ensure both Harness GitOps CRDs are managed out-of-band.
+{{- end }}
+
+Verify the controller:
+   kubectl -n {{ .Release.Namespace }} rollout status deploy/{{ include "harness-gitops-agent-controller.fullname" . }}
+   kubectl -n {{ .Release.Namespace }} logs deploy/{{ include "harness-gitops-agent-controller.fullname" . }} -f
+
+Next: create a HarnessGitopsAgent and zero or more HarnessGitopsProjectMapping
+resources (see the harness-gitops-agent-bootstrap chart). The API key Secret
+referenced by the Agent's spec.apiKeySecretRef must exist in namespace
+"{{ default .Release.Namespace .Values.manager.apiKeySecretNamespace }}".

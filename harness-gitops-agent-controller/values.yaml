@@ -1,0 +1,132 @@
+nameOverride: ""
+fullnameOverride: ""
+
+replicaCount: 1
+revisionHistoryLimit: 5
+
+image:
+  repository: harness/gitops-agent-bootstrap-controller
+  tag: v0.1.0
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+
+serviceAccount:
+  create: true
+  name: ""
+  annotations: {}
+  automountServiceAccountToken: true
+
+rbac:
+  create: true
+
+# CRD lifecycle. The chart installs both Harness GitOps CRDs by default and
+# annotates them with helm.sh/resource-policy: keep so `helm uninstall` never
+# removes their instances. Set enabled=false to manage the CRDs out-of-band.
+crds:
+  enabled: true
+  keep: true
+
+leaderElection:
+  enabled: true
+
+manager:
+  # Empty uses the controller Helm release namespace. Set an explicit namespace
+  # only when API key Secrets are managed somewhere else.
+  apiKeySecretNamespace: ""
+  appProjectPendingRetryInterval: 20s
+  harnessMappingResyncInterval: 5m
+  healthProbe:
+    bindAddress: ":8081"
+    port: 8081
+  metrics:
+    # Use "0" to disable metrics endpoint. For enabled metrics, keep bindAddress and port aligned.
+    # Disabling also removes the metrics Service and ServiceMonitor below, so
+    # the three can never disagree.
+    bindAddress: "0"
+    port: 8080
+    secure: true
+    service:
+      # Created whenever metrics are enabled. Exists so the ServiceMonitor has
+      # something to select, and so the endpoint can be port-forwarded directly.
+      annotations: {}
+    serviceMonitor:
+      # OFF BY DEFAULT because ServiceMonitor is a prometheus-operator CRD:
+      # rendering it on a cluster without kube-prometheus-stack fails the whole
+      # install with "no matches for kind ServiceMonitor". Turn on where
+      # Prometheus is present.
+      #
+      # This is what makes the operator observable rather than merely alive.
+      # Without it Prometheus sees only cAdvisor CPU/memory, and a reconciler
+      # looping on a failure is indistinguishable from a healthy one. Enabling
+      # it exposes controller_runtime_reconcile_errors_total,
+      # workqueue_depth and controller_runtime_reconcile_time_seconds.
+      enabled: false
+      # Defaults to the release namespace. Set only if your Prometheus is
+      # restricted to scraping ServiceMonitors from one specific namespace.
+      namespace: ""
+      # A default kube-prometheus-stack selects only ServiceMonitors labelled
+      # `release: <its-release-name>`. Not needed when it is installed with
+      # serviceMonitorSelectorNilUsesHelmValues=false, which selects any.
+      additionalLabels: {}
+      path: /metrics
+      interval: 30s
+      scrapeTimeout: 10s
+      relabelings: []
+      metricRelabelings: []
+  # Keep HTTP/2 disabled by default due to known HTTP/2 CVEs.
+  enableHTTP2: false
+  # Controller-runtime zap development mode; set false for production-like JSON logs.
+  zapDevelopment: true
+  extraArgs: []
+  env: []
+  envFrom: []
+
+podAnnotations: {}
+podLabels: {}
+priorityClassName: ""
+enableServiceLinks: false
+terminationGracePeriodSeconds: 30
+
+podSecurityContext:
+  runAsNonRoot: true
+  seccompProfile:
+    type: RuntimeDefault
+
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 65532
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  capabilities:
+    drop:
+      - ALL
+
+probes:
+  liveness:
+    initialDelaySeconds: 15
+    periodSeconds: 20
+    timeoutSeconds: 1
+    failureThreshold: 3
+  readiness:
+    initialDelaySeconds: 5
+    periodSeconds: 10
+    timeoutSeconds: 1
+    failureThreshold: 3
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 256Mi
+  requests:
+    cpu: 50m
+    memory: 128Mi
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+topologySpreadConstraints: []
+
+podDisruptionBudget:
+  enabled: false
+  minAvailable: 1

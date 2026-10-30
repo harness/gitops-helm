@@ -1,0 +1,292 @@
+{{- if .Values.crds.enabled }}
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.19.0
+    {{- if .Values.crds.keep }}
+    helm.sh/resource-policy: keep
+    {{- end }}
+  name: harnessgitopsprojectmappings.infrastructure.kandylis.co.uk
+spec:
+  group: infrastructure.kandylis.co.uk
+  names:
+    kind: HarnessGitopsProjectMapping
+    listKind: HarnessGitopsProjectMappingList
+    plural: harnessgitopsprojectmappings
+    shortNames:
+    - hgapm
+    singular: harnessgitopsprojectmapping
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .spec.agentRef.name
+      name: Agent
+      type: string
+    - jsonPath: .spec.appProject
+      name: AppProject
+      type: string
+    - jsonPath: .status.remote.target.projectId
+      name: Project
+      type: string
+    - jsonPath: .status.remote.ownership
+      name: Ownership
+      type: string
+    - jsonPath: .status.conditions[?(@.type=="Ready")].status
+      name: Ready
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1
+    schema:
+      openAPIV3Schema:
+        description: HarnessGitopsProjectMapping is one AppProject to Harness project
+          mapping.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: spec defines the desired mapping.
+            properties:
+              adoptMappingId:
+                description: |-
+                  AdoptMappingID requests ownership of an exact existing Harness mapping. It
+                  also recovers a create whose outcome was ambiguous. It is correctable
+                  recovery input, not mapping identity. The controller must verify the ID and
+                  complete remote tuple before accepting it as Adopted.
+                type: string
+              agentRef:
+                description: AgentRef selects a HarnessGitopsAgent in the same namespace.
+                properties:
+                  name:
+                    description: Name is the name of the HarnessGitopsAgent resource.
+                    maxLength: 253
+                    minLength: 1
+                    type: string
+                required:
+                - name
+                type: object
+              appProject:
+                description: AppProject is the Argo CD AppProject name to map.
+                maxLength: 253
+                minLength: 1
+                type: string
+              autoCreateServiceEnv:
+                default: false
+                description: |-
+                  AutoCreateServiceEnv allows Harness to create matching service and
+                  environment resources for this mapping.
+                type: boolean
+              orgId:
+                description: |-
+                  OrgID is required for ACCOUNT-scoped Agents and inherited for narrower scopes.
+                  Empty and omitted are equivalent.
+                type: string
+              projectId:
+                description: |-
+                  ProjectID is required for ACCOUNT- and ORG-scoped Agents and inherited for
+                  PROJECT-scoped Agents. Empty and omitted are equivalent.
+                type: string
+            required:
+            - agentRef
+            - appProject
+            type: object
+            x-kubernetes-validations:
+            - message: Harness project mapping identity is immutable; replace the
+                resource instead
+              rule: 'self.agentRef.name == oldSelf.agentRef.name && self.appProject
+                == oldSelf.appProject && (has(self.orgId) ? self.orgId : "") == (has(oldSelf.orgId)
+                ? oldSelf.orgId : "") && (has(self.projectId) ? self.projectId : "")
+                == (has(oldSelf.projectId) ? oldSelf.projectId : "") && (has(self.autoCreateServiceEnv)
+                ? self.autoCreateServiceEnv : false) == (has(oldSelf.autoCreateServiceEnv)
+                ? oldSelf.autoCreateServiceEnv : false)'
+          status:
+            description: status defines the observed mapping.
+            properties:
+              conditions:
+                description: Conditions store mapping readiness and lifecycle state.
+                items:
+                  description: Condition contains details for one aspect of the current
+                    state of this API Resource.
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: type of condition in CamelCase or in foo.example.com/CamelCase.
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+                x-kubernetes-list-map-keys:
+                - type
+                x-kubernetes-list-type: map
+              creationState:
+                description: |-
+                  CreationState distinguishes a never-attempted create from an operation
+                  that may need explicit ownership recovery.
+                enum:
+                - Pending
+                - OutcomeUnknown
+                type: string
+              observedGeneration:
+                description: ObservedGeneration is the most recent generation processed
+                  by the controller.
+                format: int64
+                type: integer
+              remote:
+                description: Remote contains the resolved Harness tuple and any observed
+                  mapping ID.
+                properties:
+                  agent:
+                    description: Agent is the exact Agent lookup tuple used for the
+                      verified mapping.
+                    properties:
+                      accountId:
+                        description: AccountID is the resolved Harness account identifier.
+                        minLength: 1
+                        type: string
+                      identifier:
+                        description: Identifier is the resolved Harness GitOps Agent
+                          identifier.
+                        minLength: 1
+                        type: string
+                      orgId:
+                        description: OrgID is the Agent organization identifier. It
+                          is empty at ACCOUNT scope.
+                        type: string
+                      projectId:
+                        description: ProjectID is the Agent project identifier. It
+                          is empty at ACCOUNT and ORG scope.
+                        type: string
+                      scope:
+                        description: Scope is the Harness Agent scope.
+                        enum:
+                        - ACCOUNT
+                        - ORG
+                        - PROJECT
+                        type: string
+                    required:
+                    - accountId
+                    - identifier
+                    - orgId
+                    - projectId
+                    - scope
+                    type: object
+                  mappingId:
+                    description: MappingID is the identifier returned by Harness.
+                    type: string
+                  ownership:
+                    description: Ownership determines whether finalization may delete
+                      the remote mapping.
+                    enum:
+                    - Managed
+                    - Adopted
+                    - External
+                    type: string
+                  target:
+                    description: Target is the exact project mapping tuple observed
+                      in Harness.
+                    properties:
+                      appProject:
+                        description: AppProject is the observed Argo CD AppProject
+                          name.
+                        minLength: 1
+                        type: string
+                      autoCreateServiceEnv:
+                        description: AutoCreateServiceEnv is the option observed on
+                          the remote mapping.
+                        type: boolean
+                      orgId:
+                        description: OrgID is the resolved target organization identifier.
+                        minLength: 1
+                        type: string
+                      projectId:
+                        description: ProjectID is the resolved target project identifier.
+                        minLength: 1
+                        type: string
+                    required:
+                    - appProject
+                    - autoCreateServiceEnv
+                    - orgId
+                    - projectId
+                    type: object
+                required:
+                - agent
+                - target
+                type: object
+                x-kubernetes-validations:
+                - message: mapping ownership requires a remote mapping ID
+                  rule: '!has(self.ownership) || (has(self.mappingId) && self.mappingId.size()
+                    > 0)'
+            type: object
+            x-kubernetes-validations:
+            - message: mapping creation state requires the resolved remote tuple
+              rule: '!has(self.creationState) || has(self.remote)'
+        required:
+        - spec
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+{{- end }}
