@@ -1,0 +1,75 @@
+{{- if gt (len .Values.projectMappings) 0 }}
+{{- if not .Values.harnessAgent.enabled }}
+{{- fail "harnessAgent.enabled must be true when projectMappings are configured" }}
+{{- end }}
+{{- $root := . -}}
+{{- $scope := upper (trim (default "PROJECT" .Values.harnessAgent.spec.scope)) -}}
+{{- if not (has $scope (list "ACCOUNT" "ORG" "PROJECT")) }}
+{{- fail "harnessAgent.spec.scope must be ACCOUNT, ORG, or PROJECT" }}
+{{- end }}
+{{- $identity := .Values.harness.identity -}}
+{{- $agentOrgID := trim (default "" $identity.orgIdentifier) -}}
+{{- $agentProjectID := trim (default "" $identity.projectIdentifier) -}}
+{{- $agentResourceName := include "harness-gitops-agent-bootstrap.agentResourceName" . -}}
+{{- $seenNames := dict -}}
+{{- range $index, $mapping := .Values.projectMappings }}
+{{- $name := trim (default "" $mapping.name) -}}
+{{- if eq $name "" }}
+{{- fail (printf "projectMappings[%d].name is required" $index) }}
+{{- end }}
+{{- if hasKey $seenNames $name }}
+{{- fail (printf "projectMappings contains duplicate name %q" $name) }}
+{{- end }}
+{{- $_ := set $seenNames $name true -}}
+{{- $appProject := trim (default "" $mapping.appProject) -}}
+{{- if eq $appProject "" }}
+{{- fail (printf "projectMappings[%d].appProject is required" $index) }}
+{{- end }}
+{{- $targetOrgID := trim (default "" $mapping.orgId) -}}
+{{- $targetProjectID := trim (default "" $mapping.projectId) -}}
+{{- if eq $scope "ACCOUNT" }}
+{{- if eq $targetOrgID "" }}
+{{- fail (printf "projectMappings[%d].orgId is required for an ACCOUNT-scoped Agent" $index) }}
+{{- end }}
+{{- if eq $targetProjectID "" }}
+{{- fail (printf "projectMappings[%d].projectId is required for an ACCOUNT-scoped Agent" $index) }}
+{{- end }}
+{{- else if eq $scope "ORG" }}
+{{- if eq $targetProjectID "" }}
+{{- fail (printf "projectMappings[%d].projectId is required for an ORG-scoped Agent" $index) }}
+{{- end }}
+{{- if and (ne $targetOrgID "") (ne $targetOrgID $agentOrgID) }}
+{{- fail (printf "projectMappings[%d].orgId must be omitted or match the Agent org %q" $index $agentOrgID) }}
+{{- end }}
+{{- else }}
+{{- if and (ne $targetOrgID "") (ne $targetOrgID $agentOrgID) }}
+{{- fail (printf "projectMappings[%d].orgId must be omitted or match the PROJECT-scoped Agent org %q" $index $agentOrgID) }}
+{{- end }}
+{{- if and (ne $targetProjectID "") (ne $targetProjectID $agentProjectID) }}
+{{- fail (printf "projectMappings[%d].projectId must be omitted or match the PROJECT-scoped Agent project %q" $index $agentProjectID) }}
+{{- end }}
+{{- end }}
+---
+apiVersion: infrastructure.kandylis.co.uk/v1
+kind: HarnessGitopsProjectMapping
+metadata:
+  name: {{ $name | quote }}
+  namespace: {{ $root.Release.Namespace }}
+  labels:
+    {{- include "harness-gitops-agent-bootstrap.labels" $root | nindent 4 }}
+spec:
+  agentRef:
+    name: {{ $agentResourceName | quote }}
+  appProject: {{ $appProject | quote }}
+  {{- if $targetOrgID }}
+  orgId: {{ $targetOrgID | quote }}
+  {{- end }}
+  {{- if $targetProjectID }}
+  projectId: {{ $targetProjectID | quote }}
+  {{- end }}
+  autoCreateServiceEnv: {{ default false $mapping.autoCreateServiceEnv }}
+  {{- with (trim (default "" $mapping.adoptMappingId)) }}
+  adoptMappingId: {{ . | quote }}
+  {{- end }}
+{{- end }}
+{{- end }}

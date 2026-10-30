@@ -785,3 +785,42 @@ externalRedis:
     clientCertEnabled: false
     # -- Mount path for Redis TLS certificates inside the container
     mountPath: "/etc/redis-tls"
+
+# ---------------------------------------------------------------------------
+# Harness GitOps agent bootstrap (default-off). Renders the HarnessGitopsAgent
+# CR, HarnessGitopsProjectMapping(s) and AppProject. Identity comes from
+# harness.identity.* and the token Secret from agent.existingSecrets.agentToken.
+# ---------------------------------------------------------------------------
+harnessAgent:
+  enabled: false
+  metadata:
+    name: ""
+    annotations: {}
+    labels: {}
+  spec:
+    name: ""
+    operator: ARGO
+    scope: PROJECT
+    type: MANAGED_ARGO_PROVIDER
+    existingAgentIdentifier: ""
+    # The Harness API key Secret must already exist in the namespace configured
+    # on the controller. Its key is "api_key"; never put the value here.
+    apiKeySecretRef: harness-api-key-secret
+    # Must match agent.existingSecrets.agentToken; the render fails on mismatch.
+    tokenSecretRef: ""
+
+# Each entry becomes one HarnessGitopsProjectMapping referencing the Agent above.
+projectMappings: []
+#  - name: default
+#    appProject: default
+#    orgId: ""
+#    projectId: ""
+#    autoCreateServiceEnv: false
+#    adoptMappingId: ""
+
+appProject:
+  enabled: false
+  name: default
+  description: AppProject created for the Harness GitOps Agent instance
+  annotations: {}
+  labels: {}
