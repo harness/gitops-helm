@@ -1,0 +1,59 @@
+{{- if hasKey .Values.harnessAgent.spec "projectMapping" }}
+{{- fail "harnessAgent.spec.projectMapping was removed; define one or more entries in top-level projectMappings instead" }}
+{{- end }}
+{{- if .Values.harnessAgent.enabled }}
+{{- $identity := .Values.harness.identity -}}
+{{- $scope := upper (trim (default "PROJECT" .Values.harnessAgent.spec.scope)) -}}
+{{- if not (has $scope (list "ACCOUNT" "ORG" "PROJECT")) }}
+{{- fail "harnessAgent.spec.scope must be ACCOUNT, ORG, or PROJECT" }}
+{{- end }}
+{{- $accountID := required "harness.identity.accountIdentifier is required" (trim (default "" $identity.accountIdentifier)) -}}
+{{- $orgID := "" -}}
+{{- if ne $scope "ACCOUNT" }}
+{{- $orgID = required "harness.identity.orgIdentifier is required for ORG and PROJECT scope" (trim (default "" $identity.orgIdentifier)) -}}
+{{- end }}
+{{- $projectID := "" -}}
+{{- if eq $scope "PROJECT" }}
+{{- $projectID = required "harness.identity.projectIdentifier is required for PROJECT scope" (trim (default "" $identity.projectIdentifier)) -}}
+{{- end }}
+{{- $agentIdentifier := required "harness.identity.agentIdentifier is required" (trim (default "" $identity.agentIdentifier)) -}}
+{{- $agentResourceName := include "harness-gitops-agent-bootstrap.agentResourceName" . -}}
+{{- $apiKeySecretRef := required "harnessAgent.spec.apiKeySecretRef is required" (trim (default "" .Values.harnessAgent.spec.apiKeySecretRef)) -}}
+{{- $tokenSecretRef := required "harnessAgent.spec.tokenSecretRef is required" (trim (default "" .Values.harnessAgent.spec.tokenSecretRef)) -}}
+{{- $runtimeTokenSecretRef := required "agent.existingSecrets.agentToken is required" (trim (default "" .Values.agent.existingSecrets.agentToken)) -}}
+{{- if ne $tokenSecretRef $runtimeTokenSecretRef }}
+{{- fail "harnessAgent.spec.tokenSecretRef must match agent.existingSecrets.agentToken" }}
+{{- end }}
+apiVersion: gitops.harness.io/v1alpha1
+kind: HarnessGitopsAgent
+metadata:
+  name: {{ $agentResourceName | quote }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "harness-gitops-agent-bootstrap.labels" . | nindent 4 }}
+    {{- with .Values.harnessAgent.metadata.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.harnessAgent.metadata.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  name: {{ default $agentIdentifier .Values.harnessAgent.spec.name | quote }}
+  identifier: {{ $agentIdentifier | quote }}
+  accountId: {{ $accountID | quote }}
+  {{- if $orgID }}
+  orgId: {{ $orgID | quote }}
+  {{- end }}
+  {{- if $projectID }}
+  projectId: {{ $projectID | quote }}
+  {{- end }}
+  operator: {{ .Values.harnessAgent.spec.operator | quote }}
+  scope: {{ $scope | quote }}
+  type: {{ .Values.harnessAgent.spec.type | quote }}
+  apiKeySecretRef: {{ $apiKeySecretRef | quote }}
+  tokenSecretRef: {{ $tokenSecretRef | quote }}
+  {{- if .Values.harnessAgent.spec.existingAgentIdentifier }}
+  existingAgentIdentifier: {{ .Values.harnessAgent.spec.existingAgentIdentifier | quote }}
+  {{- end }}
+{{- end }}

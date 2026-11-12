@@ -1,0 +1,40 @@
+{{- if ne .Values.manager.metrics.bindAddress "0" }}
+{{- /*
+Metrics Service. Gated on the SAME condition the Deployment uses to expose the
+metrics container port, so the two can never disagree: disable metrics and this
+disappears with the port rather than dangling as a Service with no endpoints.
+
+Exists chiefly so a ServiceMonitor has something to select, but it is useful on
+its own - `kubectl port-forward svc/<name>-metrics 8080:8080` is a far easier
+way to read the reconciler's counters than exec-ing into the pod.
+
+Deliberately headless-adjacent in spirit but a normal ClusterIP: the
+prometheus-operator resolves a ServiceMonitor to the Service's ENDPOINTS and
+scrapes pods directly, so a ClusterIP here does not put a load balancer in the
+scrape path.
+*/}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "harness-gitops-agent-controller.fullname" . }}-metrics
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "harness-gitops-agent-controller.labels" . | nindent 4 }}
+    app.kubernetes.io/component: metrics
+  {{- with .Values.manager.metrics.service.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  type: ClusterIP
+  selector:
+    {{- include "harness-gitops-agent-controller.selectorLabels" . | nindent 4 }}
+  ports:
+    - name: metrics
+      port: {{ .Values.manager.metrics.port }}
+      # Named target, matching the Deployment's container port name. Referencing
+      # the name rather than the number means changing manager.metrics.port
+      # cannot silently break the scrape.
+      targetPort: metrics
+      protocol: TCP
+{{- end }}

@@ -1,0 +1,74 @@
+{{- if and .Values.manager.metrics.serviceMonitor.enabled (ne .Values.manager.metrics.bindAddress "0") }}
+{{- /*
+ServiceMonitor for the controller's own metrics.
+
+WHY THIS MATTERS: without it Prometheus only sees the container's CPU and memory
+from cAdvisor, and a reconciler stuck in a retry loop looks EXACTLY like a
+healthy one on those. The signals that distinguish them - reconcile errors,
+workqueue depth, reconcile latency - are all on this endpoint and are invisible
+until something scrapes it. That is the difference between monitoring the
+cluster and monitoring this operator.
+
+OFF BY DEFAULT. ServiceMonitor is a prometheus-operator CRD; rendering it into a
+cluster that has never installed kube-prometheus-stack fails the install with
+"no matches for kind ServiceMonitor". Consumers who run Prometheus opt in.
+
+The `helm.sh/hook-*` free design is deliberate - this is an ordinary resource,
+so `helm upgrade` reconciles it like anything else.
+*/}}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "harness-gitops-agent-controller.fullname" . }}
+  namespace: {{ default .Release.Namespace .Values.manager.metrics.serviceMonitor.namespace }}
+  labels:
+    {{- include "harness-gitops-agent-controller.labels" . | nindent 4 }}
+    {{- /*
+    Release labels a Prometheus may require. kube-prometheus-stack installed
+    with serviceMonitorSelectorNilUsesHelmValues=false (as the hub is) selects
+    ANY ServiceMonitor and needs nothing here; a default install selects only
+    those carrying `release: <its-release-name>`. Settable for that case.
+    */}}
+    {{- with .Values.manager.metrics.serviceMonitor.additionalLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  namespaceSelector:
+    matchNames:
+      - {{ .Release.Namespace }}
+  selector:
+    matchLabels:
+      {{- include "harness-gitops-agent-controller.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: metrics
+  endpoints:
+    - port: metrics
+      path: {{ .Values.manager.metrics.serviceMonitor.path }}
+      interval: {{ .Values.manager.metrics.serviceMonitor.interval }}
+      scrapeTimeout: {{ .Values.manager.metrics.serviceMonitor.scrapeTimeout }}
+      {{- if .Values.manager.metrics.secure }}
+      {{- /*
+      secure=true puts controller-runtime's authn/authz filter in front of the
+      endpoint: HTTPS with a self-signed serving cert, and the scraper must
+      present a token that satisfies a TokenReview/SubjectAccessReview. Prometheus
+      sends its own ServiceAccount token; insecureSkipVerify is required because
+      the cert is self-signed unless metrics-cert-path is wired up.
+      NOTE: this also needs RBAC granting Prometheus's ServiceAccount the
+      nonResourceURL /metrics via a ClusterRole - the chart does not create that.
+      */}}
+      scheme: https
+      bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+      tlsConfig:
+        insecureSkipVerify: true
+      {{- else }}
+      # secure=false serves plain HTTP with no auth filter, so no token, no TLS.
+      scheme: http
+      {{- end }}
+      {{- with .Values.manager.metrics.serviceMonitor.relabelings }}
+      relabelings:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.manager.metrics.serviceMonitor.metricRelabelings }}
+      metricRelabelings:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}
