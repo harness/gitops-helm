@@ -667,4 +667,26 @@ entries:
     urls:
     - https://harness.github.io/gitops-helm/releases/gitops-helm-1.1.0.tgz
     version: 1.1.0
-generated: "2026-11-19T20:32:41.635866002Z"
+  harness-gitops-agent-controller:
+  - apiVersion: v2
+    appVersion: v0.1.0
+    created: "2026-11-20T18:50:39.648568035Z"
+    description: Helm chart for the Harness GitOps Agent Kubernetes controller
+    digest: d9e6411a028e95cd6739c6586c06538bb992407e5b165e6052828cc8cbd33199
+    home: https://github.com/harness/gitops-helm
+    keywords:
+    - harness
+    - gitops
+    - controller
+    - operator
+    kubeVersion: '>=1.25.0-0'
+    maintainers:
+    - name: harness
+    name: harness-gitops-agent-controller
+    sources:
+    - https://github.com/harness/gitops-helm
+    type: application
+    urls:
+    - harness-gitops-agent-controller-0.1.0.tgz
+    version: 0.1.0
+generated: "2026-11-20T18:50:39.648707305Z"
