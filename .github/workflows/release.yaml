@@ -24,10 +24,35 @@ jobs:
           helm repo update
 
       - name: Run chart-releaser
-        uses: helm/chart-releaser-action@v1.6.0
+        uses: helm/chart-releaser-action@v1.9.0
         with:
-          charts_dir: ./
+          charts_dir: charts
           packages_with_index: true
           skip_existing: true
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
+      # Guard against a half-published release: chart-releaser can create a
+      # GitHub release + upload the .tgz but fail to update gh-pages/index.yaml
+      # (push race). A re-run then reports "nothing to do" and the gap is
+      # permanent. Fail loudly instead so it is caught in CI (CDS-133831).
+      - name: Verify index.yaml lists every chart version
+        run: |
+          set -euo pipefail
+          git fetch origin gh-pages --depth=1
+          git show origin/gh-pages:index.yaml > /tmp/index.yaml
+          missing=0
+          for dir in charts/*/; do
+            name=$(grep -E '^name:' "${dir}Chart.yaml" | head -1 | awk '{print $2}')
+            version=$(grep -E '^version:' "${dir}Chart.yaml" | head -1 | awk '{print $2}')
+            if yq ".entries.\"${name}\"[].version" /tmp/index.yaml 2>/dev/null | grep -Fxq "${version}"; then
+              echo "ok: ${name} ${version}"
+            else
+              echo "::error::${name} ${version} is missing from gh-pages index.yaml"
+              missing=1
+            fi
+          done
+          if [ "${missing}" -ne 0 ]; then
+            echo "chart-releaser left index.yaml incomplete — half-published release"
+            exit 1
+          fi

@@ -3,3 +3,11 @@
 .idea/vcs.xml
 .idea/gitops-helm.iml
 .DS_Store
+
+# chart-releaser artifacts: index.yaml and packaged charts live on gh-pages,
+# never in the source branch.
+/index.yaml
+/releases/
+
+# vendored subchart dependencies, fetched by `helm dependency build` at release time
+charts/*/charts/*.tgz
